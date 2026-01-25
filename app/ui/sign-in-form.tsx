@@ -28,7 +28,7 @@ let TxtRes = {
 }
 
 export default function signInForm({ region }: { region: Region }) {
-  let [ formState, formAction ] = useActionState(createSessionAction, {
+  let [ formState, formAction, isPending ] = useActionState(createSessionAction, {
     error: undefined,
     profile: undefined,
   })
@@ -42,7 +42,7 @@ export default function signInForm({ region }: { region: Region }) {
   }
 
   return (
-    <form action={formAction}>
+    <form action="#">
       <div className="flex flex-col gap-2 py-4">
         <div>
           <TextField
@@ -57,8 +57,9 @@ export default function signInForm({ region }: { region: Region }) {
           />
         </div>
         <div className="mt-2">
-          <button className="pointer py-1 px-2 rounded-md bg-sky-400 text-white">
-            { TxtRes.verify[lang] }
+          <button formAction={formAction} disabled={isPending}
+            className="pointer py-1 px-2 rounded-md bg-sky-400 text-white">
+              { TxtRes.verify[lang] }
           </button>
         </div>
         {formState.error && (

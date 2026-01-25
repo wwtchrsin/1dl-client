@@ -1,7 +1,7 @@
 "use server"
 
 import { refresh } from "next/cache"
-import { createProfile, createSession } from "@/app/lib/requests"
+import * as requests from "@/app/lib/requests"
 import * as cookies from "@/app/lib/cookies"
 import type { Profile } from "@/app/lib/interfaces"
 
@@ -15,47 +15,111 @@ type CreateSessionState = {
   profile: Profile | undefined,
 }
 
-export async function createProfileAction(prevState: CreateProfileState, formData: FormData) {
-  let region = formData.get("region") as string | null
-  let login = formData.get("login") as string | null
-  let password = formData.get("password") as string | null
-  let password2 = formData.get("password2") as string | null
-  let name = formData.get("name") as string | null
+type LogoutState = {
+  error: string | undefined,
+  done: boolean,
+}
 
-  if ( password !== password2 ) {
+type DeleteProfileState = {
+  error: string | undefined,
+  done: boolean,
+}
+
+export async function createProfileAction(prevState: CreateProfileState, 
+  formData: FormData) {
+    let region = formData.get("region") as string | null
+    let login = formData.get("login") as string | null
+    let password = formData.get("password") as string | null
+    let password2 = formData.get("password2") as string | null
+    let name = formData.get("name") as string | null
+
+    if ( password !== password2 ) {
+      return {
+        error: "appErrors.passwordsNotMatch",
+        profile: undefined,
+      }
+    }
+
+    let profile = await requests.createProfile({ 
+      region, login, password, name
+    })
+    if ( profile.session ) {
+      await cookies.setSession(profile.session)
+      refresh()
+    }
     return {
-      error: "appErrors.passwordsNotMatch",
-      profile: undefined,
+      error: profile.error,
+      profile: profile.profile,
     }
   }
 
-  let profile = await createProfile({ region, login, password, name })
+export async function createSessionAction(prevState: CreateSessionState, 
+  formData: FormData) {
+    let region = formData.get("region") as  string | null
+    let login = formData.get("login") as string | null
+    let password = formData.get("password") as string | null
 
-  if ( profile.session ) {
-    await cookies.setSession(profile.session)
+    let session = await requests.createSession({ 
+      region, login, password
+    })
+    if ( session.session ) {
+      await cookies.setSession(session.session)
+      refresh()
+    }
+    return {
+      error: session.error,
+      profile: session.profile,
+    }
+  }
+
+export async function logoutAction(prevState: LogoutState, 
+  formData: FormData) {
+    let session = await cookies.getSession()
+    if ( !session ) {
+      return {
+        error: "appError.unknownError",
+        done: false,
+      }
+    }
+
+    let error = await requests.deleteSession(session)
+    if ( error ) {
+      return { 
+        error: error,
+        done: false,
+      }
+    }
+
+    await cookies.deleteSession()
     refresh()
+    return { 
+      error: undefined,
+      done: true,
+    }
   }
 
-  return {
-    error: profile.error,
-    profile: profile.profile,
-  }
-}
+export async function deleteProfileAction(prevState: DeleteProfileState, 
+  formData: FormData) {
+    let session = await cookies.getSession()
+    if ( !session ) {
+      return {
+        error: "appError.unknownError",
+        done: false,
+      }
+    }
 
-export async function createSessionAction(prevState: CreateSessionState, formData: FormData) {
-  let region = formData.get("region") as  string | null
-  let login = formData.get("login") as string | null
-  let password = formData.get("password") as string | null
+    let error = await requests.deleteProfile(session)
+    if ( error ) {
+      return {
+        error: error,
+        done: false,
+      }
+    }
 
-  let session = await createSession({ region, login, password })
-
-  if ( session.session ) {
-    await cookies.setSession(session.session)
+    await cookies.deleteSession()
     refresh()
+    return {
+      error: undefined,
+      done: true,
+    }
   }
-
-  return {
-    error: session.error,
-    profile: session.profile,
-  }
-}
