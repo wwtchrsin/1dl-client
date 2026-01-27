@@ -6,9 +6,16 @@ import { getUrlSegments } from "@/app/lib/miscs"
 import { regionBgColors, regionTextColors } from "@/app/lib/regions"
 import type { Region } from "@/app/lib/interfaces"
 
+let segmentLabels = [
+  () => process.env.NEXT_PUBLIC_APP_NAME_COMPACT,
+  (region: string) => region.toUpperCase(),
+  (district: string) => `#${district}`,
+  (room: string) => `#${room}`,
+]
+
 export default function Header() {
   let pathname = usePathname()
-  let urlSegments = getUrlSegments(pathname)
+  let urlSegments = [ "", ...getUrlSegments(pathname) ]
   let bgColor = "bg-gray-700"
   let linkBgColor = "bg-gray-200"
   let linkTextColor = "text-gray-700"
@@ -20,17 +27,21 @@ export default function Header() {
 
   return (
     <div className={`flex flex-row gap-2 px-8 py-8 text-2xl ${bgColor}`}>
-      <Link className={`p-2 rounded underline decoration-2 ${linkBgColor} ${linkTextColor}`} 
-        href="/">
-          { process.env.NEXT_PUBLIC_APP_NAME_COMPACT }
-      </Link>
       {urlSegments.map((segment, index) => {
-        let url = "/" + urlSegments.slice(0, index + 1).join("/")
+        let url = urlSegments.slice(0, index + 1).join("/") || "/"
+        let segmentLabel = segmentLabels[index](segment)
+        if ( index < urlSegments.length - 1 ) {
+          return (
+            <Link className={`p-2 rounded underline decoration-2 ${linkBgColor} ${linkTextColor}`}
+              href={url} key={index}>
+                { segmentLabel }
+            </Link>
+          )
+        }
         return (
-          <Link className={`p-2 rounded underline decoration-2 ${linkBgColor} ${linkTextColor}`}
-            href={url} key={index}>
-              { segment.toUpperCase() }
-          </Link>
+          <div className={`p-2 rounded ${linkBgColor} ${linkTextColor}`} key={index}>
+            { segmentLabel }
+          </div>
         )
       })}
     </div>

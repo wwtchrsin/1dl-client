@@ -156,3 +156,20 @@ export const getDistricts = async (region: Region):
       }
     }
   }
+
+export const getRooms = async ({ region, district }: { region: Region, district: number }):
+  Promise<{ error: string | undefined, data: Record<string, number> | undefined }> => {
+    try {
+      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}/${district}`)
+      let body = await response.json()
+      return {
+        error: body.error,
+        data: body.msgcounts,
+      }
+    } catch (err) {
+      return {
+        error: "appError.requestFailed",
+        data: undefined,
+      }
+    }
+  }
