@@ -20,16 +20,18 @@ export const ProfileContext = createContext<ProfileContextType>({
 })
 
 export function ProfileProvider({ children, profile, session }: ProfileProviderProps) {
-  useEffect(() => {
-    if ( !profile && session ) {
-      deleteSession()
-      return
-    }
-    if ( profile && session ) {
-      updateSession()
-      return
-    }
-  }, [])
+  /*useEffect(() => {
+    (async () => {
+      if ( !profile && session ) {
+        await deleteSession()
+        return
+      }
+      if ( profile && session ) {
+        await updateSession()
+        return
+      }
+    })()
+  }, [])*/
   return (
     <ProfileContext value={{ profile }}>
       { children }

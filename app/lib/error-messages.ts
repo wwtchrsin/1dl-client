@@ -3,15 +3,15 @@ import type { TextResource } from "./interfaces"
 
 let errorMessages: Record<string, TextResource> = {
   ...serverErrorMessages as Record<string, TextResource>,
-  "appErrors.unknownError": {
+  "appError.unknownError": {
     en: "Unknown error",
     ru: "Неизвесная ошибка",
   },
-  "appErrors.requestFailed": {
+  "appError.requestFailed": {
     en: "Request failed",
     ru: "Невозможно выполнить запрос",
   },
-  "appErrors.passwordsNotMatch": {
+  "appError.passwordsMismatch": {
     en: "Passwords do not match",
     ru: "Пароли не совпадают",
   },
@@ -19,7 +19,7 @@ let errorMessages: Record<string, TextResource> = {
 
 export const getErrorMessage = (errorTag: string): TextResource => {
   let errorMessage = errorMessages[errorTag]
-  if ( !errorMessage ) errorMessage = errorMessages["appErrors.unknownError"]
+  if ( !errorMessage ) errorMessage = errorMessages["appError.unknownError"]
   return errorMessage
 } 
 

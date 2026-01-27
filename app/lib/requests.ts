@@ -1,6 +1,7 @@
 "use server"
 
-import type { Profile } from "@/app/lib/interfaces"
+import limits from "@/app/lib/server-limits"
+import type { Profile, Region } from "@/app/lib/interfaces"
 
 type UserData = {
   region: string | null,
@@ -40,7 +41,7 @@ export const getProfile = async (session: string | undefined):
       }
     } catch (err) {
       return {
-        error: "appErrors.requestFailed",
+        error: "appError.requestFailed",
         profile: undefined,
       }
     }
@@ -70,7 +71,7 @@ export const createProfile = async ({ region, login, password, name }: UserData)
       }
     } catch (err) {
       return {
-        error: "appErrors.requestFailes",
+        error: "appError.requestFailes",
         session: undefined,
         profile: undefined,
       }
@@ -102,7 +103,7 @@ export const createSession = async ({ region, login, password }: Credentials):
       }
     } catch (err) {
       return {
-        error: "appErrors.requestFailed",
+        error: "appError.requestFailed",
         session: undefined,
         profile: undefined,
       }
@@ -117,10 +118,10 @@ export const deleteSession = async (session: string): Promise<string | undefined
         Authorization: `Bearer ${session}`
       }
     })
-    let message = await response.json()
-    return message.error as string | undefined
+    let body = await response.json()
+    return body.error as string | undefined
   } catch (err) {
-    return "appErrors.requestFailed"
+    return "appError.requestFailed"
   }
 }
 
@@ -132,9 +133,26 @@ export const deleteProfile = async (session: string): Promise<string | undefined
         Authorization: `Bearer ${session}`
       }
     })
-    let message = await response.json()
-    return message.error as string | undefined
+    let body = await response.json()
+    return body.error as string | undefined
   } catch (err) {
-    return "appErrors.requestFailed"
+    return "appError.requestFailed"
   }
 }
+
+export const getDistricts = async (region: Region):
+  Promise<{ error: string | undefined, data: Record<string, number> | undefined }> => {
+    try {
+      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}`)
+      let body = await response.json()
+      return {
+        error: body.error,
+        data: body.msgcounts,
+      }
+    } catch (err) {
+      return {
+        error: "appError.requestFailed",
+        data: undefined,
+      }
+    }
+  }

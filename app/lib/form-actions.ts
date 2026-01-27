@@ -3,6 +3,7 @@
 import { refresh } from "next/cache"
 import * as requests from "@/app/lib/requests"
 import * as cookies from "@/app/lib/cookies"
+import * as processors from "@/app/lib/form-processors"
 import type { Profile } from "@/app/lib/interfaces"
 
 type CreateProfileState = {
@@ -27,22 +28,14 @@ type DeleteProfileState = {
 
 export async function createProfileAction(prevState: CreateProfileState, 
   formData: FormData) {
-    let region = formData.get("region") as string | null
-    let login = formData.get("login") as string | null
-    let password = formData.get("password") as string | null
-    let password2 = formData.get("password2") as string | null
-    let name = formData.get("name") as string | null
-
-    if ( password !== password2 ) {
+    let form = processors.createProfile(formData)
+    if ( !form.data || form.error ) {
       return {
-        error: "appErrors.passwordsNotMatch",
+        error: form.error,
         profile: undefined,
       }
     }
-
-    let profile = await requests.createProfile({ 
-      region, login, password, name
-    })
+    let profile = await requests.createProfile(form.data)
     if ( profile.session ) {
       await cookies.setSession(profile.session)
       refresh()
@@ -55,13 +48,14 @@ export async function createProfileAction(prevState: CreateProfileState,
 
 export async function createSessionAction(prevState: CreateSessionState, 
   formData: FormData) {
-    let region = formData.get("region") as  string | null
-    let login = formData.get("login") as string | null
-    let password = formData.get("password") as string | null
-
-    let session = await requests.createSession({ 
-      region, login, password
-    })
+    let form = processors.createSession(formData)
+    if ( !form.data || form.error ) {
+      return {
+        error: form.error,
+        profile: undefined,
+      }
+    }
+    let session = await requests.createSession(form.data)
     if ( session.session ) {
       await cookies.setSession(session.session)
       refresh()
@@ -81,7 +75,6 @@ export async function logoutAction(prevState: LogoutState,
         done: false,
       }
     }
-
     let error = await requests.deleteSession(session)
     if ( error ) {
       return { 
@@ -89,7 +82,6 @@ export async function logoutAction(prevState: LogoutState,
         done: false,
       }
     }
-
     await cookies.deleteSession()
     refresh()
     return { 
@@ -107,7 +99,6 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
         done: false,
       }
     }
-
     let error = await requests.deleteProfile(session)
     if ( error ) {
       return {
@@ -115,7 +106,6 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
         done: false,
       }
     }
-
     await cookies.deleteSession()
     refresh()
     return {
