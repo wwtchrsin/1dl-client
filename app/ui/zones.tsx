@@ -3,9 +3,9 @@ import { regionLang, regionBgColors, regionTextColors } from "../lib/regions"
 import type { Region } from "@/app/lib/interfaces"
 
 let TxtRes = {
-  Room: {
-    en: "Room",
-    ru: "Комната",
+  Zone: {
+    en: "Zone",
+    ru: "Зона",
   },
   Messages: {
     en: "Messages",
@@ -13,13 +13,13 @@ let TxtRes = {
   }
 }
 
-type RoomsProps = {
+type ZonesProps = {
   region: Region,
   district: number,
   msgcounts: string[],
 }
 
-export default function Rooms({ region, district, msgcounts }: RoomsProps) {
+export default function Zones({ region, district, msgcounts }: ZonesProps) {
   let lang = regionLang[region]
   let bgColor = regionBgColors[region][0]
   let textColor = regionTextColors[region][8]
@@ -32,7 +32,7 @@ export default function Rooms({ region, district, msgcounts }: RoomsProps) {
             key={index}>
               <Link href={`/${region}/${district}/${index}`} 
                 className="underline decoration-2">
-                  { `${TxtRes.Room[lang]} #${index}` }
+                  { `${TxtRes.Zone[lang]} #${index}` }
               </Link>
               <div className={textColor}>
                 { `${TxtRes.Messages[lang]}: ${msgcount}` }

@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation"
-import { getRooms } from "@/app/lib/requests"
+import { getZones } from "@/app/lib/requests"
 import { regions } from "@/app/lib/regions"
 import { processMsgcounts } from "@/app/lib/miscs"
 import limits from "@/app/lib/server-limits"
-import Rooms from "@/app/ui/rooms"
+import Zones from "@/app/ui/zones"
 import type { Region } from "@/app/lib/interfaces"
 
 type DistrictParams = {
@@ -20,16 +20,16 @@ export default async function District({ params }: { params: Promise<DistrictPar
     +district > limits.message.district.max ) {
       notFound()
     }
-  let rooms = await getRooms({
+  let zones = await getZones({
     region: region as Region,
     district: +district,
   })
-  let minIndex = limits.message.room.min
-  let maxIndex = limits.message.room.max
-  let msgcounts = processMsgcounts(rooms.data, minIndex, maxIndex)
+  let minIndex = limits.message.zone.min
+  let maxIndex = limits.message.zone.max
+  let msgcounts = processMsgcounts(zones.data, minIndex, maxIndex)
 
   return (
-    <Rooms 
+    <Zones 
       region={region as Region}
       district={+district} 
       msgcounts={msgcounts}

@@ -7,9 +7,9 @@ export default {
     "en": "An incorrect value set for the following parameter: district. The value must be an integer within the range [0, 299].",
     "ru": "Следующему параметру задано неверное значение: district. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
-  "wrongValue.message.room": {
-    "en": "An incorrect value set for the following parameter: room. The value must be an integer within the range [0, 299].",
-    "ru": "Следующему параметру задано неверное значение: room. Значение должно быть целым числов находящимся в интервале [0, 299]."
+  "wrongValue.message.zone": {
+    "en": "An incorrect value set for the following parameter: zone. The value must be an integer within the range [0, 299].",
+    "ru": "Следующему параметру задано неверное значение: zone. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.index": {
     "en": "An incorrect value set for the following parameter: index. The value must be an integer within the range [0, 299].",

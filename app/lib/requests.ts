@@ -157,7 +157,7 @@ export const getDistricts = async (region: Region):
     }
   }
 
-export const getRooms = async ({ region, district }: { region: Region, district: number }):
+export const getZones = async ({ region, district }: { region: Region, district: number }):
   Promise<{ error: string | undefined, data: Record<string, number> | undefined }> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/messages/${region}/${district}`)

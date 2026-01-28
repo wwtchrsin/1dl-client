@@ -10,7 +10,7 @@ let segmentLabels = [
   () => process.env.NEXT_PUBLIC_APP_NAME_COMPACT,
   (region: string) => region.toUpperCase(),
   (district: string) => `#${district}`,
-  (room: string) => `#${room}`,
+  (zone: string) => `#${zone}`,
 ]
 
 export default function Header() {
