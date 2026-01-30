@@ -11,9 +11,8 @@ type TextAreaProps = {
   },
 }
 
-export default function TextArea(props: TextAreaProps) {
+export default function TextArea({ name, label, limits }: TextAreaProps) {
   let [ value, setValue ] = useState("")
-  let { name, label, limits } = props
 
   return (
     <>

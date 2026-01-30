@@ -1,15 +1,15 @@
+"use client"
+
 import { useState } from "react"
 import Image from "next/image"
 
 type PasswordFieldProps = {
-  value: string,
-  setValue: (value: string) => unknown,
   name: string,
   label: string,
 }
 
-export default function PasswordField (props: PasswordFieldProps) {
-  let { value, setValue, name, label } = props
+export default function PasswordField ({ name, label }: PasswordFieldProps) {
+  let [ value, setValue ] = useState("")
   let [ hidden, setHidden ] = useState(true)
   let type = hidden ? "password" : "text"
   let icon = hidden ? "visibility" : "visibility-off" 

@@ -1,9 +1,8 @@
 "use client"
 
-import { useState, useActionState } from "react"
+import { useActionState } from "react"
 import { createProfileAction } from "../lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
-import { getErrorMessage } from "@/app/lib/error-messages"
 import TextField from "@/app/ui/text-field"
 import PasswordField from "@/app/ui/password-field"
 import ErrorMessage from "@/app/ui/error-message"
@@ -39,11 +38,6 @@ export default function SignUpForm ({ region }: { region: Region }) {
     profile: undefined,
     timestamp: -1,
   })
-  let [ login, setLogin ] = useState("")
-  let [ password, setPassword ] = useState("")
-  let [ password2, setPassword2 ] = useState("")
-  let [ name, setName ] = useState("")
-
   let lang = regionLang[region]
 
   if ( formState.profile ) {
@@ -55,26 +49,26 @@ export default function SignUpForm ({ region }: { region: Region }) {
       <div className="flex flex-col gap-2 py-4">
         <div>
           <TextField
-            value={login} setValue={setLogin}
-            name="login" label={TxtRes.Login[lang]}
+            name="login"
+            label={TxtRes.Login[lang]}
           />
         </div>
         <div>
           <PasswordField
-            value={password} setValue={setPassword}
-            name="password" label={TxtRes.Password[lang]}
+            name="password"
+            label={TxtRes.Password[lang]}
           />
         </div>
         <div>
           <PasswordField
-            value={password2} setValue={setPassword2}
-            name="password2" label={TxtRes.ConfirmPassword[lang]}
+            name="password2"
+            label={TxtRes.ConfirmPassword[lang]}
           />
         </div>
         <div>
           <TextField
-            value={name} setValue={setName}
-            name="name" label={TxtRes.Name[lang]}
+            name="name"
+            label={TxtRes.Name[lang]}
           />
         </div>
         <div className="mt-2">

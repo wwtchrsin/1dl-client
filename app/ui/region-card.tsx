@@ -50,7 +50,7 @@ export default function RegionCard({ region }: { region: Region }) {
   }
 
   return (
-    <div className="px-6 py-12 md:mx-auto md:max-w-lg bg-black/5">
+    <div className="p-6 md:mx-auto md:max-w-lg bg-black/5">
       <div className={`flex flex-row gap-2 items-center`}>
         <div>
           <span className="max-sm:hidden">{ TxtRes.Region[lang] }: </span>
