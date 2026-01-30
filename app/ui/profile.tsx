@@ -3,7 +3,7 @@
 import { useState, useActionState } from "react"
 import { deleteProfileAction, logoutAction } from "../lib/form-actions"
 import { regionLang } from "../lib/regions"
-import { getErrorMessage } from "@/app/lib/error-messages"
+import ErrorMessage from "./error-message"
 import type { Profile, Region } from "../lib/interfaces"
 
 let TxtRes = {
@@ -43,10 +43,6 @@ let TxtRes = {
     en: "cancel",
     ru: "отменить",
   },
-  Error: {
-    en: "Error",
-    ru: "Ошибка",
-  },
 }
 
 export default function Profile({ profile }: { profile: Profile }) {
@@ -54,17 +50,20 @@ export default function Profile({ profile }: { profile: Profile }) {
     useActionState(logoutAction, {
       error: undefined,
       done: false,
+      timestamp: -1,
     })
   let [ deleteFormState, deleteFormAction, deleteFormPending ] = 
     useActionState(deleteProfileAction, {
       error: undefined,
       done: false,
+      timestamp: -1,
     })
   let [ dialogVisible, setDialogVisible ] = useState(false)
   let lang = regionLang[profile.region as Region]
   let error = logoutFormState.error || deleteFormState.error
   let done = logoutFormState.done || deleteFormState.done
   let isPending = logoutFormPending || deleteFormPending
+  let timestamp = Math.max(logoutFormState.timestamp, deleteFormState.timestamp)
 
   let timestampToDate = (timestamp: number | string): string => {
     let date = new Date(+timestamp * 1000)
@@ -137,12 +136,11 @@ export default function Profile({ profile }: { profile: Profile }) {
             </div>
           </div>
         )}
-        {error && (
-          <div className="mt-2 text-red-500 text-bold">
-            { `${TxtRes.Error[lang]}: ` }
-            { getErrorMessage(error)[lang] }
-          </div>
-        )}
+        <ErrorMessage
+          error={error}
+          timestamp={timestamp}
+          lang={lang}
+        />
       </div>
     </form>
   )

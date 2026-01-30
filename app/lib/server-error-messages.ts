@@ -16,8 +16,8 @@ export default {
     "ru": "Следующему параметру задано неверное значение: index. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.text": {
-    "en": "The message not sent. The message length must be within the range [16, 128]",
-    "ru": "Сообщение не отправлено. Длина сообщения должна находиться в интервале [16, 128]"
+    "en": "The message length must be within the range [16, 128]",
+    "ru": "Длина сообщения должна находиться в интервале [16, 128]"
   },
   "wrongValue.message.color": {
     "en": "An incorrect value set for the following parameter: color. Valid values: black, red, orange, yellow, green, cyan, blue, purple, pink.",

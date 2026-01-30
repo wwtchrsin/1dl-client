@@ -27,7 +27,7 @@ export default function Districts({ region, msgcounts }: DistrictsProps) {
     <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
       {msgcounts.map((msgcount, index) => {
         return (
-          <div className={`px-1 py-8 flex flex-col gap-2 items-center text-black ${bgColor}`}
+          <div className={`px-1 py-16 flex flex-col gap-2 items-center text-black ${bgColor}`}
             key={index}>
               <Link href={`/${region}/${index}`} className="underline decoration-2">
                 { `${TxtRes.District[lang]} #${index}` }

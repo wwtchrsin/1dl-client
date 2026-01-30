@@ -1,25 +1,11 @@
 "use server"
 
-import limits from "@/app/lib/server-limits"
-import type { Profile, Region } from "@/app/lib/interfaces"
-
-type UserData = {
-  region: string | null,
-  login: string | null,
-  password: string | null,
-  name: string | null,
-}
-
-type Credentials = {
-  region: string | null,
-  login: string | null,
-  password: string | null,
-}
+import type * as I from "@/app/lib/interfaces"
 
 const ServerUrl = process.env.HTTP_SERVER
 
 export const getProfile = async (session: string | undefined): 
-  Promise<{ error: string | undefined, profile: Profile | undefined }> => {
+  Promise<{ error: string | undefined, profile: I.Profile | undefined }> => {
     if ( session === undefined ) {
       return { 
         error: undefined,
@@ -47,9 +33,9 @@ export const getProfile = async (session: string | undefined):
     }
   }
 
-export const createProfile = async ({ region, login, password, name }: UserData):
+export const createProfile = async ({ region, login, password, name }: I.UserData):
   Promise<{ error: string | undefined, session: string | undefined, 
-  profile: Profile | undefined }> => {
+  profile: I.Profile | undefined }> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/profiles`, {
         method: "POST",
@@ -79,9 +65,9 @@ export const createProfile = async ({ region, login, password, name }: UserData)
   }
 
 
-export const createSession = async ({ region, login, password }: Credentials):
+export const createSession = async ({ region, login, password }: I.Credentials):
   Promise<{ error: string | undefined, session: string | undefined,
-  profile: Profile | undefined }> => {
+  profile: I.Profile | undefined }> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/sessions`, {
         method: "POST",
@@ -119,7 +105,7 @@ export const deleteSession = async (session: string): Promise<string | undefined
       }
     })
     let body = await response.json()
-    return body.error as string | undefined
+    return body.error
   } catch (err) {
     return "appError.requestFailed"
   }
@@ -134,13 +120,13 @@ export const deleteProfile = async (session: string): Promise<string | undefined
       }
     })
     let body = await response.json()
-    return body.error as string | undefined
+    return body.error
   } catch (err) {
     return "appError.requestFailed"
   }
 }
 
-export const getDistricts = async (region: Region):
+export const getDistricts = async (region: I.Region):
   Promise<{ error: string | undefined, data: Record<string, number> | undefined }> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/messages/${region}`)
@@ -157,7 +143,7 @@ export const getDistricts = async (region: Region):
     }
   }
 
-export const getZones = async ({ region, district }: { region: Region, district: number }):
+export const getZones = async ({ region, district }: I.Districtid):
   Promise<{ error: string | undefined, data: Record<string, number> | undefined }> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/messages/${region}/${district}`)
@@ -165,6 +151,54 @@ export const getZones = async ({ region, district }: { region: Region, district:
       return {
         error: body.error,
         data: body.msgcounts,
+      }
+    } catch (err) {
+      return {
+        error: "appError.requestFailed",
+        data: undefined,
+      }
+    }
+  }
+
+export const getMessages = async ({ region, district, zone }: I.Zoneid):
+  Promise<{ error: string | undefined, data: I.Message[] | undefined }> => {
+    try {
+      let location = `/api/v1/messages/${region}/${district}/${zone}/`
+      let response = await fetch(`${ServerUrl}${location}`)
+      let body = await response.json()
+      return {
+        error: body.error,
+        data: body.messages,
+      }
+    } catch (err) {
+      return {
+        error: "appError.requestFailed",
+        data: undefined,
+      }
+    }
+  }
+
+export const sendMessage = async (session: string, message: I.MessageData):
+  Promise<{ error: string | undefined, data: I.UserMessage | undefined }> => {
+    try {
+      let { region, district, zone, index } = message
+      let messageid = `${region}/${district}/${zone}/${index}`
+      let url = `${ServerUrl}/api/v1/messages/${messageid}`
+      let response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session}`,
+        },
+        body: JSON.stringify({
+          text: message.text,
+          color: message.color,
+        }),
+      })
+      let body = await response.json()
+      return {
+        error: body.error,
+        data: body.message,
       }
     } catch (err) {
       return {

@@ -3,9 +3,9 @@
 import { useState, useActionState } from "react"
 import { createSessionAction } from "../lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
-import { getErrorMessage } from "@/app/lib/error-messages"
 import TextField from "@/app/ui/text-field"
 import PasswordField from "@/app/ui/password-field"
+import ErrorMessage from "@/app/ui/error-message"
 import type { Region } from "@/app/lib/interfaces"
 
 let TxtRes = {
@@ -21,16 +21,13 @@ let TxtRes = {
     en: "verify",
     ru: "проверить",
   },
-  Error: {
-    en: "Error",
-    ru: "Ошибка",
-  },
 }
 
 export default function signInForm({ region }: { region: Region }) {
   let [ formState, formAction, isPending ] = useActionState(createSessionAction, {
     error: undefined,
     profile: undefined,
+    timestamp: -1,
   })
   let [ login, setLogin ] = useState("")
   let [ password, setPassword ] = useState("")
@@ -58,16 +55,15 @@ export default function signInForm({ region }: { region: Region }) {
         </div>
         <div className="mt-2">
           <button formAction={formAction} disabled={isPending}
-            className="pointer py-1 px-2 rounded-md bg-sky-400 text-white">
+            className="cursor-pointer py-1 px-2 rounded-md bg-sky-400 text-white">
               { TxtRes.verify[lang] }
           </button>
         </div>
-        {formState.error && (
-          <div className="mt-2 text-red-500 text-bold">
-            { `${TxtRes.Error[lang]}: ` }
-            { getErrorMessage(formState.error)[lang] }
-          </div>
-        )}
+        <ErrorMessage
+          error={formState.error}
+          timestamp={formState.timestamp}
+          lang={lang}
+        />
       </div>
       <input type="hidden" name="region" value={region} />
     </form>

@@ -1,37 +1,26 @@
 import { notFound } from "next/navigation"
+import { getDistrictid } from "@/app/lib/location-processors"
 import { getZones } from "@/app/lib/requests"
-import { regions } from "@/app/lib/regions"
-import { processMsgcounts } from "@/app/lib/miscs"
+import { processMsgcounts } from "@/app/lib/response-processors"
 import limits from "@/app/lib/server-limits"
 import Zones from "@/app/ui/zones"
-import type { Region } from "@/app/lib/interfaces"
-
-type DistrictParams = {
-  region: string,
-  district: string,
-}
+import type { DistrictParams } from "@/app/lib/interfaces"
 
 export default async function District({ params }: { params: Promise<DistrictParams> }) {
   let { region, district } = await params
-  if ( !(regions as any[]).includes(region) ) {
+  let districtid = getDistrictid({ region, district })
+  if ( !districtid ) {
     notFound()
   }
-  if ( isNaN(+district) || +district < limits.message.district.min ||
-    +district > limits.message.district.max ) {
-      notFound()
-    }
-  let zones = await getZones({
-    region: region as Region,
-    district: +district,
-  })
+  let zones = await getZones(districtid)
   let minIndex = limits.message.zone.min
   let maxIndex = limits.message.zone.max
   let msgcounts = processMsgcounts(zones.data, minIndex, maxIndex)
 
   return (
     <Zones 
-      region={region as Region}
-      district={+district} 
+      region={districtid.region}
+      district={districtid.district} 
       msgcounts={msgcounts}
     />
   )

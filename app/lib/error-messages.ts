@@ -15,6 +15,14 @@ let errorMessages: Record<string, TextResource> = {
     en: "Passwords do not match",
     ru: "Пароли не совпадают",
   },
+  "appError.pageNotFound": {
+    en: "Page not found",
+    ru: "Страница не найдена",
+  },
+  "appError.wrongMessageid": {
+    en: "Wrong message identifier",
+    ru: "Неверный идентификатор сообщения",
+  },
 }
 
 export const getErrorMessage = (errorTag: string): TextResource => {

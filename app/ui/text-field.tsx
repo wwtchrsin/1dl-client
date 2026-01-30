@@ -10,11 +10,11 @@ export default function TextField (props: TextFieldProps) {
 
   return (
     <>
-      <label htmlFor={`reg-form-${name}`} className="text-gray-500">
+      <label htmlFor={`form-${name}`} className="text-gray-500">
         { label }
       </label>
       <input 
-        id={`reg-form-${name}`} name={name} type="text"
+        id={`form-${name}`} name={name} type="text"
         className="block w-full p-2 rounded-md border border-gray-500 text-xl"
         value={value} onChange={(ev) => setValue(ev.target.value)}
       />

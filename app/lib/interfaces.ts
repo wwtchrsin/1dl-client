@@ -7,6 +7,19 @@ export type TextResource = {
   "ru": string,
 }
 
+export type UserData = {
+  region: string,
+  login: string,
+  password: string,
+  name: string,
+}
+
+export type Credentials = {
+  region: string,
+  login: string,
+  password: string,
+}
+
 export type Profile = {
   region: string,
   login: string,
@@ -14,4 +27,48 @@ export type Profile = {
   state: string,
   puid: string,
   timestamp: string,
+}
+
+export type DistrictParams = {
+  region: string | null | undefined,
+  district: string | null | undefined,
+}
+
+export type ZoneParams = DistrictParams & {
+  zone: string | null | undefined,
+}
+
+export type MessageParams = ZoneParams & {
+  index: string | null | undefined,
+}
+
+export type Districtid = {
+  region: Region,
+  district: number,
+}
+
+export type Zoneid = Districtid & {
+  zone: number,
+}
+
+export type Messageid = Zoneid & {
+  index: number,
+}
+
+export type MessageData = {
+  region: Region,
+  district: number,
+  zone: number,
+  index: number,
+  text: string,
+  color: string,
+}
+
+export type UserMessage = MessageData & {
+  timestamp: string,
+}
+
+export type Message = UserMessage & {
+  puid: string,
+  username: string,
 }

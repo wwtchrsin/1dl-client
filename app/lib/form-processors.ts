@@ -1,18 +1,7 @@
 import limits from "@/app/lib/server-limits"
+import { getMessageid } from "./location-processors"
 import { regions } from "@/app/lib/regions"
-
-type CreateProfileData = {
-  region: string,
-  login: string,
-  password: string,
-  name: string,
-}
-
-type CreateSessionData = {
-  region: string,
-  login: string,
-  password: string,
-}
+import type * as I from "@/app/lib/interfaces"
 
 let patterns = {
   login: new RegExp(limits.user.login.pattern),
@@ -20,7 +9,7 @@ let patterns = {
 }
 
 export const createProfile = (formData: FormData): 
-  { error: string | undefined, data: CreateProfileData | undefined } => {
+  { error: string | undefined, data: I.UserData | undefined } => {
     let region = formData.get("region") as string | null
     let login = formData.get("login") as string | null
     let password = formData.get("password") as string | null
@@ -65,7 +54,7 @@ export const createProfile = (formData: FormData):
   }
 
 export const createSession = (formData: FormData):
-  { error: string | undefined, data: CreateSessionData | undefined } => {
+  { error: string | undefined, data: I.Credentials | undefined } => {
     let region = formData.get("region") as  string | null
     let login = formData.get("login") as string | null
     let password = formData.get("password") as string | null
@@ -91,5 +80,40 @@ export const createSession = (formData: FormData):
     return {
       error: undefined,
       data: { region, login, password }
+    }
+  }
+
+export const sendMessage = (formData: FormData): 
+  { error: string | undefined, data: I.MessageData | undefined } => {
+    let region = formData.get("region") as string | null
+    let district = formData.get("district") as string | null
+    let zone = formData.get("zone") as string | null
+    let index = formData.get("index") as string | null
+    let text = formData.get("text") as string | null
+    let color = formData.get("color") as string | null
+
+    let messageid = getMessageid({ region, district, zone, index })
+    if ( !messageid ) {
+      return {
+        error: "appError.wrongMessageid",
+        data: undefined,
+      }
+    }
+    if ( !text || text.length < limits.message.text.minLen ||
+      text.length > limits.message.text.maxLen ) {
+        return {
+          error: "wrongValue.message.text",
+          data: undefined,
+        }
+      }
+    if ( !color || !limits.message.color.values.includes(color) ) {
+      return {
+        error: "wrongValue.message.color",
+        data: undefined,
+      }
+    }
+    return {
+      error: undefined,
+      data: { ...messageid, text, color }
     }
   }

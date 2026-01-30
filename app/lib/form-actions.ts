@@ -8,23 +8,35 @@ import type { Profile } from "@/app/lib/interfaces"
 
 type CreateProfileState = {
   error: string | undefined,
-  profile: Profile | undefined
+  profile: Profile | undefined,
+  timestamp: number,
 }
 
 type CreateSessionState = {
   error: string | undefined,
   profile: Profile | undefined,
+  timestamp: number,
 }
 
 type LogoutState = {
   error: string | undefined,
   done: boolean,
+  timestamp: number,
 }
 
 type DeleteProfileState = {
   error: string | undefined,
   done: boolean,
+  timestamp: number,
 }
+
+type SendMessageState = {
+  error: string | undefined,
+  done: boolean,
+  timestamp: number,
+}
+
+const getTimestamp = () => (new Date()).valueOf()
 
 export async function createProfileAction(prevState: CreateProfileState, 
   formData: FormData) {
@@ -33,6 +45,7 @@ export async function createProfileAction(prevState: CreateProfileState,
       return {
         error: form.error,
         profile: undefined,
+        timestamp: getTimestamp(),
       }
     }
     let profile = await requests.createProfile(form.data)
@@ -43,6 +56,7 @@ export async function createProfileAction(prevState: CreateProfileState,
     return {
       error: profile.error,
       profile: profile.profile,
+      timestamp: getTimestamp(),
     }
   }
 
@@ -53,6 +67,7 @@ export async function createSessionAction(prevState: CreateSessionState,
       return {
         error: form.error,
         profile: undefined,
+        timestamp: getTimestamp(),
       }
     }
     let session = await requests.createSession(form.data)
@@ -63,6 +78,7 @@ export async function createSessionAction(prevState: CreateSessionState,
     return {
       error: session.error,
       profile: session.profile,
+      timestamp: getTimestamp(),
     }
   }
 
@@ -71,8 +87,9 @@ export async function logoutAction(prevState: LogoutState,
     let session = await cookies.getSession()
     if ( !session ) {
       return {
-        error: "appError.unknownError",
+        error: "wrongValue.auth.sessionid",
         done: false,
+        timestamp: getTimestamp(),
       }
     }
     let error = await requests.deleteSession(session)
@@ -80,6 +97,7 @@ export async function logoutAction(prevState: LogoutState,
       return { 
         error: error,
         done: false,
+        timestamp: getTimestamp(),
       }
     }
     await cookies.deleteSession()
@@ -87,6 +105,7 @@ export async function logoutAction(prevState: LogoutState,
     return { 
       error: undefined,
       done: true,
+      timestamp: getTimestamp(),
     }
   }
 
@@ -95,8 +114,9 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
     let session = await cookies.getSession()
     if ( !session ) {
       return {
-        error: "appError.unknownError",
+        error: "wrongValue.auth.sessionid",
         done: false,
+        timestamp: getTimestamp(),
       }
     }
     let error = await requests.deleteProfile(session)
@@ -104,6 +124,7 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
       return {
         error: error,
         done: false,
+        timestamp: getTimestamp(),
       }
     }
     await cookies.deleteSession()
@@ -111,5 +132,32 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
     return {
       error: undefined,
       done: true,
+      timestamp: getTimestamp(),
+    }
+  }
+
+export async function sendMessageAction(prevState: SendMessageState, 
+  formData: FormData) {
+    let session = await cookies.getSession()
+    if ( !session ) {
+      return {
+        error: "wrongValue.auth.sessionid",
+        done: false,
+        timestamp: getTimestamp(),
+      }
+    }
+    let form = processors.sendMessage(formData)
+    if ( !form.data || form.error ) {
+      return {
+        error: form.error,
+        done: false,
+        timestamp: getTimestamp(),
+      }
+    }
+    let message = await requests.sendMessage(session, form.data)
+    return {
+      error: message.error,
+      done: !!message.data,
+      timestamp: getTimestamp(),
     }
   }

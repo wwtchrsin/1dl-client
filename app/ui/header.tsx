@@ -9,8 +9,8 @@ import type { Region } from "@/app/lib/interfaces"
 let segmentLabels = [
   () => process.env.NEXT_PUBLIC_APP_NAME_COMPACT,
   (region: string) => region.toUpperCase(),
-  (district: string) => `#${district}`,
-  (zone: string) => `#${zone}`,
+  (district: string) => `D${district}`,
+  (zone: string) => `Z${zone}`,
 ]
 
 export default function Header() {
@@ -19,10 +19,10 @@ export default function Header() {
   let bgColor = "bg-gray-700"
   let linkBgColor = "bg-gray-200"
   let linkTextColor = "text-gray-700"
-  if ( urlSegments[0] ) {
-    bgColor = regionBgColors[urlSegments[0] as Region][5]
-    linkBgColor = regionBgColors[urlSegments[0] as Region][1]
-    linkTextColor = regionTextColors[urlSegments[0] as Region][5]
+  if ( urlSegments[1] ) {
+    bgColor = regionBgColors[urlSegments[1] as Region][5]
+    linkBgColor = regionBgColors[urlSegments[1] as Region][1]
+    linkTextColor = regionTextColors[urlSegments[1] as Region][5]
   }
 
   return (
@@ -30,16 +30,16 @@ export default function Header() {
       {urlSegments.map((segment, index) => {
         let url = urlSegments.slice(0, index + 1).join("/") || "/"
         let segmentLabel = segmentLabels[index](segment)
-        if ( index < urlSegments.length - 1 ) {
+        if ( (index === 0 || index < urlSegments.length - 1) && pathname !== "/" ) {
           return (
-            <Link className={`p-2 rounded underline decoration-2 ${linkBgColor} ${linkTextColor}`}
+            <Link className={`py-2 px-3 sm:px-4 rounded underline decoration-2 ${linkBgColor} ${linkTextColor}`}
               href={url} key={index}>
                 { segmentLabel }
             </Link>
           )
         }
         return (
-          <div className={`p-2 rounded ${linkBgColor} ${linkTextColor}`} key={index}>
+          <div className={`py-2 px-3 sm:px-4 rounded ${linkBgColor} ${linkTextColor}`} key={index}>
             { segmentLabel }
           </div>
         )
