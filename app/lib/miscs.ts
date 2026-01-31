@@ -20,3 +20,14 @@ export const getUrlSegments = (url: string): string[] => {
     }
   return [ region, district, zone ]
 }
+
+export const parseJSON = (jsonString: string | undefined): any => {
+  if ( !jsonString ) {
+    return undefined
+  }
+  try {
+    return JSON.parse(jsonString)
+  } catch (err) {
+    return undefined
+  }
+}

@@ -8,14 +8,14 @@ export type TextResource = {
 }
 
 export type UserData = {
-  region: string,
+  region: Region,
   login: string,
   password: string,
   name: string,
 }
 
 export type Credentials = {
-  region: string,
+  region: Region,
   login: string,
   password: string,
 }

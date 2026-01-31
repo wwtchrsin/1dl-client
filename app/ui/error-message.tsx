@@ -19,10 +19,13 @@ type ErrorMessageProps = {
   error: string | undefined,
   timestamp: number,
   lang: Lang,
+  formAction?: (payload: FormData) => void,
 }
 
-export default function ErrorMessage({ error, timestamp, lang }: ErrorMessageProps) {
+export default function ErrorMessage({ error, timestamp, lang, formAction }: ErrorMessageProps) {
   let [ errorClosed, setErrorClosed ] = useState(-1)
+
+  let closeWindow = async () => setErrorClosed(timestamp)
 
   if ( !error || errorClosed === timestamp ) {
     return <></>
@@ -33,8 +36,9 @@ export default function ErrorMessage({ error, timestamp, lang }: ErrorMessagePro
       <div className="font-bold">{ TxtRes.Error[lang] }:</div>
       <div>{ getErrorMessage(error)[lang] }</div>
       <button className="cursor-pointer mt-2 py-1 px-2 rounded-md text-white bg-red-500"
-        onClick={(() => setErrorClosed(timestamp))}>
-        { TxtRes.close[lang] }
+        onClick={ formAction ? undefined : closeWindow }
+        formAction={ formAction ? formAction : undefined }>
+          { TxtRes.close[lang] }
       </button>
     </div>
   )

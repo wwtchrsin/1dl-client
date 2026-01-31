@@ -36,7 +36,7 @@ type SendMessageState = {
   timestamp: number,
 }
 
-const getTimestamp = () => (new Date()).valueOf()
+const timestamp = () => (new Date()).valueOf()
 
 export async function createProfileAction(prevState: CreateProfileState, 
   formData: FormData) {
@@ -45,18 +45,22 @@ export async function createProfileAction(prevState: CreateProfileState,
       return {
         error: form.error,
         profile: undefined,
-        timestamp: getTimestamp(),
+        timestamp: timestamp(),
       }
     }
     let profile = await requests.createProfile(form.data)
-    if ( profile.session ) {
-      await cookies.setSession(profile.session)
+    if ( profile.sessionid && profile.token ) {
+      await cookies.setSession({
+        region: form.data.region,
+        sessionid: profile.sessionid,
+        token: profile.token,
+      })
       refresh()
     }
     return {
       error: profile.error,
       profile: profile.profile,
-      timestamp: getTimestamp(),
+      timestamp: profile.timestamp,
     }
   }
 
@@ -67,47 +71,50 @@ export async function createSessionAction(prevState: CreateSessionState,
       return {
         error: form.error,
         profile: undefined,
-        timestamp: getTimestamp(),
+        timestamp: timestamp(),
       }
     }
     let session = await requests.createSession(form.data)
-    if ( session.session ) {
-      await cookies.setSession(session.session)
+    if ( session.sessionid && session.token ) {
+      await cookies.setSession({
+        region: form.data.region,
+        sessionid: session.sessionid,
+        token: session.token,
+      })
       refresh()
     }
     return {
       error: session.error,
       profile: session.profile,
-      timestamp: getTimestamp(),
+      timestamp: session.timestamp,
     }
   }
 
-export async function logoutAction(prevState: LogoutState, 
-  formData: FormData) {
-    let session = await cookies.getSession()
-    if ( !session ) {
-      return {
-        error: "wrongValue.auth.sessionid",
-        done: false,
-        timestamp: getTimestamp(),
-      }
-    }
-    let error = await requests.deleteSession(session)
-    if ( error ) {
-      return { 
-        error: error,
-        done: false,
-        timestamp: getTimestamp(),
-      }
-    }
-    await cookies.deleteSession()
-    refresh()
-    return { 
-      error: undefined,
-      done: true,
-      timestamp: getTimestamp(),
+export async function logoutAction(prevState: LogoutState, formData: FormData) {
+  let session = await cookies.getSession()
+  if ( !session ) {
+    return {
+      error: "wrongValue.auth.sessionid",
+      done: false,
+      timestamp: timestamp(),
     }
   }
+  let response = await requests.deleteSession(session.sessionid)
+  if ( response.error ) {
+    return { 
+      error: response.error,
+      done: false,
+      timestamp: response.timestamp,
+    }
+  }
+  await cookies.deleteSession()
+  refresh()
+  return { 
+    error: undefined,
+    done: true,
+    timestamp: response.timestamp,
+  }
+}
 
 export async function deleteProfileAction(prevState: DeleteProfileState, 
   formData: FormData) {
@@ -116,15 +123,15 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
-        timestamp: getTimestamp(),
+        timestamp: timestamp(),
       }
     }
-    let error = await requests.deleteProfile(session)
-    if ( error ) {
+    let response = await requests.deleteProfile(session.sessionid)
+    if ( response.error ) {
       return {
-        error: error,
+        error: response.error,
         done: false,
-        timestamp: getTimestamp(),
+        timestamp: response.timestamp,
       }
     }
     await cookies.deleteSession()
@@ -132,7 +139,7 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
     return {
       error: undefined,
       done: true,
-      timestamp: getTimestamp(),
+      timestamp: response.timestamp,
     }
   }
 
@@ -143,7 +150,7 @@ export async function sendMessageAction(prevState: SendMessageState,
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
-        timestamp: getTimestamp(),
+        timestamp: timestamp(),
       }
     }
     let form = processors.sendMessage(formData)
@@ -151,13 +158,13 @@ export async function sendMessageAction(prevState: SendMessageState,
       return {
         error: form.error,
         done: false,
-        timestamp: getTimestamp(),
+        timestamp: timestamp(),
       }
     }
-    let message = await requests.sendMessage(session, form.data)
+    let message = await requests.sendMessage(session.sessionid, form.data)
     return {
       error: message.error,
       done: !!message.data,
-      timestamp: getTimestamp(),
+      timestamp: message.timestamp,
     }
   }

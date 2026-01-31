@@ -49,7 +49,7 @@ export const createProfile = (formData: FormData):
       }
     return {
       error: undefined,
-      data: { region, login, password, name }
+      data: { region: region as I.Region, login, password, name }
     }
   }
 
@@ -79,7 +79,7 @@ export const createSession = (formData: FormData):
     }
     return {
       error: undefined,
-      data: { region, login, password }
+      data: { region: region as I.Region, login, password }
     }
   }
 
