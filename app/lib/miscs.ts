@@ -1,5 +1,6 @@
 import { regions } from "@/app/lib/regions"
 import limits from "@/app/lib/server-limits"
+import * as locationProcessors from "@/app/lib/location-processors"
 
 export const getUrlSegments = (url: string): string[] => {
   let segments = url.split("/").slice(1)
@@ -19,6 +20,26 @@ export const getUrlSegments = (url: string): string[] => {
       return [ region, district ]
     }
   return [ region, district, zone ]
+}
+
+export const getLocation = (url: string) => {
+  let segments = url.split("/").slice(1)
+  let [ region, district, zone ] = segments
+  switch ( segments.length ) {
+    case 1: {
+      let value = locationProcessors.getRegion(region)
+      return (value && { region: value }) || undefined
+    }
+    case 2: {
+      return locationProcessors.getDistrictid({ region, district})
+    }
+    case 3: {
+      return locationProcessors.getZoneid({ region, district, zone })
+    }
+    default: {
+      return undefined
+    }
+  }
 }
 
 export const parseJSON = (jsonString: string | undefined): any => {

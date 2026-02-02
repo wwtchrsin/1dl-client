@@ -1,22 +1,39 @@
+import limits from "@/app/lib/server-limits"
 import type { Message } from "@/app/lib/interfaces"
 
 export const processMsgcounts = (msgcounts: Record<string, number> | undefined,
-  minIndex: number, maxIndex: number): string[] => {
-    let result: string[] = []
+  minIndex: number, maxIndex: number): number[] => {
+    let result: number[] = []
     if ( !msgcounts ) {
       for ( let i=minIndex; i <= maxIndex; i++ ) {
-        result[i] = "[udf]"
+        result[i] = 0
       }
     } else {
       for ( let i=minIndex; i <= maxIndex; i++ ) {
-        result[i] = `${msgcounts[i] ?? 0}`
+        result[i] = +(msgcounts[i] ?? 0)
       }
     }
     return result
   }
 
-export const processMessages = (messages: Message[] | undefined, minIndex: number,
-  maxIndex: number): (Message | null)[] => {
+export const processZoneMsgcounts = (msgcounts: Record<string, number> | undefined): 
+  number[] => {
+    let minIndex = limits.message.zone.min
+    let maxIndex = limits.message.zone.max
+    return processMsgcounts(msgcounts, minIndex, maxIndex)
+  }
+
+export const processDistrictMsgcounts = (msgcounts: Record<string, number> | undefined): 
+  number[] => {
+    let minIndex = limits.message.district.min
+    let maxIndex = limits.message.district.max
+    return processMsgcounts(msgcounts, minIndex, maxIndex)
+  }
+
+export const processMessages = (messages: Message[] | undefined): 
+  (Message | null)[] => {
+    let minIndex = limits.message.index.min
+    let maxIndex = limits.message.index.max
     let result: (Message | null)[] = []
     if ( !messages ) {
       for ( let i=minIndex; i <= maxIndex; i++ ) {
@@ -35,3 +52,4 @@ export const processMessages = (messages: Message[] | undefined, minIndex: numbe
     }
     return result
   }
+

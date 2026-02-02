@@ -23,6 +23,10 @@ let errorMessages: Record<string, TextResource> = {
     en: "Wrong message identifier",
     ru: "Неверный идентификатор сообщения",
   },
+  "appError.wsConnection": {
+    en: "The WebSocket connection was lost",
+    ru: "Соединение с WebSocket сервером было потеряно",
+  },
 }
 
 export const getErrorMessage = (errorTag: string): TextResource => {

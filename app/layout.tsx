@@ -5,7 +5,8 @@ import * as cookies from "@/app/lib/cookies"
 import { getProfile } from "@/app/lib/requests"
 import Header from "@/app/ui/header"
 import SessionError from "./ui/session-error"
-import { ProfileProvider } from "@/app/providers"
+import { ProfileProvider } from "@/app/providers/profile"
+import { WebSocketProvider } from "@/app/providers/websocket"
 import type { Profile } from "@/app/lib/interfaces"
 
 export const metadata: Metadata = {
@@ -34,15 +35,17 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <ProfileProvider token={session?.token} profile={profile}>
-          <Header />
-          {children}
-          {error && (
-            <SessionError
-              region={session?.region}
-              error={error}
-              timestamp={timestamp}
-            />
-          )}
+          <WebSocketProvider token={session?.token}>
+            <Header />
+            {children}
+            {error && (
+              <SessionError
+                region={session?.region}
+                error={error}
+                timestamp={timestamp}
+              />
+            )}
+          </WebSocketProvider>
         </ProfileProvider>
       </body>
     </html>

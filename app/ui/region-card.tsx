@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { useProfile } from "../providers"
+import { useProfile } from "../providers/profile"
 import { regionLang } from "@/app/lib/regions"
 import SignUpForm from "@/app/ui/sign-up-form"
 import SignInForm from "@/app/ui/sign-in-form"
