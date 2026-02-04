@@ -6,23 +6,20 @@ import type { Profile } from "@/app/lib/interfaces"
 
 type ProfileContextType = {
   profile: Profile | undefined,
-  token: string | undefined,
 }
 
 type ProfileProviderProps = {
   children: ReactNode,
   profile: Profile | undefined,
-  token: string | undefined,
 }
 
 export const ProfileContext = createContext<ProfileContextType>({
   profile: undefined,
-  token: undefined,
 })
 
-export function ProfileProvider({ children, profile, token }: ProfileProviderProps) {
+export function ProfileProvider({ children, profile }: ProfileProviderProps) {
   return (
-    <ProfileContext value={{ profile, token }}>
+    <ProfileContext value={{ profile }}>
       { children }
     </ProfileContext>
   )

@@ -22,7 +22,6 @@ type WebSocketContextType = {
 
 type WebSocketProviderProps = {
   children: ReactNode,
-  token: string | undefined,
 }
 
 export const WebSocketContext = createContext<WebSocketContextType>({
@@ -36,7 +35,7 @@ export const WebSocketContext = createContext<WebSocketContextType>({
 
 let timestamp = () => (new Date()).valueOf()
 
-export function WebSocketProvider({ children, token }: WebSocketProviderProps) {
+export function WebSocketProvider({ children }: WebSocketProviderProps) {
   let pathname = usePathname()
   let [ webSocket, setWebSocket ] = useState<WebSocket | undefined>(undefined)
   let [ webSocketError, setWebSocketError ] = useState<WebSocketError | undefined>(undefined)
@@ -45,14 +44,11 @@ export function WebSocketProvider({ children, token }: WebSocketProviderProps) {
   let [ zoneCountChange, setZoneCountChange ] = useState<Map<number, number>>(new Map())
   let [ distCountChange, setDistCountChange ] = useState<Map<number, number>>(new Map())
 
+  
   useEffect(() => {
-    if ( !token ) {
-      return
-    }
     let tid: ReturnType<typeof setTimeout> | undefined
     let connect = async () => {
-      let url = `${process.env.NEXT_PUBLIC_WS_SERVER}?token=${token}`
-      let webSocket = new WebSocket(url)
+      let webSocket = new WebSocket(process.env.NEXT_PUBLIC_WS_SERVER!)
       webSocket.onopen = () => {
         let location = getLocation(pathname)
         if ( location ) {
@@ -177,8 +173,13 @@ export function WebSocketProvider({ children, token }: WebSocketProviderProps) {
     if ( webSocket && location ) {
       webSocket.send(JSON.stringify({
         type: "set-location",
-        loation: location,
+        location: location,
       }))
+      setWebSocketError(undefined)
+      setCreatedMessages(new Map())
+      setDeletedMessages(new Set())
+      setZoneCountChange(new Map())
+      setDistCountChange(new Map())
     }
   }, [pathname])
 

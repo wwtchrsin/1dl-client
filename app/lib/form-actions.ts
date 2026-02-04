@@ -99,20 +99,13 @@ export async function logoutAction(prevState: LogoutState, formData: FormData) {
       timestamp: timestamp(),
     }
   }
-  let response = await requests.deleteSession(session.sessionid)
-  if ( response.error ) {
-    return { 
-      error: response.error,
-      done: false,
-      timestamp: response.timestamp,
-    }
-  }
+  await requests.deleteSession(session.sessionid)
   await cookies.deleteSession()
   refresh()
   return { 
     error: undefined,
     done: true,
-    timestamp: response.timestamp,
+    timestamp: timestamp(),
   }
 }
 

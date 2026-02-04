@@ -34,8 +34,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ProfileProvider token={session?.token} profile={profile}>
-          <WebSocketProvider token={session?.token}>
+        <ProfileProvider profile={profile}>
+          <WebSocketProvider>
             <Header />
             {children}
             {error && (
