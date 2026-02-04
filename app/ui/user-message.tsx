@@ -24,7 +24,13 @@ let TxtRes = {
   },
 }
 
-export default function UserMessage({ lang, message }: { lang: I.Lang, message: I.Message }) {
+type UserMessageProps = {
+  lang: I.Lang,
+  message: I.Message,
+  onAction: (action: string) => void
+}
+
+export default function UserMessage({ lang, message, onAction }: UserMessageProps) {
   let [ formState, formAction, isPending ] = useActionState(deleteMessageAction, {
     error: undefined,
     done: false,
@@ -37,13 +43,18 @@ export default function UserMessage({ lang, message }: { lang: I.Lang, message: 
     return <>...</>
   }
 
+  let deleteButtonHandler = () => {
+    onAction("delete-message:click")
+    setDialogVisible(true)
+  }
+
   return (
     <form action="#">
       {!dialogVisible && (
         <>
           <Message message={message} />
           <button className="absolute right-4 top-4 cursor-pointer rounded px-2 py-1 bg-gray-700 text-white"
-            onClick={() => setDialogVisible(true)}>
+            onClick={deleteButtonHandler}>
             { TxtRes.delete[lang] }
           </button>
         </>

@@ -42,6 +42,12 @@ export default function Messages({ zoneid, messages }: MessagesProps) {
       let createdMessage = createdMessages.get(index)
       return createdMessage ?? msg
     }
+  
+  let resetFormIndex = (index: number) => {
+    if ( index === formIndex ) {
+      setFormIndex(-1)
+    }
+  }
 
   return (
     <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
@@ -63,6 +69,7 @@ export default function Messages({ zoneid, messages }: MessagesProps) {
                 <UserMessage
                   lang={lang}
                   message={message}
+                  onAction={() => resetFormIndex(index)}
                 />
               )}
               {!message && index === formIndex && (
