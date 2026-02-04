@@ -6,7 +6,8 @@ import { regionLang, regionBgColors, regionTextColors } from "@/app/lib/regions"
 import { getMessageColor } from "@/app/lib/message-colors"
 import { useWebSocket } from "@/app/providers/websocket"
 import SendMessageForm from "@/app/ui/send-message-form"
-import ErrorMessage from "@/app/ui/error-message"
+import Message from "@/app/ui/message"
+import UserMessage from "@/app/ui/user-message"
 import type * as I from "@/app/lib/interfaces"
 
 let TxtRes = {
@@ -53,17 +54,16 @@ export default function Messages({ zoneid, messages }: MessagesProps) {
           textColor = "text-white"
         }
         return (
-          <div className={`flex flex-col items-center  ${textColor} ${bgColor}`} key={index}>
+          <div className={`relative flex flex-col items-center  ${textColor} ${bgColor}`} key={index}>
             <div className={`p-8 flex flex-col justify-center h-100 max-w-80`}>
-              {message && (
-                <div className={`flex flex-col max-w-80`}>
-                  <div>
-                    { message.text }
-                  </div>
-                  <div className="font-bold">
-                    { message.username }
-                  </div>
-                </div>
+              {message && message.puid !== profile?.puid && (
+                <Message message={message} />
+              )}
+              {message && message.puid === profile?.puid && (
+                <UserMessage
+                  lang={lang}
+                  message={message}
+                />
               )}
               {!message && index === formIndex && (
                 <SendMessageForm 

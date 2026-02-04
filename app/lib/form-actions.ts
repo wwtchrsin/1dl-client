@@ -36,6 +36,12 @@ type SendMessageState = {
   timestamp: number,
 }
 
+type DeleteMessageState = {
+  error: string | undefined,
+  done: boolean,
+  timestamp: number,
+}
+
 const timestamp = () => (new Date()).valueOf()
 
 export async function createProfileAction(prevState: CreateProfileState, 
@@ -159,5 +165,31 @@ export async function sendMessageAction(prevState: SendMessageState,
       error: message.error,
       done: !!message.data,
       timestamp: message.timestamp,
+    }
+  }
+
+export async function deleteMessageAction(prevState: DeleteMessageState,
+  formData: FormData) {
+    let session = await cookies.getSession()
+    if ( !session ) {
+      return {
+        error: "wrongValue.auth.sessionid",
+        done: false,
+        timestamp: timestamp(),
+      }
+    }
+    let form = processors.deleteMessage(formData)
+    if ( !form.data || form.error ) {
+      return {
+        error: form.error,
+        done: false,
+        timestamp: timestamp(),
+      }
+    }
+    let response = await requests.deleteMessage(session.sessionid, form.data)
+    return {
+      error: response.error,
+      done: !!response.error,
+      timestamp: timestamp(),
     }
   }

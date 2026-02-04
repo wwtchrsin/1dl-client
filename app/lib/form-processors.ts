@@ -117,3 +117,23 @@ export const sendMessage = (formData: FormData):
       data: { ...messageid, text, color }
     }
   }
+
+export const deleteMessage = (formData: FormData):
+  { error: string | undefined, data: I.Messageid | undefined } => {
+    let region = formData.get("region") as string | null
+    let district = formData.get("district") as string | null
+    let zone = formData.get("zone") as string | null
+    let index = formData.get("index") as string | null
+
+    let messageid = getMessageid({ region, district, zone, index })
+    if ( !messageid ) {
+      return {
+        error: "appError.wrongMessageid",
+        data: undefined,
+      }
+    }
+    return {
+      error: undefined,
+      data: messageid,
+    }
+  }

@@ -58,6 +58,11 @@ export type SendMessageResponse = {
   timestamp: number,
 }
 
+export type DeleteMessageResponse = {
+  error: string | undefined,
+  timestamp: number,
+}
+
 const ServerUrl = process.env.HTTP_SERVER
 
 const timestamp = () => (new Date()).valueOf()
@@ -292,6 +297,32 @@ export const sendMessage = async (sessionid: string, message: I.MessageData):
       return {
         error: "appError.requestFailed",
         data: undefined,
+        timestamp: timestamp(),
+      }
+    }
+  }
+
+export const deleteMessage = async (sessionid: string, messageid: I.Messageid):
+  Promise<DeleteMessageResponse> => {
+    try {
+      let { region, district, zone, index } = messageid
+      let path = `${region}/${district}/${zone}/${index}`
+      let url = `${ServerUrl}/api/v1/messages/${path}`
+      let response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionid}`,
+        },
+      })
+      let body = await response.json()
+      return {
+        error: body.error,
+        timestamp: timestamp(),
+      }
+    } catch ( err ) {
+      return {
+        error: "appError.requestFailed",
         timestamp: timestamp(),
       }
     }
