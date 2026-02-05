@@ -27,6 +27,10 @@ let errorMessages: Record<string, TextResource> = {
     en: "The WebSocket connection was lost",
     ru: "Соединение с WebSocket сервером было потеряно",
   },
+  "appError.validationFailed": {
+    en: "Request validation failed",
+    ru: "Запрос не прошел проверку",
+  },
 }
 
 export const getErrorMessage = (errorTag: string): TextResource => {

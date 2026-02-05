@@ -2,12 +2,14 @@ import type { Message } from "@/app/lib/interfaces";
 
 export default function Message({ message }: { message: Message }) {
   return (
-    <div className="flex flex-col max-w-80">
-      <div>
-        { message.text }
-      </div>
-      <div className="font-bold">
-        { message.username }
+    <div className="h-full w-full flex flex-col items-center justify-center">
+      <div className="max-w-86 p-6 flex flex-col">
+        <div>
+          { message.text }
+        </div>
+        <div className="font-bold">
+          { message.username }
+        </div>
       </div>
     </div>
   )

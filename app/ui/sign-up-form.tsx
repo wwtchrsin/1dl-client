@@ -6,6 +6,7 @@ import { regionLang } from "@/app/lib/regions"
 import TextField from "@/app/ui/text-field"
 import PasswordField from "@/app/ui/password-field"
 import ErrorMessage from "@/app/ui/error-message"
+import TurnstileWidget from "@/app/ui/turnstile-widget"
 import type { Region } from "@/app/lib/interfaces"
 
 let TxtRes = {
@@ -71,6 +72,11 @@ export default function SignUpForm ({ region }: { region: Region }) {
             label={TxtRes.Name[lang]}
           />
         </div>
+        <TurnstileWidget
+          lang={lang}
+          id={`sign-up-${region}`}
+          className="rounded-lg mt-2"
+        />
         <div className="mt-2">
           <button formAction={formAction} disabled={isPending}
             className="cursor-pointer py-1 px-2 rounded-md bg-sky-400 text-white">

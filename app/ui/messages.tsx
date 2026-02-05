@@ -11,17 +11,6 @@ import UserMessage from "@/app/ui/user-message"
 import MessageCell from "@/app/ui/message-cell"
 import type * as I from "@/app/lib/interfaces"
 
-let TxtRes = {
-  Object: {
-    en: "Object",
-    ru: "Объект",
-  },
-  modify: {
-    en: "modify",
-    ru: "модифицировать",
-  }
-}
-
 type MessagesProps = {
   zoneid: I.Zoneid,
   messages: (I.Message | null)[],
@@ -58,36 +47,36 @@ export default function Messages({ zoneid, messages }: MessagesProps) {
           bgColor = getMessageColor(message.color)
           textColor = "text-white"
         }
+        let userActive = profile?.state === "active"
+        let userLocal = message && message.puid === profile?.puid
         return (
-          <div className={`relative flex flex-col items-center  ${textColor} ${bgColor}`} key={index}>
-            <div className={`p-8 flex flex-col justify-center h-100 max-w-80`}>
-              {message && message.puid !== profile?.puid && (
-                <Message message={message} />
-              )}
-              {message && message.puid === profile?.puid && (
-                <UserMessage
-                  lang={lang}
-                  message={message}
-                  onAction={() => resetFormIndex(index)}
-                />
-              )}
-              {!message && index === formIndex && (
-                <SendMessageForm 
-                  region={region}
-                  district={district}
-                  zone={zone}
-                  index={index}
-                  close={() => setFormIndex(-1)}
-                />
-              )}
-              {!message && index !== formIndex && (
-                <MessageCell
-                  region={region}
-                  index={index}
-                  onClick={localProfile ? () => setFormIndex(index) : undefined}
-                />
-              )}
-            </div>
+          <div className={`relative h-100 ${textColor} ${bgColor}`} key={index}>
+            {message && !(userActive && userLocal) && (
+              <Message message={message} />
+            )}
+            {message && userActive && userLocal && (
+              <UserMessage
+                lang={lang}
+                message={message}
+                onAction={() => resetFormIndex(index)}
+              />
+            )}
+            {!message && index === formIndex && (
+              <SendMessageForm 
+                region={region}
+                district={district}
+                zone={zone}
+                index={index}
+                close={() => setFormIndex(-1)}
+              />
+            )}
+            {!message && index !== formIndex && (
+              <MessageCell
+                region={region}
+                index={index}
+                onClick={localProfile ? () => setFormIndex(index) : undefined}
+              />
+            )}
           </div>
         )
       })}

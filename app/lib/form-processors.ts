@@ -8,7 +8,16 @@ let patterns = {
   password: new RegExp(limits.user.password.pattern),
 }
 
-export const createProfile = (formData: FormData): 
+export const turnstileToken = (formData: FormData): 
+  { error: string | undefined, data: string | undefined } => {
+    let token = formData.get("cf-turnstile-response") as string | null
+    return {
+      error: token ? undefined :"appError.validationFailed",
+      data: token ?? undefined
+    }
+  }
+
+export const createProfile = (formData: FormData):
   { error: string | undefined, data: I.UserData | undefined } => {
     let region = formData.get("region") as string | null
     let login = formData.get("login") as string | null
@@ -49,16 +58,16 @@ export const createProfile = (formData: FormData):
       }
     return {
       error: undefined,
-      data: { region: region as I.Region, login, password, name }
+      data: { region: region as I.Region, login, password, name },
     }
   }
 
-export const createSession = (formData: FormData):
+export const createSession = (formData: FormData): 
   { error: string | undefined, data: I.Credentials | undefined } => {
     let region = formData.get("region") as  string | null
     let login = formData.get("login") as string | null
     let password = formData.get("password") as string | null
-
+    
     if ( !region || !(regions as string[]).includes(region) ) {
       return {
         error: "wrongValue.auth.region",
@@ -74,12 +83,12 @@ export const createSession = (formData: FormData):
     if ( !password ) {
       return {
         error: "wrongValue.auth.password",
-        data: undefined
+        data: undefined,
       }
     }
     return {
       error: undefined,
-      data: { region: region as I.Region, login, password }
+      data: { region: region as I.Region, login, password },
     }
   }
 

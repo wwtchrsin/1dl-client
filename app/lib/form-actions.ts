@@ -47,9 +47,18 @@ const timestamp = () => (new Date()).valueOf()
 export async function createProfileAction(prevState: CreateProfileState, 
   formData: FormData) {
     let form = processors.createProfile(formData)
-    if ( !form.data || form.error ) {
+    let token = processors.turnstileToken(formData)
+    if ( !form.data || !token.data || form.error || token.error ) {
       return {
-        error: form.error,
+        error: form.error ?? token.error,
+        profile: undefined,
+        timestamp: timestamp(),
+      }
+    }
+    let validation = await requests.validateTurnstileToken(token.data)
+    if ( validation.error ) {
+      return {
+        error: validation.error,
         profile: undefined,
         timestamp: timestamp(),
       }
@@ -73,11 +82,20 @@ export async function createProfileAction(prevState: CreateProfileState,
 export async function createSessionAction(prevState: CreateSessionState, 
   formData: FormData) {
     let form = processors.createSession(formData)
-    if ( !form.data || form.error ) {
+    let token = processors.turnstileToken(formData)
+    if ( !form.data || !token.data || form.error || token.error ) {
       return {
-        error: form.error,
+        error: form.error ?? token.error,
         profile: undefined,
         timestamp: timestamp(),
+      }
+    }
+    let validation = await requests.validateTurnstileToken(token.data)
+    if ( validation.error ) {
+      return {
+        error: validation.error,
+        profile: undefined,
+        timestamp: validation.timestamp,
       }
     }
     let session = await requests.createSession(form.data)
@@ -125,6 +143,22 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
         timestamp: timestamp(),
       }
     }
+    let token = processors.turnstileToken(formData)
+    if ( !token.data || token.error ) {
+      return {
+        error: token.error,
+        done: false,
+        timestamp: timestamp(),
+      }
+    }
+    let validation = await requests.validateTurnstileToken(token.data)
+    if ( validation.error ) {
+      return {
+        error: validation.error,
+        done: false,
+        timestamp: validation.timestamp,
+      }
+    }
     let response = await requests.deleteProfile(session.sessionid)
     if ( response.error ) {
       return {
@@ -153,9 +187,18 @@ export async function sendMessageAction(prevState: SendMessageState,
       }
     }
     let form = processors.sendMessage(formData)
-    if ( !form.data || form.error ) {
+    let token = processors.turnstileToken(formData)
+    if ( !form.data || !token.data || form.error || token.error ) {
       return {
-        error: form.error,
+        error: form.error ?? token.error,
+        done: false,
+        timestamp: timestamp(),
+      }
+    }
+    let validation = await requests.validateTurnstileToken(token.data)
+    if ( validation.error ) {
+      return {
+        error: validation.error,
         done: false,
         timestamp: timestamp(),
       }

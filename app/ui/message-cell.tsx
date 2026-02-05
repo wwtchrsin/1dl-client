@@ -23,13 +23,15 @@ export default function MessageCell({ region, index, onClick }: MessageCellProps
   let buttonBgColor = onClick ? regionBgColors[region][3] : regionBgColors[region][2]
   
   return (
-    <div className="flex flex-col gap-2 items-center">
-      <div>{ `${TxtRes.Object[lang]} #${index}` }</div>
-      <button 
-        className={`cursor-pointer py-1 px-2 rounded-md ${buttonBgColor} text-white`}
-        onClick={onClick}>
-          { TxtRes.modify[lang] }
-      </button>
+    <div className="w-full h-full flex flex-col justify-center items-center">
+      <div className="px-6 flex flex-col gap-2">
+        <div>{ `${TxtRes.Object[lang]} #${index}` }</div>
+        <button 
+          className={`cursor-pointer py-1 px-2 rounded-md ${buttonBgColor} text-white`}
+          onClick={onClick}>
+            { TxtRes.modify[lang] }
+        </button>
+      </div>
     </div>
   )
 }

@@ -1,10 +1,11 @@
 "use client"
 
 import { useState, useActionState } from "react"
-import { deleteProfileAction, logoutAction } from "../lib/form-actions"
-import { regionLang } from "../lib/regions"
-import ErrorMessage from "./error-message"
-import type { Profile, Region } from "../lib/interfaces"
+import { deleteProfileAction, logoutAction } from "@/app/lib/form-actions"
+import { regionLang } from "@/app/lib/regions"
+import ErrorMessage from "@/app/ui/error-message"
+import TurnstileWidget from "@/app/ui/turnstile-widget"
+import type { Profile, Region } from "@/app/lib/interfaces"
 
 let TxtRes = {
   Login: {
@@ -14,6 +15,10 @@ let TxtRes = {
   Name: {
     en: "Name",
     ru: "Имя",
+  },
+  Status: {
+    en: "Status",
+    ru: "Статус",
   },
   AccountCreated: {
     en: "Account created",
@@ -98,6 +103,14 @@ export default function Profile({ profile }: { profile: Profile }) {
         </div>
         <div>
           <div className="text-gray-500">
+            { TxtRes.Status[lang] }
+          </div>
+          <div className="text-xl">
+            { profile.state }
+          </div>
+        </div>
+        <div>
+          <div className="text-gray-500">
             { TxtRes.AccountCreated[lang] }
           </div>
           <div className="text-xl">
@@ -119,22 +132,29 @@ export default function Profile({ profile }: { profile: Profile }) {
           </div>
         )}
         {dialogVisible && (
-          <div className="mt-2 flex flex-col gap-2">
-            <div className="text-red-500 font-bold">
-              { TxtRes.ConfirmDeletion[lang] }
+          <>
+            <TurnstileWidget 
+              lang={lang}
+              id={`profile-${profile.region}`}
+              className="rounded-lg mt-2"
+            />
+            <div className="mt-2 flex flex-col gap-2">
+              <div className="text-red-500 font-bold">
+                { TxtRes.ConfirmDeletion[lang] }
+              </div>
+              <div className="flex flex-row gap-2 mt-2">
+                <button className="rounded py-1 px-2 bg-red-500 text-white"
+                  type="submit" formAction={deleteFormAction}
+                  disabled={isPending}>
+                    { TxtRes.confirm[lang] }
+                </button>
+                <button className="rounded py-1 px-2 bg-red-500 text-white" 
+                  onClick={() => setDialogVisible(false)}>
+                    { TxtRes.cancel[lang] }
+                </button>
+              </div>
             </div>
-            <div className="flex flex-row gap-2">
-              <button className="rounded py-1 px-2 bg-red-500 text-white"
-                type="submit" formAction={deleteFormAction}
-                disabled={isPending}>
-                  { TxtRes.confirm[lang] }
-              </button>
-              <button className="rounded py-1 px-2 bg-red-500 text-white" 
-                onClick={() => setDialogVisible(false)}>
-                  { TxtRes.cancel[lang] }
-              </button>
-            </div>
-          </div>
+          </>
         )}
         <ErrorMessage
           error={error}

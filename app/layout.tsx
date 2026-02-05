@@ -47,6 +47,10 @@ export default async function RootLayout({
             )}
           </WebSocketProvider>
         </ProfileProvider>
+        <script 
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          defer>
+        </script>
       </body>
     </html>
   )

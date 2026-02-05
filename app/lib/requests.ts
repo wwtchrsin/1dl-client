@@ -63,7 +63,12 @@ export type DeleteMessageResponse = {
   timestamp: number,
 }
 
-const ServerUrl = process.env.HTTP_SERVER
+export type TurnstileResponse = {
+  error: string | undefined,
+  timestamp: number,
+}
+
+const ServerUrl = process.env.HTTP_SERVER!
 
 const timestamp = () => (new Date()).valueOf()
 
@@ -323,6 +328,34 @@ export const deleteMessage = async (sessionid: string, messageid: I.Messageid):
     } catch ( err ) {
       return {
         error: "appError.requestFailed",
+        timestamp: timestamp(),
+      }
+    }
+  }
+
+export const validateTurnstileToken = async (token: string): 
+  Promise<TurnstileResponse> => {
+    try {
+      let turnstileSecret = process.env.TURNSTILE_SECRET_KEY!
+      let url = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+      let response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          secret: turnstileSecret,
+          response: token,
+        })
+      })
+      let result = await response.json()
+      return {
+        error: result.success ? undefined : "appError.validationFailed",
+        timestamp: timestamp(),
+      }
+    } catch (err) {
+      return {
+        error: "appError.validationFailed",
         timestamp: timestamp(),
       }
     }
