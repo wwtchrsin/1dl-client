@@ -48,9 +48,9 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
   }
 
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center">
-      <form action="#">
-        <div className="max-w-86 px-6 flex flex-col">
+    <form className="h-full w-full" action="#">
+      <div className="h-full w-full flex flex-col items-center justify-center">
+        <div className="max-w-80 px-6 flex flex-col">
           {!dialogVisible && (<>
             <div>{ message.text }</div>
             <div className="font-bold">{ message.username }</div>
@@ -85,7 +85,7 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
         <input type="hidden" name="district" value={district} />
         <input type="hidden" name="zone" value={zone} />
         <input type="hidden" name="index" value={index} />
-      </form>
-    </div>
+      </div>
+    </form>
   )
 }

@@ -5,7 +5,7 @@ import { deleteProfileAction, logoutAction } from "@/app/lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
 import ErrorMessage from "@/app/ui/error-message"
 import TurnstileWidget from "@/app/ui/turnstile-widget"
-import type { Profile, Region } from "@/app/lib/interfaces"
+import type { Profile, Region, TextResource } from "@/app/lib/interfaces"
 
 let TxtRes = {
   Login: {
@@ -48,6 +48,35 @@ let TxtRes = {
     en: "cancel",
     ru: "отменить",
   },
+
+}
+
+type ProfileStatus = "active" | "inactive" | "suspended" | "unknown"
+
+let statuses: Record<ProfileStatus, TextResource> = {
+  unknown: {
+    en: "unknown",
+    ru: "неизвестный",
+  },
+  active: {
+    en: "active",
+    ru: "активный",
+  },
+  inactive: {
+    en: "inactive",
+    ru: "неактивный",
+  },
+  suspended: {
+    en: "suspended",
+    ru: "приостановлен",
+  },
+}
+
+let getStatusName = (tag: string) => {
+  if ( tag in statuses ) {
+    return statuses[tag as ProfileStatus]
+  }
+  return statuses.unknown
 }
 
 export default function Profile({ profile }: { profile: Profile }) {
@@ -106,7 +135,7 @@ export default function Profile({ profile }: { profile: Profile }) {
             { TxtRes.Status[lang] }
           </div>
           <div className="text-xl">
-            { profile.state }
+            { getStatusName(profile.state)[lang] }
           </div>
         </div>
         <div>
@@ -133,11 +162,6 @@ export default function Profile({ profile }: { profile: Profile }) {
         )}
         {dialogVisible && (
           <>
-            <TurnstileWidget 
-              lang={lang}
-              id={`profile-${profile.region}`}
-              className="rounded-lg mt-2"
-            />
             <div className="mt-2 flex flex-col gap-2">
               <div className="text-red-500 font-bold">
                 { TxtRes.ConfirmDeletion[lang] }
@@ -162,6 +186,14 @@ export default function Profile({ profile }: { profile: Profile }) {
           lang={lang}
         />
       </div>
+      {dialogVisible && (
+        <TurnstileWidget 
+          lang={lang}
+          id={`profile-${profile.region}`}
+          className="rounded-md"
+          hidden={true}
+        />
+      )}
     </form>
   )
 }

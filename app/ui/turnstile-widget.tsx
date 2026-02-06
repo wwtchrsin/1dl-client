@@ -14,9 +14,9 @@ type TurnstileWidgetProps = {
 export default function TurnstileWidget({ lang, id, className, hidden }: TurnstileWidgetProps) {
   let publicKey = process.env.NEXT_PUBLIC_TURNSTILE_KEY
   let containerId = `turnstile-widget-${id}`
-  let height = hidden ? "min-h-6 max-h-15" : "h-15"
-  let bgColor = !hidden ? "bg-white/50" : ""
-  let cssClasses = `overflow-hidden opacity-75 ${bgColor} ${height} ${className ?? ""}` 
+  let cssClasses = "overflow-hidden opacity-75" +
+    (hidden ? " min-h-6 max-h-15" : " h-15 bg-white/50") +
+    (className ? ` ${className}` : "")
 
   useEffect(() => {
     let widgetId: any
@@ -40,7 +40,10 @@ export default function TurnstileWidget({ lang, id, className, hidden }: Turnsti
 
   return (
     <div className={cssClasses}>
-      <div className="-mt-1 -ml-1" id={containerId}></div>
+      <div id={containerId}
+        className="-mt-1 -ml-1"
+        style={{ width: "calc(100% + 8px)" }}>
+      </div>
     </div>
   )
 }
