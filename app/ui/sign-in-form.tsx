@@ -51,6 +51,15 @@ export default function signInForm({ region }: { region: Region }) {
             label={TxtRes.Password[lang]}
           />
         </div>
+        <TurnstileWidget
+          lang={lang}
+          id={`sign-in-${region}`}
+          hidden={true}
+          style="rounded-md"
+          styleVisible="mt-2"
+          styleHidden="-mt-2"
+          timestamp={formState.timestamp}
+        />
         <div className="mt-2">
           <button formAction={formAction} disabled={isPending}
             className="cursor-pointer py-1 px-2 rounded-md bg-sky-400 text-white">
@@ -63,12 +72,6 @@ export default function signInForm({ region }: { region: Region }) {
           lang={lang}
         />
       </div>
-      <TurnstileWidget
-        lang={lang}
-        id={`sign-in-${region}`}
-        className="rounded-md"
-        hidden={true}
-      />
       <input type="hidden" name="region" value={region} />
     </form>
   )

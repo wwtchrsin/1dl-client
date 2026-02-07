@@ -93,6 +93,7 @@ export default function SendMessageForm(props: SendMessageProps) {
           lang={lang}
           id={`send-message-${index}`}
           hidden={true}
+          timestamp={formState.timestamp}
         />
       </div>
     </form>

@@ -162,6 +162,15 @@ export default function Profile({ profile }: { profile: Profile }) {
         )}
         {dialogVisible && (
           <>
+            <TurnstileWidget 
+              lang={lang}
+              id={`profile-${profile.region}`}
+              hidden={true}
+              style="rounded-md"
+              styleVisible="mt-2"
+              styleHidden="-mt-2"
+              timestamp={deleteFormState.timestamp}
+            />
             <div className="mt-2 flex flex-col gap-2">
               <div className="text-red-500 font-bold">
                 { TxtRes.ConfirmDeletion[lang] }
@@ -186,14 +195,6 @@ export default function Profile({ profile }: { profile: Profile }) {
           lang={lang}
         />
       </div>
-      {dialogVisible && (
-        <TurnstileWidget 
-          lang={lang}
-          id={`profile-${profile.region}`}
-          className="rounded-md"
-          hidden={true}
-        />
-      )}
     </form>
   )
 }
