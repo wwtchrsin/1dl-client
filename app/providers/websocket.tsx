@@ -43,15 +43,15 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
   let [ deletedMessages, setDeletedMessages ] = useState<Set<number>>(new Set())
   let [ zoneCountChange, setZoneCountChange ] = useState<Map<number, number>>(new Map())
   let [ distCountChange, setDistCountChange ] = useState<Map<number, number>>(new Map())
-
   
   useEffect(() => {
+    let webSocket: WebSocket | undefined
     let tid: ReturnType<typeof setTimeout> | undefined
     let connect = async () => {
-      let webSocket = new WebSocket(process.env.NEXT_PUBLIC_WS_SERVER!)
+      webSocket = new WebSocket(process.env.NEXT_PUBLIC_WS_SERVER!)
       webSocket.onopen = () => {
         let location = getLocation(pathname)
-        if ( location ) {
+        if ( location && webSocket ) {
           webSocket.send(JSON.stringify({
             type: "set-location",
             location: location,
@@ -77,7 +77,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
       }
       webSocket.onerror = () => {
         setWebSocket(undefined)
-        webSocket.close()
+        webSocket?.close()
       }
       webSocket.onmessage = (ev) => {
         let message = parseJSON(ev.data)
@@ -163,7 +163,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
     connect()
 
     return () => {
-      webSocket && webSocket.close(1000, "unmounting-provider")
+      webSocket?.close(1000, "unmounting-provider")
       tid && clearTimeout(tid)
     }
   }, [])
@@ -181,7 +181,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
       setZoneCountChange(new Map())
       setDistCountChange(new Map())
     }
-  }, [pathname])
+  }, [pathname, webSocket])
 
   let context = {
     webSocket,
