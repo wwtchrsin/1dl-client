@@ -62,7 +62,7 @@ export default {
   },
   "session": {
     "sessionid": {
-      "len": 128,
+      "size": 64,
       "pattern": "^[0-9A-Fa-f]{128}$"
     }
   }

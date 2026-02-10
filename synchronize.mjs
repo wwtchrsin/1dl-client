@@ -1,11 +1,15 @@
 import { writeFile } from "node:fs/promises"
 import { join } from "node:path"
+import dotenv from "dotenv"
 
-let __dirname = import.meta.dirname
-let serverUrl = process.env.HTTP_SERVER ?? "http://localhost:3100"
+dotenv.config({ path: "./.env" })
+
+const __dirname = import.meta.dirname
+const ServerUrl = process.env.HTTP_SERVER ?? "http://localhost:3100"
+
 let urls = new Map([
-  ["server-error-messages", `${serverUrl}/api/v1/app/messages`],
-  ["server-limits", `${serverUrl}/api/v1/app/limits`],
+  ["server-error-messages", `${ServerUrl}/api/v1/app/messages`],
+  ["server-limits", `${ServerUrl}/api/v1/app/limits`],
 ])
 let extractData = (tag, message) => {
   switch ( tag ) {
@@ -21,7 +25,7 @@ let extractData = (tag, message) => {
   }
 }
 
-console.log(`[#] synchronizing with the server ${serverUrl}...`)
+console.log(`[#] synchronizing with the server ${ServerUrl}...`)
 
 try {
   for ( let [ tag, url ] of urls ) {

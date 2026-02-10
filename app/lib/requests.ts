@@ -68,7 +68,9 @@ export type TurnstileResponse = {
   timestamp: number,
 }
 
-const ServerUrl = process.env.HTTP_SERVER!
+const ServerUrl = process.env.HTTP_SERVER ?? "http://localhost:3100"
+
+const ServiceId = process.env.SERVICE_ID ?? ""
 
 const timestamp = () => (new Date()).valueOf()
 
@@ -86,8 +88,8 @@ export const getProfile = async (sessionid: string | undefined):
       let url = `${ServerUrl}/api/v1/profiles`
       let response = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${sessionid}`
-        }
+          "Authorization": `Bearer ${ServiceId}:${sessionid}`,
+        },
       })
       let body = await response.json()
       return {
@@ -111,6 +113,7 @@ export const createProfile = async ({ region, login, password, name }: I.UserDat
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${ServiceId}:`,
         },
         body: JSON.stringify({
           region,
@@ -146,6 +149,7 @@ export const createSession = async ({ region, login, password }: I.Credentials):
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${ServiceId}:`,
         },
         body: JSON.stringify({
           region,
@@ -179,8 +183,8 @@ export const deleteSession = async (sessionid: string):
       let response = await fetch(`${ServerUrl}/api/v1/sessions`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${sessionid}`
-        }
+          "Authorization": `Bearer ${ServiceId}:${sessionid}`,
+        },
       })
       let body = await response.json()
       return {
@@ -201,8 +205,8 @@ export const deleteProfile = async (sessionid: string):
       let response = await fetch(`${ServerUrl}/api/v1/profiles`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${sessionid}`
-        }
+          "Authorization": `Bearer ${ServiceId}:${sessionid}`,
+        },
       })
       let body = await response.json()
       return {
@@ -220,7 +224,12 @@ export const deleteProfile = async (sessionid: string):
 export const getDistricts = async (region: I.Region):
   Promise<GetDistrictsResponse> => {
     try {
-      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}`)
+      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${ServiceId}:`,
+        },
+      })
       let body = await response.json()
       return {
         error: body.error,
@@ -239,7 +248,12 @@ export const getDistricts = async (region: I.Region):
 export const getZones = async ({ region, district }: I.Districtid):
   Promise<GetZonesResponse> => {
     try {
-      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}/${district}`)
+      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}/${district}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${ServiceId}:`,
+        },
+      })
       let body = await response.json()
       return {
         error: body.error,
@@ -259,7 +273,12 @@ export const getMessages = async ({ region, district, zone }: I.Zoneid):
   Promise<GetMessagesResponse> => {
     try {
       let location = `/api/v1/messages/${region}/${district}/${zone}/`
-      let response = await fetch(`${ServerUrl}${location}`)
+      let response = await fetch(`${ServerUrl}${location}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${ServiceId}:`,
+        },
+      })
       let body = await response.json()
       return {
         error: body.error,
@@ -285,7 +304,7 @@ export const sendMessage = async (sessionid: string, message: I.MessageData):
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${sessionid}`,
+          "Authorization": `Bearer ${ServiceId}:${sessionid}`,
         },
         body: JSON.stringify({
           text: message.text,
@@ -317,7 +336,7 @@ export const deleteMessage = async (sessionid: string, messageid: I.Messageid):
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${sessionid}`,
+          "Authorization": `Bearer ${ServiceId}:${sessionid}`,
         },
       })
       let body = await response.json()

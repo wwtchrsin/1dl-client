@@ -63,6 +63,14 @@ export default {
     "en": "Wrong session identifier",
     "ru": "Недопустимый идентификатор сессии"
   },
+  "wrongValue.auth.serviceid": {
+    "en": "Wrong service id",
+    "ru": "Недопустимый идентификатор сервиса"
+  },
+  "wrongValue.auth.token": {
+    "en": "Wrong token",
+    "ru": "Недопустимый токен"
+  },
   "appError.actionNotAllowed": {
     "en": "Action not allowed",
     "ru": "Действие запрещено"
@@ -130,6 +138,10 @@ export default {
   "databaseError.countRegionMessages": {
     "en": "Impossible to count messages",
     "ru": "Невозможно посчитать сообщения"
+  },
+  "databaseError.verifySessionToken": {
+    "en": "Impossible to verify token",
+    "ru": "Невозможно проверить токен"
   },
   "databaseConflict.messageNotFound": {
     "en": "Message not found",
