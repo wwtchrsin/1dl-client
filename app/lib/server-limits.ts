@@ -22,7 +22,7 @@ export default {
     "text": {
       "minLen": 16,
       "maxLen": 128,
-      "pattern": "^[ -~]{16,128}$"
+      "pattern": "^(?!.* {2})[!-~][ -~]{14,126}[!-~]$"
     },
     "color": {
       "values": [
