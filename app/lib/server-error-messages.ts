@@ -1,43 +1,43 @@
 export default {
   "wrongValue.message.region": {
-    "en": "An incorrect value set for the following parameter: region. Valid values: en, ru.",
-    "ru": "Следующему параметру задано неверное значение: region. Корректные значения: en, ru."
+    "en": "An incorrect value for region. Valid values: en, ru.",
+    "ru": "Неверное значение для region. Корректные значения: en, ru."
   },
   "wrongValue.message.district": {
-    "en": "An incorrect value set for the following parameter: district. The value must be an integer within the range [0, 299].",
-    "ru": "Следующему параметру задано неверное значение: district. Значение должно быть целым числов находящимся в интервале [0, 299]."
+    "en": "An incorrect value for district. The value must be an integer within the range of [0, 299].",
+    "ru": "Неверное значение для district. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.zone": {
-    "en": "An incorrect value set for the following parameter: zone. The value must be an integer within the range [0, 299].",
-    "ru": "Следующему параметру задано неверное значение: zone. Значение должно быть целым числов находящимся в интервале [0, 299]."
+    "en": "An incorrect value for zone. The value must be an integer within the range of [0, 299].",
+    "ru": "Неверное значение для zone. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.index": {
-    "en": "An incorrect value set for the following parameter: index. The value must be an integer within the range [0, 299].",
-    "ru": "Следующему параметру задано неверное значение: index. Значение должно быть целым числов находящимся в интервале [0, 299]."
+    "en": "An incorrect value for index. The value must be an integer within the range of [0, 299].",
+    "ru": "Неверное значение для index. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.text": {
-    "en": "The message length must be within the range [16, 128]",
-    "ru": "Длина сообщения должна находиться в интервале [16, 128]"
+    "en": "An incorrect value for text. The message text can only contain characters with codes from 32 to 127 (latin letters, digits, spaces, punctuation marks and some other characters like # or @) and the message length must be within the range of [16, 128]",
+    "ru": "Неверное значение для text. Текст сообщения может содержать только символы с кодами от 32 до 127 (латинские буквы, цифры, пробелы, знаки препинания и некоторые другие символы как \"@\" или \"#\") и длина сообщения должна находиться в интервале [16, 128]"
   },
   "wrongValue.message.color": {
-    "en": "An incorrect value set for the following parameter: color. Valid values: black, red, orange, yellow, green, cyan, blue, purple, pink.",
-    "ru": "Следующему параметру задано неверное значение: color. Корректные значения: black, red, orange, yellow, green, cyan, blue, purple, pink."
+    "en": "An incorrect value for color. Valid values: black, red, orange, yellow, green, cyan, blue, purple, pink.",
+    "ru": "Неверное значение для color. Корректные значения: black, red, orange, yellow, green, cyan, blue, purple, pink."
   },
   "wrongValue.user.region": {
-    "en": "An incorrect value set for the following parameter: region. Valid values: en, ru.",
-    "ru": "Следующему параметру задано неверное значение: region. Корректные значения: en, ru."
+    "en": "An incorrect value for region. Valid values: en, ru.",
+    "ru": "Неверное значение для region. Корректные значения: en, ru."
   },
   "wrongValue.user.login": {
-    "en": "Login not accepted. The login can only contain latin letters, digits, and symbols \"-\" and \"_\". The login length must be between 8 and 16 symbols.",
-    "ru": "Логин не принят. Логин может содержать только латинские буквы, цифры, и символы \"-\" и \"_\". Длина логина должна находиться в интервале от 8 до 16 символов."
+    "en": "An incorrect value for login. The login can only contain latin letters, digits, and symbols \"-\" and \"_\". The login length must be within the range of [8, 16].",
+    "ru": "Неверное значение для login. Логин может содержать только латинские буквы, цифры, и символы \"-\" и \"_\". Длина логина должна находиться в интервале [8, 16]."
   },
   "wrongValue.user.password": {
-    "en": "Password not accepted. The password can only contain latin letters, digits and special symbols (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), and must contain at least one lowercase letter, one uppercase letter, one digit and one special symbol. The password length must be between 8 and 24 symbols.",
-    "ru": "Пароль не принят. Пароль может содержать только латинские буквы, цифры, и специальные символы (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), и должен содержать хотя бы одну строчную букву, одну заглавную букву, одну цифру и один специальный символ. Длина пароля должна находиться в интервале от 8 до 24 символов."
+    "en": "An incorrect value for password. The password can only contain latin letters, digits and special symbols (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), and must contain at least one lowercase letter, one uppercase letter, one digit and one special symbol. The password length must be within the range of [8, 24].",
+    "ru": "Неверное значение для password. Пароль может содержать только латинские буквы, цифры, и специальные символы (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), и должен содержать хотя бы одну строчную букву, одну заглавную букву, одну цифру и один специальный символ. Длина пароля должна находиться в интервале [8, 24]."
   },
   "wrongValue.user.name": {
-    "en": "Wrong user name. The name length must be between 8 and 16 symbols.",
-    "ru": "Недопустимое имя пользователя. Длина имени должна находиться в интервале от 8 до 16 символов."
+    "en": "An incorrect value for name. The user name can only contain latin letters, digits, and symbols \"-\" and \"_\". The name length must be within the range of [8, 16].",
+    "ru": "Неверное значение для name. Имя пользователя может содержать только латинские буквы, цифры, и символы \"-\" и \"_\". Длина имени должна находиться в интервале [8, 16]."
   },
   "wrongValue.user.userid": {
     "en": "Wrong user identifier",

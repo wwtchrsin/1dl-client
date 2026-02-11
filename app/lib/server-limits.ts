@@ -21,7 +21,8 @@ export default {
     },
     "text": {
       "minLen": 16,
-      "maxLen": 128
+      "maxLen": 128,
+      "pattern": "^[ -~]{16,128}$"
     },
     "color": {
       "values": [
@@ -50,7 +51,8 @@ export default {
     },
     "name": {
       "minLen": 8,
-      "maxLen": 16
+      "maxLen": 16,
+      "pattern": "^[A-Za-z0-9_-]{8,16}$"
     },
     "state": {
       "values": [

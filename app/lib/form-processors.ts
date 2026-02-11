@@ -6,6 +6,8 @@ import type * as I from "@/app/lib/interfaces"
 let patterns = {
   login: new RegExp(limits.user.login.pattern),
   password: new RegExp(limits.user.password.pattern),
+  name: new RegExp(limits.user.name.pattern),
+  text: new RegExp(limits.message.text.pattern),
 }
 
 export const turnstileToken = (formData: FormData): 
@@ -49,8 +51,7 @@ export const createProfile = (formData: FormData):
         data: undefined,
       }
     }
-    if ( !name || name.length < limits.user.name.minLen || 
-      name.length > limits.user.name.maxLen ) {
+    if ( !name || !patterns.name.test(name) ) {
         return {
           error: "wrongValue.user.name",
           data: undefined,
@@ -108,8 +109,7 @@ export const sendMessage = (formData: FormData):
         data: undefined,
       }
     }
-    if ( !text || text.length < limits.message.text.minLen ||
-      text.length > limits.message.text.maxLen ) {
+    if ( !text || !patterns.text.test(text) ) {
         return {
           error: "wrongValue.message.text",
           data: undefined,
