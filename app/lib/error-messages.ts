@@ -31,6 +31,10 @@ let errorMessages: Record<string, TextResource> = {
     en: "Request validation failed",
     ru: "Запрос не прошел проверку",
   },
+  "appError.wrongSession": {
+    en: "Wrong session data",
+    ru: "Неверные данные сессии",
+  }
 }
 
 export const getErrorMessage = (errorTag: string): TextResource => {

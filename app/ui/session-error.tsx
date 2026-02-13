@@ -7,19 +7,18 @@ import ErrorMessage from "@/app/ui/error-message"
 import type { Region } from "@/app/lib/interfaces"
 
 type SessionErrorProps = {
-  region: Region | undefined,
+  region: Region,
   error: string | undefined,
   timestamp: number,
 }
 
-export default function SessionError(props: SessionErrorProps) {
+export default function SessionError({ region, error, timestamp }: SessionErrorProps) {
   let [ formState, formAction ] = useActionState(logoutAction, {
     error: undefined,
     done: false,
     timestamp: -1,
   })
-  let { region, error, timestamp } = props
-  let lang = regionLang[region ?? "en"]
+  let lang = regionLang[region]
   if ( formState.error && timestamp < formState.timestamp ) {
     timestamp = formState.timestamp
     error = formState.error

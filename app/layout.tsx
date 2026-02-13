@@ -5,6 +5,7 @@ import * as cookies from "@/app/lib/cookies"
 import { getProfile } from "@/app/lib/requests"
 import Header from "@/app/ui/header"
 import SessionError from "./ui/session-error"
+import CookieConsentWindow from "@/app/ui/cookie-consent-window"
 import { ProfileProvider } from "@/app/providers/profile"
 import { WebSocketProvider } from "@/app/providers/websocket"
 import type { Profile } from "@/app/lib/interfaces"
@@ -22,28 +23,31 @@ export default async function RootLayout({
   let session = await cookies.getSession()
   let profile: Profile | undefined = undefined
   let error: string | undefined = undefined
-  let timestamp = -1
+  let timestamp = 0
 
-  if ( session ) {
-    let response = await getProfile(session.sessionid)
+  if ( session.data?.sessionid ) {
+    let response = await getProfile(session.data.sessionid)
     profile = response.profile
     error = response.error
     timestamp = response.timestamp
   }
-
+  
   return (
     <html lang="en">
       <body>
-        <ProfileProvider profile={profile}>
+        <ProfileProvider profile={profile} identifier={session.data?.identifier}>
           <WebSocketProvider>
             <Header />
             {children}
-            {error && (
+            {session.data?.region && error && (
               <SessionError
-                region={session?.region}
+                region={session.data?.region}
                 error={error}
                 timestamp={timestamp}
               />
+            )}
+            {!session.data?.identifier && (
+              <CookieConsentWindow />
             )}
           </WebSocketProvider>
         </ProfileProvider>

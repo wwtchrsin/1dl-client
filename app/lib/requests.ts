@@ -11,7 +11,6 @@ export type GetProfileResponse = {
 export type CreateProfileResponse = {
   error: string | undefined,
   sessionid: string | undefined,
-  token: string | undefined,
   profile: I.Profile | undefined,
   timestamp: number,
 }
@@ -19,7 +18,6 @@ export type CreateProfileResponse = {
 export type CreateSessionResponse = {
   error: string | undefined,
   sessionid: string | undefined,
-  token: string | undefined,
   profile: I.Profile | undefined,
   timestamp: number,
 }
@@ -106,7 +104,7 @@ export const getProfile = async (sessionid: string | undefined):
     }
   }
 
-export const createProfile = async ({ region, login, password, name }: I.UserData):
+export const createProfile = async (identifier: string, userData: I.UserData):
   Promise<CreateProfileResponse> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/profiles`, {
@@ -116,17 +114,14 @@ export const createProfile = async ({ region, login, password, name }: I.UserDat
           "Authorization": `Bearer ${ServiceId}:`,
         },
         body: JSON.stringify({
-          region,
-          login,
-          password,
-          name,
+          ...userData,
+          identifier,
         })
       })
       let body = await response.json()
       return {
         error: body.error,
         sessionid: body.sessionid,
-        token: body.token,
         profile: body.profile,
         timestamp: timestamp(),
       }
@@ -134,15 +129,13 @@ export const createProfile = async ({ region, login, password, name }: I.UserDat
       return {
         error: "appError.requestFailes",
         sessionid: undefined,
-        token: undefined,
         profile: undefined,
         timestamp: timestamp(),
       }
     }
   }
 
-
-export const createSession = async ({ region, login, password }: I.Credentials):
+export const createSession = async (identifier: string, credentials: I.Credentials): 
   Promise<CreateSessionResponse> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/sessions`, {
@@ -152,9 +145,8 @@ export const createSession = async ({ region, login, password }: I.Credentials):
           "Authorization": `Bearer ${ServiceId}:`,
         },
         body: JSON.stringify({
-          region,
-          login,
-          password,
+          ...credentials,
+          identifier,
           profile: true,
         })
       })
@@ -162,7 +154,6 @@ export const createSession = async ({ region, login, password }: I.Credentials):
       return {
         error: body.error,
         sessionid: body.sessionid,
-        token: body.token,
         profile: body.profile,
         timestamp: timestamp(),
       }
@@ -170,7 +161,6 @@ export const createSession = async ({ region, login, password }: I.Credentials):
       return {
         error: "appError.requestFailed",
         sessionid: undefined,
-        token: undefined,
         profile: undefined,
         timestamp: timestamp(),
       }

@@ -18,6 +18,12 @@ type CreateSessionState = {
   timestamp: number,
 }
 
+type InitCookiesState = {
+  error: string | undefined,
+  done: boolean,
+  timestamp: number,
+}
+
 type LogoutState = {
   error: string | undefined,
   done: boolean,
@@ -46,6 +52,14 @@ const timestamp = () => (new Date()).valueOf()
 
 export async function createProfileAction(prevState: CreateProfileState, 
   formData: FormData) {
+    let sessionCookie = await cookies.getSession()
+    if ( !sessionCookie.data ) {
+      return {
+        error: "appError.wrongSession",
+        profile: undefined,
+        timestamp: timestamp(),
+      }
+    }
     let form = processors.createProfile(formData)
     let token = processors.turnstileToken(formData)
     if ( !form.data || !token.data || form.error || token.error ) {
@@ -63,12 +77,13 @@ export async function createProfileAction(prevState: CreateProfileState,
         timestamp: timestamp(),
       }
     }
-    let profile = await requests.createProfile(form.data)
-    if ( profile.sessionid && profile.token ) {
+    let { identifier } = sessionCookie.data
+    let profile = await requests.createProfile(identifier, form.data)
+    if ( profile.sessionid ) {
       await cookies.setSession({
         region: form.data.region,
         sessionid: profile.sessionid,
-        token: profile.token,
+        identifier: identifier,
       })
       refresh()
     }
@@ -79,8 +94,27 @@ export async function createProfileAction(prevState: CreateProfileState,
     }
   }
 
+export async function initCookiesAction(prevState: InitCookiesState,
+  formData: FormData) {
+    await cookies.resetSession()
+    refresh()
+    return {
+      error: undefined,
+      done: true,
+      timestamp: timestamp(),
+    }
+  }
+
 export async function createSessionAction(prevState: CreateSessionState, 
   formData: FormData) {
+    let sessionCookie = await cookies.getSession()
+    if ( !sessionCookie.data ) {
+      return {
+        error: "appError.wrongSession",
+        profile: undefined,
+        timestamp: timestamp(),
+      }
+    }
     let form = processors.createSession(formData)
     let token = processors.turnstileToken(formData)
     if ( !form.data || !token.data || form.error || token.error ) {
@@ -98,12 +132,13 @@ export async function createSessionAction(prevState: CreateSessionState,
         timestamp: validation.timestamp,
       }
     }
-    let session = await requests.createSession(form.data)
-    if ( session.sessionid && session.token ) {
+    let { identifier } = sessionCookie.data
+    let session = await requests.createSession(identifier, form.data)
+    if ( session.sessionid ) {
       await cookies.setSession({
         region: form.data.region,
         sessionid: session.sessionid,
-        token: session.token,
+        identifier: identifier,
       })
       refresh()
     }
@@ -116,16 +151,17 @@ export async function createSessionAction(prevState: CreateSessionState,
 
 export async function logoutAction(prevState: LogoutState, formData: FormData) {
   let session = await cookies.getSession()
-  if ( !session ) {
-    return {
-      error: "wrongValue.auth.sessionid",
-      done: false,
-      timestamp: timestamp(),
-    }
+  if ( session.data?.sessionid ) {
+    await requests.deleteSession(session.data.sessionid)
   }
-  await requests.deleteSession(session.sessionid)
-  await cookies.deleteSession()
-  refresh()
+  if ( session.data ) {
+    await cookies.setSession({
+      region: undefined,
+      sessionid: undefined,
+      identifier: session.data.identifier,
+    })
+    refresh()
+  }
   return { 
     error: undefined,
     done: true,
@@ -136,7 +172,7 @@ export async function logoutAction(prevState: LogoutState, formData: FormData) {
 export async function deleteProfileAction(prevState: DeleteProfileState, 
   formData: FormData) {
     let session = await cookies.getSession()
-    if ( !session ) {
+    if ( !session.data?.sessionid ) {
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
@@ -159,7 +195,7 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
         timestamp: validation.timestamp,
       }
     }
-    let response = await requests.deleteProfile(session.sessionid)
+    let response = await requests.deleteProfile(session.data.sessionid)
     if ( response.error ) {
       return {
         error: response.error,
@@ -167,7 +203,11 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
         timestamp: response.timestamp,
       }
     }
-    await cookies.deleteSession()
+    await cookies.setSession({ 
+      region: undefined,
+      sessionid: undefined,
+      identifier: session.data.identifier,
+    })
     refresh()
     return {
       error: undefined,
@@ -179,7 +219,7 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
 export async function sendMessageAction(prevState: SendMessageState, 
   formData: FormData) {
     let session = await cookies.getSession()
-    if ( !session ) {
+    if ( !session.data?.sessionid ) {
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
@@ -203,7 +243,7 @@ export async function sendMessageAction(prevState: SendMessageState,
         timestamp: timestamp(),
       }
     }
-    let message = await requests.sendMessage(session.sessionid, form.data)
+    let message = await requests.sendMessage(session.data.sessionid, form.data)
     return {
       error: message.error,
       done: !!message.data,
@@ -214,7 +254,7 @@ export async function sendMessageAction(prevState: SendMessageState,
 export async function deleteMessageAction(prevState: DeleteMessageState,
   formData: FormData) {
     let session = await cookies.getSession()
-    if ( !session ) {
+    if ( !session.data?.sessionid ) {
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
@@ -229,7 +269,7 @@ export async function deleteMessageAction(prevState: DeleteMessageState,
         timestamp: timestamp(),
       }
     }
-    let response = await requests.deleteMessage(session.sessionid, form.data)
+    let response = await requests.deleteMessage(session.data.sessionid, form.data)
     return {
       error: response.error,
       done: !!response.error,

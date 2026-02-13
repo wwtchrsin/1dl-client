@@ -7,6 +7,7 @@ import { regionLang } from "@/app/lib/regions"
 import SignUpForm from "@/app/ui/sign-up-form"
 import SignInForm from "@/app/ui/sign-in-form"
 import Profile from "@/app/ui/profile"
+import CookieConsentWidget from "./cookie-consent-widget"
 import type { Region } from "@/app/lib/interfaces"
 
 let TxtRes = {
@@ -33,7 +34,7 @@ let TxtRes = {
 }
 
 export default function RegionCard({ region }: { region: Region }) {
-  let { profile } = useProfile()
+  let { profile, identifier } = useProfile()
   let [ activeForm, setActiveForm ] = useState("")
 
   let lang = regionLang[region]
@@ -58,7 +59,7 @@ export default function RegionCard({ region }: { region: Region }) {
             {`/${region.toUpperCase()}`}
           </Link>
         </div>
-        {!userAuthorized && (<>
+        {identifier && !userAuthorized && (<>
           <button className={headerItemClasses(activeForm === "sign-in")}
             onClick={() => switchForm("sign-in" )} key="sign-in">
             { TxtRes.SignIn[lang] }
@@ -69,14 +70,17 @@ export default function RegionCard({ region }: { region: Region }) {
           </button>
         </>)}
       </div>
-      {!userAuthorized && activeForm === "sign-in" && (
+      {identifier && !userAuthorized && activeForm === "sign-in" && (
         <SignInForm region={region} />
       )}
-      {!userAuthorized && activeForm === "sign-up" && (
+      {identifier && !userAuthorized && activeForm === "sign-up" && (
         <SignUpForm region={region} />
       )}
-      {userAuthorized && (
+      {identifier && userAuthorized && (
         <Profile profile={profile!} />
+      )}
+      {!identifier && (
+        <CookieConsentWidget region={region} />
       )}
     </div>
   )
