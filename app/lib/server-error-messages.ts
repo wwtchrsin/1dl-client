@@ -43,6 +43,10 @@ export default {
     "en": "Wrong user identifier",
     "ru": "Недопустимый идентификатор пользователя"
   },
+  "wrongValue.user.identifier": {
+    "en": "Wrong identifier",
+    "ru": "Недопустимый идентификатор"
+  },
   "wrongValue.auth.region": {
     "en": "Region is not set or incorrect",
     "ru": "Регион не задан или имеет недопустимое значение"
@@ -66,10 +70,6 @@ export default {
   "wrongValue.auth.serviceid": {
     "en": "Wrong service id",
     "ru": "Недопустимый идентификатор сервиса"
-  },
-  "wrongValue.auth.token": {
-    "en": "Wrong token",
-    "ru": "Недопустимый токен"
   },
   "appError.actionNotAllowed": {
     "en": "Action not allowed",
@@ -107,8 +107,8 @@ export default {
     "en": "Impossible to create a session",
     "ru": "Невозможно создать сессию"
   },
-  "databaseError.checkCredentials": {
-    "en": "Impossible to check credentials",
+  "databaseError.verifyCredentials": {
+    "en": "Impossible to verify credentials",
     "ru": "Невозможно проверить учетные данные пользователя"
   },
   "databaseError.getProfile": {
@@ -138,10 +138,6 @@ export default {
   "databaseError.countRegionMessages": {
     "en": "Impossible to count messages",
     "ru": "Невозможно посчитать сообщения"
-  },
-  "databaseError.verifySessionToken": {
-    "en": "Impossible to verify token",
-    "ru": "Невозможно проверить токен"
   },
   "databaseConflict.messageNotFound": {
     "en": "Message not found",
