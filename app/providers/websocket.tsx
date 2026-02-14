@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { getLocation, parseJSON } from "@/app/lib/miscs"
+import { getLocation, parseJSON, getTimestamp } from "@/app/lib/miscs"
 import type { ReactNode } from "react"
 import * as I from "@/app/lib/interfaces"
 
@@ -32,8 +32,6 @@ export const WebSocketContext = createContext<WebSocketContextType>({
   zoneCountChange: new Map(),
   distCountChange: new Map(),
 })
-
-let timestamp = () => (new Date()).valueOf()
 
 export function WebSocketProvider({ children }: WebSocketProviderProps) {
   let pathname = usePathname()
@@ -69,7 +67,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
           setWebSocket(undefined)
           setWebSocketError({
             error: "appError.wsConnection",
-            timestamp: timestamp(),
+            timestamp: getTimestamp(),
           })
           tid && clearTimeout(tid)
           tid = setTimeout(connect, 5000)

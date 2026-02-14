@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useProfile } from "@/app/providers/profile"
+import { useSession } from "@/app/providers/session"
 import { regionLang, regionBgColors, regionTextColors } from "@/app/lib/regions"
 import { getMessageColor } from "@/app/lib/message-colors"
 import { useWebSocket } from "@/app/providers/websocket"
@@ -18,7 +18,7 @@ type MessagesProps = {
 
 export default function Messages({ zoneid, messages }: MessagesProps) {
   let { region, district, zone } = zoneid
-  let { profile } = useProfile()
+  let { profile } = useSession()
   let { createdMessages, deletedMessages } = useWebSocket()
   let [ formIndex, setFormIndex ] = useState(-1)
   let lang = regionLang[zoneid.region]

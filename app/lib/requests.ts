@@ -1,5 +1,6 @@
 "use server"
 
+import { getTimestamp } from "@/app/lib/miscs"
 import type * as I from "@/app/lib/interfaces"
 
 export type GetProfileResponse = {
@@ -70,15 +71,13 @@ const ServerUrl = process.env.HTTP_SERVER ?? "http://localhost:3100"
 
 const ServiceId = process.env.SERVICE_ID ?? ""
 
-const timestamp = () => (new Date()).valueOf()
-
 export const getProfile = async (sessionid: string | undefined): 
   Promise<GetProfileResponse> => {
     if ( sessionid === undefined ) {
       return { 
         error: undefined,
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
 
@@ -93,13 +92,13 @@ export const getProfile = async (sessionid: string | undefined):
       return {
         error: body.error,
         profile: body.profile,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -123,14 +122,14 @@ export const createProfile = async (identifier: string, userData: I.UserData):
         error: body.error,
         sessionid: body.sessionid,
         profile: body.profile,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailes",
         sessionid: undefined,
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -155,14 +154,14 @@ export const createSession = async (identifier: string, credentials: I.Credentia
         error: body.error,
         sessionid: body.sessionid,
         profile: body.profile,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
         sessionid: undefined,
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -179,12 +178,12 @@ export const deleteSession = async (sessionid: string):
       let body = await response.json()
       return {
         error: body.error,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -201,12 +200,12 @@ export const deleteProfile = async (sessionid: string):
       let body = await response.json()
       return {
         error: body.error,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -224,13 +223,13 @@ export const getDistricts = async (region: I.Region):
       return {
         error: body.error,
         data: body.msgcounts,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
         data: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -248,13 +247,13 @@ export const getZones = async ({ region, district }: I.Districtid):
       return {
         error: body.error,
         data: body.msgcounts,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
         data: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -273,13 +272,13 @@ export const getMessages = async ({ region, district, zone }: I.Zoneid):
       return {
         error: body.error,
         data: body.messages,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
         data: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -305,13 +304,13 @@ export const sendMessage = async (sessionid: string, message: I.MessageData):
       return {
         error: body.error,
         data: body.message,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.requestFailed",
         data: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -332,12 +331,12 @@ export const deleteMessage = async (sessionid: string, messageid: I.Messageid):
       let body = await response.json()
       return {
         error: body.error,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch ( err ) {
       return {
         error: "appError.requestFailed",
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }
@@ -360,12 +359,12 @@ export const validateTurnstileToken = async (token: string):
       let result = await response.json()
       return {
         error: result.success ? undefined : "appError.validationFailed",
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     } catch (err) {
       return {
         error: "appError.validationFailed",
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
   }

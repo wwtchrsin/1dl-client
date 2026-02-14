@@ -3,11 +3,13 @@
 import { randomBytes } from "node:crypto"
 import jwt from "jsonwebtoken"
 import { cookies } from "next/headers"
+import { getTimestamp } from "@/app/lib/miscs"
 import limits from "@/app/lib/server-limits"
 import type { Region } from "@/app/lib/interfaces"
 
-const SessionMaxAge = 86400 * 30
+
 const JwtKey = process.env.JWT_KEY ?? "ha-ha"
+const SessionMaxAge = +(process.env.NEXT_PUBLIC_SESSION_MAX_AGE ?? 2_000_000)
 
 export type SessionData = {
   region: Region | undefined,
@@ -27,7 +29,7 @@ const verifySessionCookie = (token: string): Session | undefined => {
   }
 }
 
-const getTimestamp = () => Math.floor((new Date()).valueOf() / 1000)
+
 
 export const resetSession = async () => {
   let storage = await cookies()

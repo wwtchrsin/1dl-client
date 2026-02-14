@@ -4,6 +4,7 @@ import { refresh } from "next/cache"
 import * as requests from "@/app/lib/requests"
 import * as cookies from "@/app/lib/cookies"
 import * as processors from "@/app/lib/form-processors"
+import { getTimestamp } from "@/app/lib/miscs"
 import type { Profile } from "@/app/lib/interfaces"
 
 type CreateProfileState = {
@@ -48,8 +49,6 @@ type DeleteMessageState = {
   timestamp: number,
 }
 
-const timestamp = () => (new Date()).valueOf()
-
 export async function createProfileAction(prevState: CreateProfileState, 
   formData: FormData) {
     let sessionCookie = await cookies.getSession()
@@ -57,7 +56,7 @@ export async function createProfileAction(prevState: CreateProfileState,
       return {
         error: "appError.wrongSession",
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let form = processors.createProfile(formData)
@@ -66,7 +65,7 @@ export async function createProfileAction(prevState: CreateProfileState,
       return {
         error: form.error ?? token.error,
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let validation = await requests.validateTurnstileToken(token.data)
@@ -74,7 +73,7 @@ export async function createProfileAction(prevState: CreateProfileState,
       return {
         error: validation.error,
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let { identifier } = sessionCookie.data
@@ -101,7 +100,7 @@ export async function initCookiesAction(prevState: InitCookiesState,
     return {
       error: undefined,
       done: true,
-      timestamp: timestamp(),
+      timestamp: getTimestamp(),
     }
   }
 
@@ -112,7 +111,7 @@ export async function createSessionAction(prevState: CreateSessionState,
       return {
         error: "appError.wrongSession",
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let form = processors.createSession(formData)
@@ -121,7 +120,7 @@ export async function createSessionAction(prevState: CreateSessionState,
       return {
         error: form.error ?? token.error,
         profile: undefined,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let validation = await requests.validateTurnstileToken(token.data)
@@ -165,7 +164,7 @@ export async function logoutAction(prevState: LogoutState, formData: FormData) {
   return { 
     error: undefined,
     done: true,
-    timestamp: timestamp(),
+    timestamp: getTimestamp(),
   }
 }
 
@@ -176,7 +175,7 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let token = processors.turnstileToken(formData)
@@ -184,7 +183,7 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
       return {
         error: token.error,
         done: false,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let validation = await requests.validateTurnstileToken(token.data)
@@ -223,7 +222,7 @@ export async function sendMessageAction(prevState: SendMessageState,
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let form = processors.sendMessage(formData)
@@ -232,7 +231,7 @@ export async function sendMessageAction(prevState: SendMessageState,
       return {
         error: form.error ?? token.error,
         done: false,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let validation = await requests.validateTurnstileToken(token.data)
@@ -240,7 +239,7 @@ export async function sendMessageAction(prevState: SendMessageState,
       return {
         error: validation.error,
         done: false,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let message = await requests.sendMessage(session.data.sessionid, form.data)
@@ -258,7 +257,7 @@ export async function deleteMessageAction(prevState: DeleteMessageState,
       return {
         error: "wrongValue.auth.sessionid",
         done: false,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let form = processors.deleteMessage(formData)
@@ -266,13 +265,13 @@ export async function deleteMessageAction(prevState: DeleteMessageState,
       return {
         error: form.error,
         done: false,
-        timestamp: timestamp(),
+        timestamp: getTimestamp(),
       }
     }
     let response = await requests.deleteMessage(session.data.sessionid, form.data)
     return {
       error: response.error,
       done: !!response.error,
-      timestamp: timestamp(),
+      timestamp: getTimestamp(),
     }
   }

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { useProfile } from "../providers/profile"
+import { useSession } from "../providers/session"
 import { regionLang } from "@/app/lib/regions"
 import SignUpForm from "@/app/ui/sign-up-form"
 import SignInForm from "@/app/ui/sign-in-form"
@@ -34,7 +34,7 @@ let TxtRes = {
 }
 
 export default function RegionCard({ region }: { region: Region }) {
-  let { profile, identifier } = useProfile()
+  let { profile, identifier } = useSession()
   let [ activeForm, setActiveForm ] = useState("")
 
   let lang = regionLang[region]

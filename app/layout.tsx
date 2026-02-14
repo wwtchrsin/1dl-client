@@ -6,7 +6,7 @@ import { getProfile } from "@/app/lib/requests"
 import Header from "@/app/ui/header"
 import SessionError from "./ui/session-error"
 import CookieConsentWindow from "@/app/ui/cookie-consent-window"
-import { ProfileProvider } from "@/app/providers/profile"
+import { SessionProvider } from "@/app/providers/session"
 import { WebSocketProvider } from "@/app/providers/websocket"
 import type { Profile } from "@/app/lib/interfaces"
 
@@ -35,7 +35,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ProfileProvider profile={profile} identifier={session.data?.identifier}>
+        <SessionProvider 
+          profile={profile}
+          identifier={session.data?.identifier}
+          timestamp={session.data?.timestamp ?? -1}
+        >
           <WebSocketProvider>
             <Header />
             {children}
@@ -50,7 +54,7 @@ export default async function RootLayout({
               <CookieConsentWindow />
             )}
           </WebSocketProvider>
-        </ProfileProvider>
+        </SessionProvider>
         <script 
           src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
           defer>

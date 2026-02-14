@@ -52,3 +52,5 @@ export const parseJSON = (jsonString: string | undefined): any => {
     return undefined
   }
 }
+
+export const getTimestamp = () => Math.floor((new Date()).valueOf() / 1000)
