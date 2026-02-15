@@ -14,7 +14,7 @@ const SessionMaxAge = +(process.env.NEXT_PUBLIC_SESSION_MAX_AGE ?? 2_000_000)
 export type SessionData = {
   region: Region | undefined,
   sessionid: string | undefined,
-  identifier: string,
+  deviceid: string,
 }
 
 export type Session = SessionData & {
@@ -33,9 +33,9 @@ const verifySessionCookie = (token: string): Session | undefined => {
 
 export const resetSession = async () => {
   let storage = await cookies()
-  let identifier = randomBytes(limits.session.sessionid.size).toString("hex")
+  let deviceid = randomBytes(limits.session.sessionid.size).toString("hex")
   let payload = {
-    identifier,
+    deviceid,
     timestamp: getTimestamp(),
   }
   let cookie = jwt.sign(payload, JwtKey)
@@ -64,12 +64,12 @@ export const getSession = async ():
     }
   }
 
-export const setSession = async ({ region, sessionid, identifier }: SessionData) => {
+export const setSession = async ({ region, sessionid, deviceid }: SessionData) => {
   let storage = await cookies()
   let payload = { 
     region,
     sessionid,
-    identifier,
+    deviceid,
     timestamp: getTimestamp()
   }
   let cookie = jwt.sign(payload, JwtKey)

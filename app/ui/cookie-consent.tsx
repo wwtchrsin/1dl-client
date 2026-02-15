@@ -12,7 +12,7 @@ let TxtRes = {
     en: "The website requires your permission to use cookies " +
       "which are necessary for the site to function properly. " +
       "The information to be stored in the browser's local storage includes: " +
-      "user identifier, region (if logged in), and session identifier.",
+      "user deviceid, region (if logged in), and session deviceid.",
     ru: "Сайту требуется ваше разрешение, чтобы использовать файлы куки, " +
       "которые необходимы для правильной работы сайта. " +
       "Информация, которая будет храниться в локальном хранилище браузера, это: " +

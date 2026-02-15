@@ -103,7 +103,7 @@ export const getProfile = async (sessionid: string | undefined):
     }
   }
 
-export const createProfile = async (identifier: string, userData: I.UserData):
+export const createProfile = async (deviceid: string, userData: I.UserData):
   Promise<CreateProfileResponse> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/profiles`, {
@@ -114,7 +114,7 @@ export const createProfile = async (identifier: string, userData: I.UserData):
         },
         body: JSON.stringify({
           ...userData,
-          identifier,
+          deviceid,
         })
       })
       let body = await response.json()
@@ -134,7 +134,7 @@ export const createProfile = async (identifier: string, userData: I.UserData):
     }
   }
 
-export const createSession = async (identifier: string, credentials: I.Credentials): 
+export const createSession = async (deviceid: string, credentials: I.Credentials): 
   Promise<CreateSessionResponse> => {
     try {
       let response = await fetch(`${ServerUrl}/api/v1/sessions`, {
@@ -145,7 +145,7 @@ export const createSession = async (identifier: string, credentials: I.Credentia
         },
         body: JSON.stringify({
           ...credentials,
-          identifier,
+          deviceid,
           profile: true,
         })
       })

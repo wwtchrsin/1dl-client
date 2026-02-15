@@ -34,7 +34,7 @@ let TxtRes = {
 }
 
 export default function RegionCard({ region }: { region: Region }) {
-  let { profile, identifier } = useSession()
+  let { profile, deviceid } = useSession()
   let [ activeForm, setActiveForm ] = useState("")
 
   let lang = regionLang[region]
@@ -59,7 +59,7 @@ export default function RegionCard({ region }: { region: Region }) {
             {`/${region.toUpperCase()}`}
           </Link>
         </div>
-        {identifier && !userAuthorized && (<>
+        {deviceid && !userAuthorized && (<>
           <button className={headerItemClasses(activeForm === "sign-in")}
             onClick={() => switchForm("sign-in" )} key="sign-in">
             { TxtRes.SignIn[lang] }
@@ -70,16 +70,16 @@ export default function RegionCard({ region }: { region: Region }) {
           </button>
         </>)}
       </div>
-      {identifier && !userAuthorized && activeForm === "sign-in" && (
+      {deviceid && !userAuthorized && activeForm === "sign-in" && (
         <SignInForm region={region} />
       )}
-      {identifier && !userAuthorized && activeForm === "sign-up" && (
+      {deviceid && !userAuthorized && activeForm === "sign-up" && (
         <SignUpForm region={region} />
       )}
-      {identifier && userAuthorized && (
+      {deviceid && userAuthorized && (
         <Profile profile={profile!} />
       )}
-      {!identifier && (
+      {!deviceid && (
         <CookieConsentWidget region={region} />
       )}
     </div>

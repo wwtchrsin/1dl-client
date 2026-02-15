@@ -43,9 +43,9 @@ export default {
     "en": "Wrong user identifier",
     "ru": "Недопустимый идентификатор пользователя"
   },
-  "wrongValue.user.identifier": {
-    "en": "Wrong identifier",
-    "ru": "Недопустимый идентификатор"
+  "wrongValue.user.deviceid": {
+    "en": "Wrong device identifier",
+    "ru": "Недопустимый идентификатор устройства"
   },
   "wrongValue.auth.region": {
     "en": "Region is not set or incorrect",
@@ -102,6 +102,10 @@ export default {
   "databaseError.deleteSession": {
     "en": "Impossible to delete the session",
     "ru": "Невозможно удалить сессию"
+  },
+  "databaseError.getDeviceid": {
+    "en": "Impossible to retrieve device identifier",
+    "ru": "Невозможно извлечь идентификатор устройства"
   },
   "databaseError.createSession": {
     "en": "Impossible to create a session",

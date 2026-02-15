@@ -37,7 +37,7 @@ export default async function RootLayout({
       <body>
         <SessionProvider 
           profile={profile}
-          identifier={session.data?.identifier}
+          deviceid={session.data?.deviceid}
           timestamp={session.data?.timestamp ?? -1}
         >
           <WebSocketProvider>
@@ -50,7 +50,7 @@ export default async function RootLayout({
                 timestamp={timestamp}
               />
             )}
-            {!session.data?.identifier && (
+            {!session.data?.deviceid && (
               <CookieConsentWindow />
             )}
           </WebSocketProvider>

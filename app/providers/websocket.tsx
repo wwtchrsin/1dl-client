@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { getLocation, parseJSON, getTimestamp } from "@/app/lib/miscs"
 import type { ReactNode } from "react"
 import * as I from "@/app/lib/interfaces"
@@ -34,6 +34,7 @@ export const WebSocketContext = createContext<WebSocketContextType>({
 })
 
 export function WebSocketProvider({ children }: WebSocketProviderProps) {
+  let router = useRouter()
   let pathname = usePathname()
   let [ webSocket, setWebSocket ] = useState<WebSocket | undefined>(undefined)
   let [ webSocketError, setWebSocketError ] = useState<WebSocketError | undefined>(undefined)
@@ -154,6 +155,10 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             }
             break
           }
+          case "logout": {
+            router.refresh()
+            break
+          }
         }
       }
     }
@@ -179,7 +184,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
       setZoneCountChange(new Map())
       setDistCountChange(new Map())
     }
-  }, [pathname, webSocket])
+  }, [pathname, webSocket, router])
 
   let context = {
     webSocket,

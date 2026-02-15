@@ -76,13 +76,13 @@ export async function createProfileAction(prevState: CreateProfileState,
         timestamp: getTimestamp(),
       }
     }
-    let { identifier } = sessionCookie.data
-    let profile = await requests.createProfile(identifier, form.data)
+    let { deviceid } = sessionCookie.data
+    let profile = await requests.createProfile(deviceid, form.data)
     if ( profile.sessionid ) {
       await cookies.setSession({
         region: form.data.region,
         sessionid: profile.sessionid,
-        identifier: identifier,
+        deviceid: deviceid,
       })
       refresh()
     }
@@ -131,13 +131,13 @@ export async function createSessionAction(prevState: CreateSessionState,
         timestamp: validation.timestamp,
       }
     }
-    let { identifier } = sessionCookie.data
-    let session = await requests.createSession(identifier, form.data)
+    let { deviceid } = sessionCookie.data
+    let session = await requests.createSession(deviceid, form.data)
     if ( session.sessionid ) {
       await cookies.setSession({
         region: form.data.region,
         sessionid: session.sessionid,
-        identifier: identifier,
+        deviceid: deviceid,
       })
       refresh()
     }
@@ -157,7 +157,7 @@ export async function logoutAction(prevState: LogoutState, formData: FormData) {
     await cookies.setSession({
       region: undefined,
       sessionid: undefined,
-      identifier: session.data.identifier,
+      deviceid: session.data.deviceid,
     })
     refresh()
   }
@@ -205,7 +205,7 @@ export async function deleteProfileAction(prevState: DeleteProfileState,
     await cookies.setSession({ 
       region: undefined,
       sessionid: undefined,
-      identifier: session.data.identifier,
+      deviceid: session.data.deviceid,
     })
     refresh()
     return {

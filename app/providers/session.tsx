@@ -10,22 +10,22 @@ const SessionMaxAge = +(process.env.NEXT_PUBLIC_SESSION_MAX_AGE ?? 2_000_000)
 
 type SessionContextType = {
   profile: Profile | undefined,
-  identifier: string | undefined,
+  deviceid: string | undefined,
 }
 
 type SessionProviderProps = {
   children: ReactNode,
   profile: Profile | undefined,
-  identifier: string | undefined,
+  deviceid: string | undefined,
   timestamp: number,
 }
 
 export const SessionContext = createContext<SessionContextType>({
   profile: undefined,
-  identifier: undefined,
+  deviceid: undefined,
 })
 
-export function SessionProvider({ children, profile, identifier, timestamp }: SessionProviderProps) {
+export function SessionProvider({ children, profile, deviceid, timestamp }: SessionProviderProps) {
   useEffect(() => {
     if ( timestamp > 0 && getTimestamp() - timestamp > SessionMaxAge / 2 ) {
       refreshSession()
@@ -33,7 +33,7 @@ export function SessionProvider({ children, profile, identifier, timestamp }: Se
   }, [timestamp])
   
   return (
-    <SessionContext value={{ profile, identifier }}>
+    <SessionContext value={{ profile, deviceid }}>
       { children }
     </SessionContext>
   )
