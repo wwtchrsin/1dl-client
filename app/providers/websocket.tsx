@@ -18,7 +18,9 @@ type WebSocketContextType = {
   createdMessages: Map<number, I.Message>,
   deletedMessages: Set<number>,
   zoneCountChange: Map<number, number>,
-  distCountChange: Map<number, number>, 
+  distCountChange: Map<number, number>,
+  loginTimestamp: number,
+  logoutTimestamp: number,
 }
 
 type WebSocketProviderProps = {
@@ -32,6 +34,8 @@ export const WebSocketContext = createContext<WebSocketContextType>({
   deletedMessages: new Set(),
   zoneCountChange: new Map(),
   distCountChange: new Map(),
+  loginTimestamp: -1,
+  logoutTimestamp: -1,
 })
 
 export function WebSocketProvider({ children }: WebSocketProviderProps) {
@@ -44,7 +48,10 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
   let [ deletedMessages, setDeletedMessages ] = useState<Set<number>>(new Set())
   let [ zoneCountChange, setZoneCountChange ] = useState<Map<number, number>>(new Map())
   let [ distCountChange, setDistCountChange ] = useState<Map<number, number>>(new Map())
-  
+  let [ loginTimestamp, setLoginTimestamp ] = useState(-1)
+  let [ logoutTimestamp, setLogoutTimestamp ] = useState(-1)
+
+
   useEffect(() => {
     let webSocket: WebSocket | undefined
     let tid: ReturnType<typeof setTimeout> | undefined
@@ -145,9 +152,12 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             }
             break
           }
-          case "login":
+          case "login": {
+            setLoginTimestamp(getTimestamp())
+            break
+          }
           case "logout": {
-            router.refresh()
+            setLogoutTimestamp(getTimestamp())
             break
           }
         }
@@ -190,6 +200,8 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
     deletedMessages,
     zoneCountChange,
     distCountChange,
+    loginTimestamp,
+    logoutTimestamp,
   }
 
   return (

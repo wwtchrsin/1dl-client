@@ -27,7 +27,7 @@ export default function TurnstileWidget(props: TurnstileWidgetProps) {
     (style ? ` ${style}` : "")
 
   useEffect(() => {
-    if ( typeof window !== "undefined" && (window as any).turnstile && !widgetIdRef.current ) {
+    if ( (window as any).turnstile && !widgetIdRef.current ) {
       widgetIdRef.current = (window as any).turnstile.render(`#${containerId}`, {
         sitekey: publicKey,
         theme: "light",
@@ -44,7 +44,7 @@ export default function TurnstileWidget(props: TurnstileWidgetProps) {
     }
 
     return () => {
-      if ( typeof window !== "undefined" && (window as any).turnstile && widgetIdRef.current ) {
+      if ( (window as any).turnstile && widgetIdRef.current ) {
         (window as any).turnstile.remove(widgetIdRef.current)
         widgetIdRef.current = undefined
       }
@@ -52,7 +52,7 @@ export default function TurnstileWidget(props: TurnstileWidgetProps) {
   }, [])
 
   useEffect(() => {
-    if ( typeof window !== "undefined" && (window as any).turnstile && widgetIdRef.current ) {
+    if ( (window as any).turnstile && widgetIdRef.current ) {
       (window as any).turnstile.reset(widgetIdRef.current)
     }
   }, [timestamp])
