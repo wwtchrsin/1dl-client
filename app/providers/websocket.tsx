@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
+import { useSession } from "@/app/providers/session"
 import { getLocation, parseJSON, getTimestamp } from "@/app/lib/miscs"
 import type { ReactNode } from "react"
 import * as I from "@/app/lib/interfaces"
@@ -36,6 +37,7 @@ export const WebSocketContext = createContext<WebSocketContextType>({
 export function WebSocketProvider({ children }: WebSocketProviderProps) {
   let router = useRouter()
   let pathname = usePathname()
+  let { deviceid } = useSession()
   let [ webSocket, setWebSocket ] = useState<WebSocket | undefined>(undefined)
   let [ webSocketError, setWebSocketError ] = useState<WebSocketError | undefined>(undefined)
   let [ createdMessages, setCreatedMessages ] = useState<Map<number, I.Message>>(new Map())
@@ -49,19 +51,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
     let connect = async () => {
       webSocket = new WebSocket(process.env.NEXT_PUBLIC_WS_SERVER!)
       webSocket.onopen = () => {
-        let location = getLocation(pathname)
-        if ( location && webSocket ) {
-          webSocket.send(JSON.stringify({
-            type: "set-location",
-            location: location,
-          }))
-        }
         setWebSocket(webSocket)
-        setWebSocketError(undefined)
-        setCreatedMessages(new Map())
-        setDeletedMessages(new Set())
-        setZoneCountChange(new Map())
-        setDistCountChange(new Map())
       }
       webSocket.onclose = (ev: CloseEvent) => {
         if ( ev.reason !== "unmounting-provider" ) {
@@ -155,6 +145,7 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             }
             break
           }
+          case "login":
           case "logout": {
             router.refresh()
             break
@@ -178,13 +169,19 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
         type: "set-location",
         location: location,
       }))
-      setWebSocketError(undefined)
-      setCreatedMessages(new Map())
-      setDeletedMessages(new Set())
-      setZoneCountChange(new Map())
-      setDistCountChange(new Map())
     }
-  }, [pathname, webSocket, router])
+    if ( webSocket && deviceid ) {
+      webSocket.send(JSON.stringify({
+        type: "set-deviceid",
+        deviceid: deviceid,
+      }))
+    }
+    setWebSocketError(undefined)
+    setCreatedMessages(new Map())
+    setDeletedMessages(new Set())
+    setZoneCountChange(new Map())
+    setDistCountChange(new Map())
+  }, [pathname, webSocket, router, deviceid])
 
   let context = {
     webSocket,
