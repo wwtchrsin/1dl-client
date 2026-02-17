@@ -1,43 +1,43 @@
 export default {
   "wrongValue.message.region": {
     "en": "An incorrect value for region. Valid values: en, ru.",
-    "ru": "Неверное значение для region. Корректные значения: en, ru."
+    "ru": "Неверное значение для региона. Корректные значения: en, ru."
   },
   "wrongValue.message.district": {
     "en": "An incorrect value for district. The value must be an integer within the range of [0, 299].",
-    "ru": "Неверное значение для district. Значение должно быть целым числов находящимся в интервале [0, 299]."
+    "ru": "Неверное значение для района. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.zone": {
     "en": "An incorrect value for zone. The value must be an integer within the range of [0, 299].",
-    "ru": "Неверное значение для zone. Значение должно быть целым числов находящимся в интервале [0, 299]."
+    "ru": "Неверное значение для зоны. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.index": {
     "en": "An incorrect value for index. The value must be an integer within the range of [0, 299].",
-    "ru": "Неверное значение для index. Значение должно быть целым числов находящимся в интервале [0, 299]."
+    "ru": "Неверное значение для индекса. Значение должно быть целым числов находящимся в интервале [0, 299]."
   },
   "wrongValue.message.text": {
-    "en": "An incorrect value for text. The message text can only contain printable ASCII characters (latin letters, digits, spaces, punctuation marks and some other characters like \"#\" or \"@\") and cannot have trailing or leading spaces nor have more than one space in a row. The message length must be within the range of [16, 128]",
-    "ru": "Неверное значение для text. Текст сообщения может содержать только печатные символы таблицы ASCII (латинские буквы, цифры, пробелы, знаки препинания и некоторые другие символы как \"@\" или \"#\") и не может начинаться или заканчиваться пробелом или содержать больше одного пробела подряд. Длина сообщения должна находиться в интервале [16, 128]"
+    "en": "An incorrect value for text.  The message text can only contain printable ASCII characters (latin letters, digits, spaces, punctuation marks and some other characters like \"#\" or \"@\") and cannot have trailing or leading spaces nor have more than one space in a row. The message length must be within the range of [16, 128]",
+    "ru": "Неверное значение для теста.  Текст сообщения может содержать только печатные символы таблицы ASCII (латинские буквы, цифры, пробелы, знаки препинания и некоторые другие символы как \"@\" или \"#\") и не может начинаться или заканчиваться пробелом или содержать больше одного пробела подряд. Длина сообщения должна находиться в интервале [16, 128]"
   },
   "wrongValue.message.color": {
     "en": "An incorrect value for color. Valid values: black, red, orange, yellow, green, cyan, blue, purple, pink.",
-    "ru": "Неверное значение для color. Корректные значения: black, red, orange, yellow, green, cyan, blue, purple, pink."
+    "ru": "Неверное значение для цвета. Корректные значения: black, red, orange, yellow, green, cyan, blue, purple, pink."
   },
   "wrongValue.user.region": {
     "en": "An incorrect value for region. Valid values: en, ru.",
-    "ru": "Неверное значение для region. Корректные значения: en, ru."
+    "ru": "Неверное значение для региона. Корректные значения: en, ru."
   },
   "wrongValue.user.login": {
-    "en": "An incorrect value for login. The login can only contain latin letters, digits, and symbols \"-\" and \"_\". The login length must be within the range of [8, 16].",
-    "ru": "Неверное значение для login. Логин может содержать только латинские буквы, цифры, и символы \"-\" и \"_\". Длина логина должна находиться в интервале [8, 16]."
+    "en": "An incorrect value for login.  The login can only contain latin letters, digits, and symbols \"-\" and \"_\". The login length must be within the range of [8, 16].",
+    "ru": "Неверное значение для логина.  Логин может содержать только латинские буквы, цифры, и символы \"-\" и \"_\". Длина логина должна находиться в интервале [8, 16]."
   },
   "wrongValue.user.password": {
-    "en": "An incorrect value for password. The password can only contain latin letters, digits and special symbols (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), and must contain at least one lowercase letter, one uppercase letter, one digit and one special symbol. The password length must be within the range of [8, 24].",
-    "ru": "Неверное значение для password. Пароль может содержать только латинские буквы, цифры, и специальные символы (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), и должен содержать хотя бы одну строчную букву, одну заглавную букву, одну цифру и один специальный символ. Длина пароля должна находиться в интервале [8, 24]."
+    "en": "An incorrect value for password.  The password can only contain latin letters, digits and special symbols (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), and must contain at least one lowercase letter, one uppercase letter, one digit and one special symbol. The password length must be within the range of [8, 24].",
+    "ru": "Неверное значение для пароля.  Пароль может содержать только латинские буквы, цифры, и специальные символы (\"!\", \"@\", \"#\", \"$\", \"%\", \"^\", \"&\", \"*\", \"+\", \"=\", \"_\", \"-\"), и должен содержать хотя бы одну строчную букву, одну заглавную букву, одну цифру и один специальный символ. Длина пароля должна находиться в интервале [8, 24]."
   },
   "wrongValue.user.name": {
-    "en": "An incorrect value for name. The user name can only contain latin letters, digits, and symbols \"-\" and \"_\". The name length must be within the range of [8, 16].",
-    "ru": "Неверное значение для name. Имя пользователя может содержать только латинские буквы, цифры, и символы \"-\" и \"_\". Длина имени должна находиться в интервале [8, 16]."
+    "en": "An incorrect value for name.  The user name can only contain latin letters, digits, and symbols \"-\" and \"_\". The name length must be within the range of [8, 16].",
+    "ru": "Неверное значение для имени.  Имя пользователя может содержать только латинские буквы, цифры, и символы \"-\" и \"_\". Длина имени должна находиться в интервале [8, 16]."
   },
   "wrongValue.user.userid": {
     "en": "Wrong user identifier",
@@ -74,6 +74,14 @@ export default {
   "appError.actionNotAllowed": {
     "en": "Action not allowed",
     "ru": "Действие запрещено"
+  },
+  "appError.unhandledError": {
+    "en": "Unknown unhandled error occurred",
+    "ru": "Произошла неизвестая необработанная ошибка"
+  },
+  "appError.wrongUrl": {
+    "en": "Wrong request URL",
+    "ru": "Неверный URL запроса"
   },
   "databaseError.getMessages": {
     "en": "Impossible to get the list of messages",
@@ -162,5 +170,21 @@ export default {
   "databaseConflict.profileNotFound": {
     "en": "Profile not found",
     "ru": "Профиль не найден"
+  },
+  "wsError.wrongLocation": {
+    "en": "WebSocket server: an incorrect value for location",
+    "ru": "Websocket сервер: неверное значение для локации"
+  },
+  "wsError.wrongDeviceid": {
+    "en": "WebSocket server: an incorrect value for device identifier",
+    "ru": "Websocket сервер: неверное значение для идентификатора устройства"
+  },
+  "wsError.wrongMessageType": {
+    "en": "WebSocket server: an incorrect value for message type",
+    "ru": "Websocket сервер: неверное значение для типа сообщения"
+  },
+  "wsError.wrongJson": {
+    "en": "WebSocket server: impossible to decode the message",
+    "ru": "Websocket сервер: невозможно декодировать сообщение"
   }
 }
