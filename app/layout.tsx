@@ -29,11 +29,11 @@ export default async function RootLayout({
   let timestamp = 0
 
   if ( !session.data?.deviceid ) {
-    console.warn("SESSION NOT FOUND OR CORRUPT")
+    logger.warn("SESSION NOT FOUND OR CORRUPT")
   }
 
   if ( session.data?.sessionid ) {
-    console.info("LAYOUT: FETCHING PROFILE")
+    logger.info("LAYOUT: FETCHING PROFILE")
     let response = await getProfile(session.data.sessionid)
     profile = response.profile
     error = response.error
@@ -41,7 +41,7 @@ export default async function RootLayout({
   }
 
   if ( session.data?.sessionid && !profile ) {
-    console.warn("IMPOSSIBLE TO FECTH PROFILE")
+    logger.warn("IMPOSSIBLE TO FECTH PROFILE")
   }
   
   return (
