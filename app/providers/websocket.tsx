@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { useSession } from "@/app/providers/session"
 import { getLocation, parseJSON, getTimestamp } from "@/app/lib/miscs"
+import logger from "@/app/lib/logger"
 import type { ReactNode } from "react"
 import * as I from "@/app/lib/interfaces"
 
@@ -53,14 +54,18 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
 
 
   useEffect(() => {
+    logger.info("WS PROVIDER MOUNTED")
     let webSocket: WebSocket | undefined
     let tid: ReturnType<typeof setTimeout> | undefined
     let connect = async () => {
+      logger.info("WS: CONNECTING")
       webSocket = new WebSocket(process.env.NEXT_PUBLIC_WS_SERVER!)
       webSocket.onopen = () => {
+        logger.info("WS CONNECTION OPEN")
         setWebSocket(webSocket)
       }
       webSocket.onclose = (ev: CloseEvent) => {
+        logger.warn("WS CONNECTION CLOSED")
         if ( ev.reason !== "unmounting-provider" ) {
           setWebSocket(undefined)
           setWebSocketError({
@@ -71,12 +76,14 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
           tid = setTimeout(connect, 5000)
         }
       }
-      webSocket.onerror = () => {
+      webSocket.onerror = (err) => {
+        logger.error("WS CONNECTION ERROR")
         setWebSocket(undefined)
         webSocket?.close()
       }
       webSocket.onmessage = (ev) => {
         let message = parseJSON(ev.data)
+        logger.info(`WS MESSAGE RECEIVED. TYPE='${message?.type ?? "UDF"}'`)
         switch ( message?.type ) {
           case "insert-messages": {
             if ( message.messages?.length ) {
@@ -160,6 +167,13 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             setLogoutTimestamp(getTimestamp())
             break
           }
+          case "error": {
+            let error = message.error ?? "UNKNOWN_ERROR"
+            logger.error(`WS SERVER ERROR: '${error}'`, )
+          }
+          default: {
+            logger.error("WS MESSAGE UNKNOWN TYPE")
+          }
         }
       }
     }
@@ -167,20 +181,24 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
     connect()
 
     return () => {
+      logger.info("WS PROVIDER UNMOUNTED")
       webSocket?.close(1000, "unmounting-provider")
       tid && clearTimeout(tid)
     }
   }, [])
 
   useEffect(() => {
+    logger.info("WS: SYNCHRONIZING")
     let location = getLocation(pathname)
     if ( webSocket && location ) {
+      logger.info("WS: UPDATING LOCATION")
       webSocket.send(JSON.stringify({
         type: "set-location",
         location: location,
       }))
     }
     if ( webSocket && deviceid ) {
+      logger.info("WS: UPDATING DEVICEID")
       webSocket.send(JSON.stringify({
         type: "set-deviceid",
         deviceid: deviceid,

@@ -1,10 +1,11 @@
 import { writeFile } from "node:fs/promises"
 import { join } from "node:path"
-import dotenv from "dotenv"
-
-dotenv.config({ path: "./.env" })
+import nextenv from "@next/env"
 
 const __dirname = import.meta.dirname
+
+nextenv.loadEnvConfig(__dirname)
+
 const ServerUrl = process.env.HTTP_SERVER ?? "http://localhost:3100"
 
 let urls = new Map([

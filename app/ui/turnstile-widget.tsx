@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import logger from "@/app/lib/logger"
 import type { Lang } from "@/app/lib/interfaces"
 
 type TurnstileWidgetProps = {
@@ -28,6 +29,7 @@ export default function TurnstileWidget(props: TurnstileWidgetProps) {
 
   useEffect(() => {
     if ( (window as any).turnstile && !widgetIdRef.current ) {
+      logger.info("TURNSTILE WIDGET: LOADING")
       widgetIdRef.current = (window as any).turnstile.render(`#${containerId}`, {
         sitekey: publicKey,
         theme: "light",
@@ -35,7 +37,7 @@ export default function TurnstileWidget(props: TurnstileWidgetProps) {
         appearance: hidden ? "interaction-only" : "always",
         language: lang,
         "error-callback": (err: any) => {
-          console.error(err)
+          logger.error("TURNSTILE WIDGET: ERROR", err)
         },
         "before-interactive-callback": hidden ?
           () => setInteractive(true) :
@@ -45,7 +47,8 @@ export default function TurnstileWidget(props: TurnstileWidgetProps) {
 
     return () => {
       if ( (window as any).turnstile && widgetIdRef.current ) {
-        (window as any).turnstile.remove(widgetIdRef.current)
+        logger.info("TURNSTILE WIDGET UNMOUNTED")
+        ;(window as any).turnstile.remove(widgetIdRef.current)
         widgetIdRef.current = undefined
       }
     }
@@ -53,7 +56,8 @@ export default function TurnstileWidget(props: TurnstileWidgetProps) {
 
   useEffect(() => {
     if ( (window as any).turnstile && widgetIdRef.current ) {
-      (window as any).turnstile.reset(widgetIdRef.current)
+      logger.info("TURNSTILE WIDGET: RESETTING")
+      ;(window as any).turnstile.reset(widgetIdRef.current)
     }
   }, [timestamp])
 

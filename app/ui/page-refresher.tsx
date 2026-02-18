@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import { useWebSocket } from "@/app/providers/websocket"
 import { useSession } from "@/app/providers/session"
+import logger from "../lib/logger"
 
 export default function PageRefresher() {
   let { loginTimestamp, logoutTimestamp } = useWebSocket()
@@ -15,13 +16,19 @@ export default function PageRefresher() {
   }
 
   useEffect(() => {
+    logger.info(`PAGE REFRESHER STATE: ` +
+      `login=${loginTimestamp} ` +
+      `logout=${logoutTimestamp} ` +
+      `profile=${!!profile}`)
     timerId.current && clearTimeout(timerId.current)
     if ( isSessionExpired(loginTimestamp, logoutTimestamp, !!profile) ) {
+      logger.info("PAGE REFRESHER: PAGE SET TO REFRESH")
       timerId.current = setTimeout(() => {
         window.location.reload()
       }, 2000)
     }
     return () => {
+      logger.info("PAGE REFRESHER UNMOUNTED")
       timerId.current && clearTimeout(timerId.current)
       timerId.current = undefined
     }

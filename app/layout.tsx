@@ -9,6 +9,7 @@ import CookieConsentWindow from "@/app/ui/cookie-consent-window"
 import PageRefresher from "@/app/ui/page-refresher"
 import { SessionProvider } from "@/app/providers/session"
 import { WebSocketProvider } from "@/app/providers/websocket"
+import logger from "@/app/lib/logger"
 import type { Profile } from "@/app/lib/interfaces"
 
 export const metadata: Metadata = {
@@ -21,16 +22,26 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  logger.info("LAYOUT: UPDATING")
   let session = await cookies.getSession()
   let profile: Profile | undefined = undefined
   let error: string | undefined = undefined
   let timestamp = 0
 
+  if ( !session.data?.deviceid ) {
+    console.warn("SESSION NOT FOUND OR CORRUPT")
+  }
+
   if ( session.data?.sessionid ) {
+    console.info("LAYOUT: FETCHING PROFILE")
     let response = await getProfile(session.data.sessionid)
     profile = response.profile
     error = response.error
     timestamp = response.timestamp
+  }
+
+  if ( session.data?.sessionid && !profile ) {
+    console.warn("IMPOSSIBLE TO FECTH PROFILE")
   }
   
   return (
