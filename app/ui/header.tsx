@@ -9,8 +9,8 @@ import type { Region } from "@/app/lib/interfaces"
 
 let segmentLabels = [
   (region: string) => region.charAt(0).toUpperCase() + region.slice(1),
-  (district: string) => `d${district}`,
-  (zone: string) => `z${zone}`,
+  (district: string) => `${district}`,
+  (zone: string) => `${zone}`,
 ]
 
 export default function Header() {
@@ -24,14 +24,14 @@ export default function Header() {
   }
 
   return (
-    <div className={`flex flex-row items-center px-2 py-4 text-2xl ${bgColor}`}>
+    <div className={`flex flex-row items-center px-2 py-4 ${bgColor}`}>
       {urlSegments.length === 0 && (
-        <div className="mx-3 sm:mx-5">
+        <div className="mx-4 sm:mx-6">
           <Image src="/logo.svg" alt="1DL" width={64} height={64} />
         </div>
       )}
       {urlSegments.length > 0 && (
-        <Link className="mx-3 sm:mx-5" href="/">
+        <Link className="mx-4 sm:mx-6" href="/">
           <Image src="/logo.svg" alt="1DL" width={64} height={64} />
         </Link>
       )}
@@ -42,14 +42,14 @@ export default function Header() {
             let segmentLabel = segmentLabels[index](segment)
             if ( index < urlSegments.length - 1 ) {
               return (
-                <Link className={`py-2 px-3 sm:px-4 underline decoration-2 bg-white ${linkTextColor}`}
+                <Link className={`py-2 w-14 sm:w-20 text-base sm:text-2xl text-center bg-white ${linkTextColor}`}
                   href={url} key={index}>
                     { segmentLabel }
                 </Link>
               )
             }
             return (
-              <div className={`py-2 px-3 sm:px-4 bg-white ${linkTextColor}`} key={index}>
+              <div className={`py-2 w-14 sm:w-20 text-base sm:text-2xl text-center opacity-75 bg-white ${linkTextColor}`} key={index}>
                 { segmentLabel }
               </div>
             )
