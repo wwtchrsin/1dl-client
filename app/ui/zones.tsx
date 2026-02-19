@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { regionLang, regionBgColors, regionTextColors } from "../lib/regions"
 import { useWebSocket } from "@/app/providers/websocket"
+import limits from "@/app/lib/server-limits"
 import type { Region } from "@/app/lib/interfaces"
 
 let TxtRes = {
@@ -10,10 +11,10 @@ let TxtRes = {
     en: "Zone",
     ru: "Зона",
   },
-  Messages: {
-    en: "Messages",
-    ru: "Сообщения",
-  }
+  ObjectsAvailable: {
+    en: "Objects Available",
+    ru: "Доступные Объекты",
+  },
 }
 
 type ZonesProps = {
@@ -28,6 +29,8 @@ export default function Zones({ region, district, msgcounts }: ZonesProps) {
   let bgColor = regionBgColors[region][0]
   let textColor = regionTextColors[region][8]
 
+  let objectMaxNumber = limits.message.zone.max - limits.message.zone.min + 1
+
   return (
     <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
       {msgcounts.map((count, index) => {
@@ -40,7 +43,7 @@ export default function Zones({ region, district, msgcounts }: ZonesProps) {
                   { `${TxtRes.Zone[lang]} #${index}` }
               </Link>
               <div className={textColor}>
-                { `${TxtRes.Messages[lang]}: ${msgcount}` }
+                { `${TxtRes.ObjectsAvailable[lang]}: ${objectMaxNumber}` }
               </div>
           </div>
         )

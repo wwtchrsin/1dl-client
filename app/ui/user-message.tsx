@@ -54,7 +54,7 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
           {!dialogVisible && (<>
             <div>{ message.text }</div>
             <div className="font-bold">{ message.username }</div>
-            <button className="absolute right-4 top-4 cursor-pointer rounded px-2 py-1 bg-gray-700 text-white"
+            <button className="absolute right-4 top-4 cursor-pointer rounded px-2 py-1 bg-gray-600 text-white"
               onClick={deleteButtonHandler}>
               { TxtRes.delete[lang] }
             </button>
@@ -64,12 +64,12 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
               { TxtRes.ConfirmDeletion[lang] }
             </div>
             <div className="mt-2 flex flex-row gap-2">
-              <button className="cursor-pointer rounded py-1 px-2 bg-gray-700 text-white"
+              <button className="cursor-pointer rounded py-1 px-2 bg-gray-600 text-white"
                 type="submit" formAction={formAction}
                 disabled={isPending}>
                   { TxtRes.confirm[lang] }
               </button>
-              <button className="cursor-pointer rounded py-1 px-2 bg-gray-700 text-white" 
+              <button className="cursor-pointer rounded py-1 px-2 bg-gray-600 text-white" 
                 onClick={() => setDialogVisible(false)}>
                   { TxtRes.cancel[lang] }
               </button>
