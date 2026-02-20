@@ -35,6 +35,7 @@ export default function Zones({ region, district, msgcounts }: ZonesProps) {
     <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
       {msgcounts.map((count, index) => {
         let msgcount = count + (zoneCountChange.get(index) ?? 0)
+        let objectsAvailable = objectMaxNumber - msgcount
         return (
           <div className={`px-1 py-16 flex flex-col gap-2 items-center text-black ${bgColor}`}
             key={index}>
@@ -43,7 +44,7 @@ export default function Zones({ region, district, msgcounts }: ZonesProps) {
                   { `${TxtRes.Zone[lang]} #${index}` }
               </Link>
               <div className={textColor}>
-                { `${TxtRes.ObjectsAvailable[lang]}: ${objectMaxNumber}` }
+                { `${TxtRes.ObjectsAvailable[lang]}: ${objectsAvailable}` }
               </div>
           </div>
         )
