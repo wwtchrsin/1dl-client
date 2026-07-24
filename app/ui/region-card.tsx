@@ -7,6 +7,7 @@ import { regionLang } from "@/app/lib/regions"
 import SignUpForm from "@/app/ui/sign-up-form"
 import SignInForm from "@/app/ui/sign-in-form"
 import Profile from "@/app/ui/profile"
+import ReportBug from "@/app/ui/report-bug"
 import CookieConsentWidget from "./cookie-consent-widget"
 import type { Region } from "@/app/lib/interfaces"
 
@@ -78,6 +79,9 @@ export default function RegionCard({ region }: { region: Region }) {
       )}
       {deviceid && userAuthorized && (
         <Profile profile={profile!} />
+      )}
+      {deviceid && (
+        <ReportBug lang={lang} />
       )}
       {!deviceid && (
         <CookieConsentWidget region={region} />
