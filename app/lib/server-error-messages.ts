@@ -3,17 +3,13 @@ export default {
     "en": "An incorrect value for region. Valid values: en, ru.",
     "ru": "Неверное значение для региона. Корректные значения: en, ru."
   },
-  "wrongValue.message.district": {
-    "en": "An incorrect value for district. The value must be an integer within the range of [0, 299].",
-    "ru": "Неверное значение для района. Значение должно быть целым числов находящимся в интервале [0, 299]."
-  },
-  "wrongValue.message.zone": {
-    "en": "An incorrect value for zone. The value must be an integer within the range of [0, 299].",
-    "ru": "Неверное значение для зоны. Значение должно быть целым числов находящимся в интервале [0, 299]."
+  "wrongValue.message.tag": {
+    "en": "An incorrect value for tag. The message tag must be a string containing lowercase latin letters only, between 1 and 6 characters in length.",
+    "ru": "Метке сообщения задано неверное значение. Метка должна быть строкой содержащей только строчные латинские буквы и имеющей длину от 1 до 6 символов."
   },
   "wrongValue.message.index": {
-    "en": "An incorrect value for index. The value must be an integer within the range of [0, 299].",
-    "ru": "Неверное значение для индекса. Значение должно быть целым числов находящимся в интервале [0, 299]."
+    "en": "An incorrect value for index. The value must be an integer within the range of [0, 299]",
+    "ru": "Неверное значение для индекса. Значение должно быть целым числов находящимся в интервале [0, 299]"
   },
   "wrongValue.message.text": {
     "en": "An incorrect value for text.  The message text can only contain printable ASCII characters (latin letters, digits, spaces, punctuation marks and some other characters like \"#\" or \"@\") and cannot have trailing or leading spaces nor have more than one space in a row. The message length must be within the range of [16, 128]",
@@ -142,14 +138,6 @@ export default {
   "databaseError.deleteMessage": {
     "en": "Impossible to delete message",
     "ru": "Невозможно удалить сообщение"
-  },
-  "databaseError.countDistrictMessages": {
-    "en": "Impossible to count messages",
-    "ru": "Невозможно посчитать сообщения"
-  },
-  "databaseError.countRegionMessages": {
-    "en": "Impossible to count messages",
-    "ru": "Невозможно посчитать сообщения"
   },
   "databaseConflict.messageNotFound": {
     "en": "Message not found",

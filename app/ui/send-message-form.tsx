@@ -34,7 +34,7 @@ type SendMessageProps = Messageid & {
 }
 
 export default function SendMessageForm(props: SendMessageProps) {
-  let { region, district, zone, index, close } = props
+  let { region, tag, index, close } = props
   let [ formState, formAction, isPending ] = useActionState(sendMessageAction, {
     error: undefined,
     done: false,
@@ -85,8 +85,7 @@ export default function SendMessageForm(props: SendMessageProps) {
             lang={lang}
           />
           <input type="hidden" name="region" value={region} />
-          <input type="hidden" name="district" value={district} />
-          <input type="hidden" name="zone" value={zone} />
+          <input type="hidden" name="tag" value={tag} />
           <input type="hidden" name="index" value={index} />
         </div>
         <TurnstileWidget

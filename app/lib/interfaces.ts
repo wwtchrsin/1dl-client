@@ -29,36 +29,27 @@ export type Profile = {
   timestamp: string,
 }
 
-export type DistrictParams = {
+export type LocationParams = {
   region: string | null | undefined,
-  district: string | null | undefined,
+  tag: string | null | undefined,
 }
 
-export type ZoneParams = DistrictParams & {
-  zone: string | null | undefined,
-}
-
-export type MessageParams = ZoneParams & {
+export type MessageParams = LocationParams & {
   index: string | null | undefined,
 }
 
-export type Districtid = {
+export type Location = {
   region: Region,
-  district: number,
+  tag: string,
 }
 
-export type Zoneid = Districtid & {
-  zone: number,
-}
-
-export type Messageid = Zoneid & {
+export type Messageid = Location & {
   index: number,
 }
 
 export type MessageData = {
   region: Region,
-  district: number,
-  zone: number,
+  tag: string,
   index: number,
   text: string,
   color: string,

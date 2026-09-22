@@ -1,13 +1,12 @@
 "use client"
 
-import Link from "next/link"
 import { useState } from "react"
 import { useSession } from "../providers/session"
 import { regionLang } from "@/app/lib/regions"
 import SignUpForm from "@/app/ui/sign-up-form"
 import SignInForm from "@/app/ui/sign-in-form"
 import Profile from "@/app/ui/profile"
-import ReportBug from "@/app/ui/report-bug"
+import NoteSearch from "./note-search"
 import CookieConsentWidget from "./cookie-consent-widget"
 import type { Region } from "@/app/lib/interfaces"
 
@@ -24,6 +23,14 @@ let TxtRes = {
     en: "Sign in",
     ru: "Вход",
   },
+  SearchByTag: {
+    en: "Search by tag",
+    ru: "Поиск по метке",
+  },
+  Profile: {
+    en: "Profile",
+    ru: "Профиль",
+  },
   Error: {
     en: "Error",
     ru: "Ошибка",
@@ -34,12 +41,12 @@ let TxtRes = {
   },
 }
 
-export default function RegionCard({ region }: { region: Region }) {
+export default function RegionEntry({ region }: { region: Region }) {
   let { profile, deviceid } = useSession()
-  let [ activeForm, setActiveForm ] = useState("")
-
-  let lang = regionLang[region]
   let userAuthorized = !!profile && profile.region === region
+  let [ activeForm, setActiveForm ] = 
+    useState(userAuthorized ? "notes" : "sign-in")
+  let lang = regionLang[region]
 
   let headerItemClasses = (active: boolean) => {
     let classes = "underline decoration-2 "
@@ -54,12 +61,18 @@ export default function RegionCard({ region }: { region: Region }) {
   return (
     <div className="p-6 md:mx-auto md:max-w-lg bg-black/5">
       <div className={`flex flex-row gap-2 items-center`}>
-        <div>
-          <span className="max-sm:hidden">{ TxtRes.Region[lang] }: </span>
-          <Link href={`/${region}`} className={headerItemClasses(userAuthorized)}>
-            {`/${region.toUpperCase()}`}
-          </Link>
-        </div>
+        {deviceid && userAuthorized && (
+          <button className={headerItemClasses(activeForm === "notes")}
+            onClick={() => switchForm("notes" )} key="notes">
+            { TxtRes.SearchByTag[lang] }
+          </button>
+        )}
+        {deviceid && userAuthorized && (
+          <button className={headerItemClasses(activeForm === "profile")}
+            onClick={() => switchForm("profile" )} key="profile">
+            { TxtRes.Profile[lang] }
+          </button>
+        )}
         {deviceid && !userAuthorized && (<>
           <button className={headerItemClasses(activeForm === "sign-in")}
             onClick={() => switchForm("sign-in" )} key="sign-in">
@@ -77,11 +90,11 @@ export default function RegionCard({ region }: { region: Region }) {
       {deviceid && !userAuthorized && activeForm === "sign-up" && (
         <SignUpForm region={region} />
       )}
-      {deviceid && userAuthorized && (
+      {deviceid && userAuthorized && activeForm === "profile" && (
         <Profile profile={profile!} />
       )}
-      {deviceid && (
-        <ReportBug lang={lang} />
+      {deviceid && userAuthorized && activeForm === "notes" && (
+        <NoteSearch region={region} />
       )}
       {!deviceid && (
         <CookieConsentWidget region={region} />

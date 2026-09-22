@@ -7,13 +7,10 @@ export default {
       ],
       "pattern": "^(en|ru)$"
     },
-    "district": {
-      "min": 0,
-      "max": 299
-    },
-    "zone": {
-      "min": 0,
-      "max": 299
+    "tag": {
+      "minLen": 1,
+      "maxLen": 6,
+      "pattern": "^[a-z]{1,6}$"
     },
     "index": {
       "min": 0,

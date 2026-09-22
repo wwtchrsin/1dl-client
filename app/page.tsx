@@ -1,5 +1,5 @@
+import Link from "next/link"
 import { regions, regionBgColors } from "@/app/lib/regions"
-import Region from "@/app/ui/region-card"
 import logger from "@/app/lib/logger"
 
 export default function Home() {
@@ -9,8 +9,10 @@ export default function Home() {
     <div className="mb-32">
       {regions.map((region) => {
         return (
-          <div className={`m-1 ${regionBgColors[region][0]}`} key={region}>
-            <Region region={region} />
+          <div className={`py-8 text-center font-bold ${regionBgColors[region][0]}`} key={region}>
+            <Link href={`/${region}`}>
+              {`${region.toUpperCase()}`}
+            </Link>
           </div>
         )
       })}

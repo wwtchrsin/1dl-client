@@ -18,8 +18,6 @@ type WebSocketContextType = {
   webSocketError: WebSocketError | undefined,
   createdMessages: Map<number, I.Message>,
   deletedMessages: Set<number>,
-  zoneCountChange: Map<number, number>,
-  distCountChange: Map<number, number>,
   loginTimestamp: number,
   logoutTimestamp: number,
 }
@@ -33,8 +31,6 @@ export const WebSocketContext = createContext<WebSocketContextType>({
   webSocketError: undefined,
   createdMessages: new Map(),
   deletedMessages: new Set(),
-  zoneCountChange: new Map(),
-  distCountChange: new Map(),
   loginTimestamp: -1,
   logoutTimestamp: -1,
 })
@@ -47,8 +43,6 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
   let [ webSocketError, setWebSocketError ] = useState<WebSocketError | undefined>(undefined)
   let [ createdMessages, setCreatedMessages ] = useState<Map<number, I.Message>>(new Map())
   let [ deletedMessages, setDeletedMessages ] = useState<Set<number>>(new Set())
-  let [ zoneCountChange, setZoneCountChange ] = useState<Map<number, number>>(new Map())
-  let [ distCountChange, setDistCountChange ] = useState<Map<number, number>>(new Map())
   let [ loginTimestamp, setLoginTimestamp ] = useState(-1)
   let [ logoutTimestamp, setLogoutTimestamp ] = useState(-1)
 
@@ -123,42 +117,6 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
             }
             break
           }
-          case "change-zone-msgcounts": {
-            if ( message.msgcounts ) {
-              setZoneCountChange(zoneCountChange => {
-                let msgcounts = new Map(zoneCountChange)
-                for ( let index in message.msgcounts ) {
-                  let delta = +message.msgcounts[index]
-                  let value = msgcounts.get(+index)
-                  if ( !value ) {
-                    msgcounts.set(+index, delta)
-                  } else {
-                    msgcounts.set(+index, value + delta)
-                  }
-                }
-                return msgcounts
-              })
-            }
-            break
-          }
-          case "change-district-msgcounts": {
-            if ( message.msgcounts ) {
-              setDistCountChange(distCountChange => {
-                let msgcounts = new Map(distCountChange)
-                for ( let index in message.msgcounts ) {
-                  let delta = +message.msgcounts[index]
-                  let value = msgcounts.get(+index)
-                  if ( !value ) {
-                    msgcounts.set(+index, delta)
-                  } else {
-                    msgcounts.set(+index, value + delta)
-                  }
-                }
-                return msgcounts
-              })
-            }
-            break
-          }
           case "login": {
             setLoginTimestamp(getTimestamp())
             break
@@ -207,8 +165,6 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
     setWebSocketError(undefined)
     setCreatedMessages(new Map())
     setDeletedMessages(new Set())
-    setZoneCountChange(new Map())
-    setDistCountChange(new Map())
   }, [pathname, webSocket, router, deviceid])
 
   let context = {
@@ -216,8 +172,6 @@ export function WebSocketProvider({ children }: WebSocketProviderProps) {
     webSocketError,
     createdMessages,
     deletedMessages,
-    zoneCountChange,
-    distCountChange,
     loginTimestamp,
     logoutTimestamp,
   }

@@ -9,8 +9,7 @@ import type { Region } from "@/app/lib/interfaces"
 
 let segmentLabels = [
   (region: string) => region.charAt(0).toUpperCase() + region.slice(1),
-  (district: string) => `${district}`,
-  (zone: string) => `${zone}`,
+  (tag: string) => `${tag}`,
 ]
 
 export default function Header() {
@@ -40,16 +39,18 @@ export default function Header() {
           {urlSegments.map((segment, index) => {
             let url = "/" + urlSegments.slice(0, index + 1).join("/")
             let segmentLabel = segmentLabels[index](segment)
-            if ( index < urlSegments.length - 1 ) {
+            let isTagSegment = index === urlSegments.length - 1
+            let width = !isTagSegment ? "w-10 sm:w-16" : "w-20 sm:w-28"
+            if ( !isTagSegment ) {
               return (
-                <Link className={`py-2 w-14 sm:w-20 text-base sm:text-2xl text-center bg-white ${linkTextColor}`}
+                <Link className={`py-2 ${width} text-base sm:text-2xl text-center bg-white ${linkTextColor}`}
                   href={url} key={index}>
                     { segmentLabel }
                 </Link>
               )
             }
             return (
-              <div className={`py-2 w-14 sm:w-20 text-base sm:text-2xl text-center opacity-75 bg-white ${linkTextColor}`} key={index}>
+              <div className={`py-2 ${width} text-base sm:text-2xl text-center opacity-75 bg-white ${linkTextColor}`} key={index}>
                 { segmentLabel }
               </div>
             )

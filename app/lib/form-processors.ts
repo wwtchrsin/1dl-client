@@ -1,14 +1,8 @@
 import limits from "@/app/lib/server-limits"
+import { patterns } from "@/app/lib/limits"
 import { getMessageid } from "./location-processors"
 import { regions } from "@/app/lib/regions"
 import type * as I from "@/app/lib/interfaces"
-
-let patterns = {
-  login: new RegExp(limits.user.login.pattern),
-  password: new RegExp(limits.user.password.pattern),
-  name: new RegExp(limits.user.name.pattern),
-  text: new RegExp(limits.message.text.pattern),
-}
 
 export const turnstileToken = (formData: FormData): 
   { error: string | undefined, data: string | undefined } => {
@@ -96,13 +90,12 @@ export const createSession = (formData: FormData):
 export const sendMessage = (formData: FormData): 
   { error: string | undefined, data: I.MessageData | undefined } => {
     let region = formData.get("region") as string | null
-    let district = formData.get("district") as string | null
-    let zone = formData.get("zone") as string | null
+    let tag = formData.get("tag") as string | null
     let index = formData.get("index") as string | null
     let text = formData.get("text") as string | null
     let color = formData.get("color") as string | null
 
-    let messageid = getMessageid({ region, district, zone, index })
+    let messageid = getMessageid({ region, tag, index })
     if ( !messageid ) {
       return {
         error: "appError.wrongMessageid",
@@ -130,11 +123,10 @@ export const sendMessage = (formData: FormData):
 export const deleteMessage = (formData: FormData):
   { error: string | undefined, data: I.Messageid | undefined } => {
     let region = formData.get("region") as string | null
-    let district = formData.get("district") as string | null
-    let zone = formData.get("zone") as string | null
+    let tag = formData.get("tag") as string | null
     let index = formData.get("index") as string | null
 
-    let messageid = getMessageid({ region, district, zone, index })
+    let messageid = getMessageid({ region, tag, index })
     if ( !messageid ) {
       return {
         error: "appError.wrongMessageid",

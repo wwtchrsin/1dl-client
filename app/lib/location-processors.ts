@@ -1,5 +1,6 @@
 import limits from "@/app/lib/server-limits"
 import { regions } from "@/app/lib/regions"
+import { patterns } from "@/app/lib/limits"
 import type * as Interfaces from "@/app/lib/interfaces"
 
 export const getRegion = (region: string | undefined | null): 
@@ -10,45 +11,25 @@ export const getRegion = (region: string | undefined | null):
     return region as Interfaces.Region
   }
 
-export const getDistrictid = (params: Interfaces.DistrictParams): 
-  Interfaces.Districtid | undefined => {
+export const getLocation = (params: Interfaces.LocationParams):
+  Interfaces.Location | undefined => {
     let region = getRegion(params.region)
     if ( region === undefined ) {
       return undefined
     }
-    if ( !params.district || isNaN(+params.district) || 
-      +params.district < limits.message.district.min || 
-      +params.district > limits.message.district.max ) {
-        return undefined
-      }
+    if ( !params.tag || !patterns.tag.test(params.tag) ) {
+      undefined
+    }
     return {
       region: region,
-      district: +params.district,
-    }
-  }
-
-export const getZoneid = (params: Interfaces.ZoneParams):
-  Interfaces.Zoneid | undefined => {
-    let districtid = getDistrictid(params)
-    if ( districtid === undefined ) {
-      return undefined
-    }
-    if ( !params.zone || isNaN(+params.zone) || 
-      +params.zone < limits.message.zone.min ||
-      +params.zone > limits.message.zone.max ) {
-        return undefined
-      }
-    return {
-      region: districtid.region,
-      district: districtid.district,
-      zone: +params.zone,
+      tag: params.tag as string,
     }
   }
   
 export const getMessageid = (params: Interfaces.MessageParams):
   Interfaces.Messageid | undefined => {
-    let zoneid = getZoneid(params)
-    if ( zoneid === undefined ) {
+    let location = getLocation(params)
+    if ( location === undefined ) {
       return undefined
     }
     if ( !params.index || isNaN(+params.index) ||
@@ -57,9 +38,8 @@ export const getMessageid = (params: Interfaces.MessageParams):
         return undefined
       }
     return {
-      region: zoneid.region,
-      district: zoneid.district,
-      zone: zoneid.zone,
+      region: location.region,
+      tag: location.tag,
       index: +params.index,
     }
   }

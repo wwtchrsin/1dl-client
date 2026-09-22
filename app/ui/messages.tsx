@@ -12,16 +12,16 @@ import MessageCell from "@/app/ui/message-cell"
 import type * as I from "@/app/lib/interfaces"
 
 type MessagesProps = {
-  zoneid: I.Zoneid,
+  location: I.Location,
   messages: (I.Message | null)[],
 }
 
-export default function Messages({ zoneid, messages }: MessagesProps) {
-  let { region, district, zone } = zoneid
+export default function Messages({ location, messages }: MessagesProps) {
+  let { region, tag } = location
   let { profile } = useSession()
   let { createdMessages, deletedMessages } = useWebSocket()
   let [ formIndex, setFormIndex ] = useState(-1)
-  let lang = regionLang[zoneid.region]
+  let lang = regionLang[location.region]
   let localProfile = profile && profile.region === region
 
   let getCurrentMessage = (msg: I.Message | null, index: number): 
@@ -64,8 +64,7 @@ export default function Messages({ zoneid, messages }: MessagesProps) {
             {!message && index === formIndex && (
               <SendMessageForm 
                 region={region}
-                district={district}
-                zone={zone}
+                tag={tag}
                 index={index}
                 close={() => setFormIndex(-1)}
               />

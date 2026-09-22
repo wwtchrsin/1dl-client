@@ -33,18 +33,6 @@ export type DeleteProfileResponse = {
   timestamp: number,
 }
 
-export type GetDistrictsResponse = {
-  error: string | undefined,
-  data: Record<string, number> | undefined,
-  timestamp: number,
-}
-
-export type GetZonesResponse = {
-  error: string | undefined,
-  data: Record<string, number> | undefined,
-  timestamp: number,
-}
-
 export type GetMessagesResponse = {
   error: string | undefined,
   data: I.Message[] | undefined,
@@ -210,58 +198,10 @@ export const deleteProfile = async (sessionid: string):
     }
   }
 
-export const getDistricts = async (region: I.Region):
-  Promise<GetDistrictsResponse> => {
-    try {
-      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${ServiceId}:`,
-        },
-      })
-      let body = await response.json()
-      return {
-        error: body.error,
-        data: body.msgcounts,
-        timestamp: getTimestamp(),
-      }
-    } catch (err) {
-      return {
-        error: "appError.requestFailed",
-        data: undefined,
-        timestamp: getTimestamp(),
-      }
-    }
-  }
-
-export const getZones = async ({ region, district }: I.Districtid):
-  Promise<GetZonesResponse> => {
-    try {
-      let response = await fetch(`${ServerUrl}/api/v1/messages/${region}/${district}`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${ServiceId}:`,
-        },
-      })
-      let body = await response.json()
-      return {
-        error: body.error,
-        data: body.msgcounts,
-        timestamp: getTimestamp(),
-      }
-    } catch (err) {
-      return {
-        error: "appError.requestFailed",
-        data: undefined,
-        timestamp: getTimestamp(),
-      }
-    }
-  }
-
-export const getMessages = async ({ region, district, zone }: I.Zoneid):
+export const getMessages = async ({ region, tag }: I.Location):
   Promise<GetMessagesResponse> => {
     try {
-      let location = `/api/v1/messages/${region}/${district}/${zone}/`
+      let location = `/api/v1/messages/${region}/${tag}`
       let response = await fetch(`${ServerUrl}${location}`, {
         method: "GET",
         headers: {
@@ -286,8 +226,8 @@ export const getMessages = async ({ region, district, zone }: I.Zoneid):
 export const sendMessage = async (sessionid: string, message: I.MessageData):
   Promise<SendMessageResponse> => {
     try {
-      let { region, district, zone, index } = message
-      let messageid = `${region}/${district}/${zone}/${index}`
+      let { region, tag, index } = message
+      let messageid = `${region}/${tag}/${index}`
       let url = `${ServerUrl}/api/v1/messages/${messageid}`
       let response = await fetch(url, {
         method: "POST",
@@ -318,8 +258,8 @@ export const sendMessage = async (sessionid: string, message: I.MessageData):
 export const deleteMessage = async (sessionid: string, messageid: I.Messageid):
   Promise<DeleteMessageResponse> => {
     try {
-      let { region, district, zone, index } = messageid
-      let path = `${region}/${district}/${zone}/${index}`
+      let { region, tag, index } = messageid
+      let path = `${region}/${tag}/${index}`
       let url = `${ServerUrl}/api/v1/messages/${path}`
       let response = await fetch(url, {
         method: "DELETE",

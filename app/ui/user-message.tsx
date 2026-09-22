@@ -35,7 +35,7 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
     done: false,
     timestamp: -1,
   })
-  let { region, district, zone, index } = message
+  let { region, tag, index } = message
   let [ dialogVisible, setDialogVisible ] = useState(false)
 
   if ( formState.done ) {
@@ -82,8 +82,7 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
           />
         </div>
         <input type="hidden" name="region" value={region} />
-        <input type="hidden" name="district" value={district} />
-        <input type="hidden" name="zone" value={zone} />
+        <input type="hidden" name="tag" value={tag} />
         <input type="hidden" name="index" value={index} />
       </div>
     </form>
