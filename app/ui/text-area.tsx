@@ -30,8 +30,8 @@ export default function TextArea({ name, label, limits }: TextAreaProps) {
       )}
       <textarea 
         id={`form-${name}`} name={name}
-        className="block resize-none w-full p-2 rounded-md border border-gray-500 text-xl"
-        rows={3} value={value} onChange={(ev) => setValue(ev.target.value)} 
+        className="block resize-none w-full p-2 rounded-md border border-gray-200 text-base bg-white text-black"
+        rows={4} value={value} onChange={(ev) => setValue(ev.target.value)} 
       />
     </>
   )

@@ -14,14 +14,14 @@ export default function ColorSelector({ lang, label }: { lang: Lang, label: stri
   let selColorValue = getMessageColor(color)
   let selColorName = messageColorNames.get(color)
   let iconType = expanded ? "arrow-up" : "arrow-down"
-  let headerBorder = expanded ? "rounded-t-md" : "rounded-md"
+  let headerBorder = expanded ? "rounded-b-md" : "rounded-md"
   
   return (
     <div className="relative">
       {label && (
         <div>{ label }</div>
       )}
-      <div className={`p-2 flex flex-row gap-2 items-center ${headerBorder} border border-gray-500`}>
+      <div className={`p-2 flex flex-row gap-2 items-center ${headerBorder} border border-gray-500 bg-white text-black`}>
         {!selColorName && (
           <>
             <div className={`shrink-0 w-4 h-4 ${selColorValue}`}></div>
@@ -43,7 +43,7 @@ export default function ColorSelector({ lang, label }: { lang: Lang, label: stri
         />
       </div>
       {expanded && (
-        <div className="absolute z-10 p-2 w-full rounded-b-md border border-t-0 border-gray-500 bg-gray-50">
+        <div className="absolute z-10 p-2 w-full bottom-10 rounded-t-md border border-b-0 border-gray-500 bg-gray-50 text-black">
           {colors.map(([tag, bgColor]) => {
             return (
               <div className="flex gap-2 items-center" key={tag}>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useEffect } from "react"
 import { sendMessageAction } from "@/app/lib/form-actions"
 import { regionLang, regionBgColors } from "@/app/lib/regions"
 import limits from "@/app/lib/server-limits"
@@ -11,17 +11,17 @@ import TurnstileWidget from "./turnstile-widget"
 import type { Messageid } from "@/app/lib/interfaces"
 
 let TxtRes = {
-  Text: {
-    en: "Text",
-    ru: "Текст",
+  EntryNumber: {
+    en: (index: number) => `Entry #${index}`,
+    ru: (index: number) => `Запись №${index}`,
   },
   BackgroundColor: {
     en: "Background",
     ru: "Цвет фона",
   },
-  apply: {
-    en: "apply",
-    ru: "применить",
+  add: {
+    en: "add",
+    ru: "добавить",
   },
   close: {
     en: "close",
@@ -42,58 +42,61 @@ export default function SendMessageForm(props: SendMessageProps) {
   })
   let lang = regionLang[region]
   let buttonBgColor = regionBgColors[region][3]
+  let bgColor = regionBgColors[region][6]
 
-  if ( formState.done ) {
-    return (
-      <div>...</div>
-    )
-  }
+  useEffect(() => {
+    if ( formState.done ) {
+      close()
+    }
+  }, [formState])
 
   return (
-    <form action="#" className="w-full h-full">
-      <div className="w-full h-full flex flex-col">
-        <div className="mx-auto max-w-68 grow shrink-0 flex flex-col gap-2 justify-center">
-          <div>
-            <TextArea 
-              name="text"
-              label={TxtRes.Text[lang]}
-              limits={{ 
-                min: limits.message.text.minLen,
-                max: limits.message.text.maxLen,
-              }}
-            />
-          </div>
-          <div>
-            <ColorSelector
+    <form action="#">
+      <div className={`fixed bottom-0 left-0 w-full ${bgColor}`}>
+        <div className="mx-auto max-w-150 p-8 text-white">
+          <div className="w-full mb-4 flex flex-col gap-2 justify-center">
+            <div>
+              <TextArea 
+                name="text"
+                label={ TxtRes.EntryNumber[lang](index + 1) }
+                limits={{ 
+                  min: limits.message.text.minLen,
+                  max: limits.message.text.maxLen,
+                }}
+              />
+            </div>
+            <div>
+              <ColorSelector
+                lang={lang}
+                label={TxtRes.BackgroundColor[lang]}
+              />
+            </div>
+            <div className="mt-2 flex flex-row gap-2">
+              <button formAction={formAction} disabled={isPending}
+                className={`cursor-pointer py-1 px-2 rounded-md text-white ${buttonBgColor}`}>
+                  { TxtRes.add[lang] }
+              </button>
+              <button onClick={() => close()} disabled={isPending}
+                className={`cursor-pointer py-1 px-2 rounded-md text-white ${buttonBgColor}`}>
+                  { TxtRes.close[lang] }
+              </button>
+            </div>
+            <ErrorMessage 
+              error={formState.error}
+              timestamp={formState.timestamp}
               lang={lang}
-              label={TxtRes.BackgroundColor[lang]}
             />
+            <input type="hidden" name="region" value={region} />
+            <input type="hidden" name="tag" value={tag} />
+            <input type="hidden" name="index" value={index} />
           </div>
-          <div className="mt-2 flex flex-row gap-2">
-            <button formAction={formAction} disabled={isPending}
-              className={`cursor-pointer py-1 px-2 rounded-md text-white ${buttonBgColor}`}>
-                { TxtRes.apply[lang] }
-            </button>
-            <button onClick={() => close()} disabled={isPending}
-              className={`cursor-pointer py-1 px-2 rounded-md text-white ${buttonBgColor}`}>
-                { TxtRes.close[lang] }
-            </button>
-          </div>
-          <ErrorMessage 
-            error={formState.error}
-            timestamp={formState.timestamp}
+          <TurnstileWidget
             lang={lang}
+            id={`send-message-${index}`}
+            hidden={true}
+            timestamp={formState.timestamp}
           />
-          <input type="hidden" name="region" value={region} />
-          <input type="hidden" name="tag" value={tag} />
-          <input type="hidden" name="index" value={index} />
         </div>
-        <TurnstileWidget
-          lang={lang}
-          id={`send-message-${index}`}
-          hidden={true}
-          timestamp={formState.timestamp}
-        />
       </div>
     </form>
   )

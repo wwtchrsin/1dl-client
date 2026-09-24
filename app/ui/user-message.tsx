@@ -1,6 +1,8 @@
 
+import Image from "next/image"
 import { useState, useActionState } from "react"
-import { deleteMessageAction } from "../lib/form-actions"
+import { timestampToDate } from "@/app/lib/miscs"
+import { deleteMessageAction } from "@/app/lib/form-actions"
 import ErrorMessage from "@/app/ui/error-message"
 import type * as I from "@/app/lib/interfaces"
 
@@ -50,14 +52,24 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
   return (
     <form className="h-full w-full" action="#">
       <div className="h-full w-full flex flex-col items-center justify-center">
-        <div className="max-w-80 px-6 flex flex-col">
+        <div className="px-8 flex flex-col items-start">
           {!dialogVisible && (<>
             <div>{ message.text }</div>
-            <div className="font-bold">{ message.username }</div>
-            <button className="absolute right-4 top-4 cursor-pointer rounded px-2 py-1 bg-gray-600 text-white"
-              onClick={deleteButtonHandler}>
-              { TxtRes.delete[lang] }
-            </button>
+            <div className="flex flex-row gap-2 text-white/80">
+              <div className="font-bold">
+                { message.username }
+              </div>
+              <div>
+                { timestampToDate(+message.timestamp) }
+              </div>
+            </div>
+            <div className="absolute bottom-4 right-4 p-2 rounded-full bg-white/20">
+              <Image
+                  src={`/icons/delete.svg`} alt="Delete"
+                  width={24} height={24} className="cursor-pointer"
+                  onClick={deleteButtonHandler}
+                />
+              </div>
           </>)}
           {dialogVisible && (<>
             <div className="font-bold">

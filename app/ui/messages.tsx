@@ -9,6 +9,7 @@ import SendMessageForm from "@/app/ui/send-message-form"
 import Message from "@/app/ui/message"
 import UserMessage from "@/app/ui/user-message"
 import MessageCell from "@/app/ui/message-cell"
+import ActiveMessageCell from "@/app/ui/active-message-cell"
 import type * as I from "@/app/lib/interfaces"
 
 type MessagesProps = {
@@ -38,47 +39,56 @@ export default function Messages({ location, messages }: MessagesProps) {
   }
 
   return (
-    <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
-      {messages.map((msg, index) => {
-        let bgColor = regionBgColors[region][0]
-        let textColor = regionTextColors[region][8]
-        let message = getCurrentMessage(msg, index)
-        if ( message ) {
-          bgColor = getMessageColor(message.color)
-          textColor = "text-white"
-        }
-        let userActive = profile?.state === "active"
-        let userLocal = message && message.puid === profile?.puid
-        return (
-          <div className={`relative h-100 ${textColor} ${bgColor}`} key={index}>
-            {message && !(userActive && userLocal) && (
-              <Message message={message} />
-            )}
-            {message && userActive && userLocal && (
-              <UserMessage
-                lang={lang}
-                message={message}
-                onAction={() => resetFormIndex(index)}
-              />
-            )}
-            {!message && index === formIndex && (
-              <SendMessageForm 
-                region={region}
-                tag={tag}
-                index={index}
-                close={() => setFormIndex(-1)}
-              />
-            )}
-            {!message && index !== formIndex && (
-              <MessageCell
-                region={region}
-                index={index}
-                onClick={localProfile ? () => setFormIndex(index) : undefined}
-              />
-            )}
-          </div>
-        )
-      })}
-    </div>
+    <>
+      <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
+        {messages.map((msg, index) => {
+          let bgColor = regionBgColors[region][0]
+          let textColor = regionTextColors[region][8]
+          let message = getCurrentMessage(msg, index)
+          if ( message ) {
+            bgColor = getMessageColor(message.color)
+            textColor = "text-white"
+          }
+          let userActive = profile?.state === "active"
+          let userLocal = message && message.puid === profile?.puid
+          return (
+            <div className={`relative h-50 ${textColor} ${bgColor}`} key={index}>
+              {message && !(userActive && userLocal) && (
+                <Message message={message} />
+              )}
+              {message && userActive && userLocal && (
+                <UserMessage
+                  lang={lang}
+                  message={message}
+                  onAction={() => resetFormIndex(index)}
+                />
+              )}
+              {!message && index === formIndex && (
+                <ActiveMessageCell
+                  region={region}
+                  index={index}
+                  onClick={() =>  resetFormIndex(index)}
+                />
+              )}
+              {!message && index !== formIndex && (
+                <MessageCell
+                  region={region}
+                  index={index}
+                  onClick={localProfile ? () => setFormIndex(index) : undefined}
+                />
+              )}
+            </div>
+          )
+        })}
+      </div>
+      {formIndex >= 0 && (
+        <SendMessageForm 
+            region={region}
+            tag={tag}
+            index={formIndex}
+            close={() => setFormIndex(-1)}
+          />
+      )}
+    </>
   )
 }
