@@ -65,7 +65,7 @@ export default function UserMessage({ lang, message, onAction }: UserMessageProp
             </div>
             <div className="absolute bottom-4 right-4 p-2 rounded-full bg-white/20">
               <Image
-                  src={`/icons/delete.svg`} alt="Delete"
+                  src={`/icons/entry-delete.svg`} alt="Delete"
                   width={24} height={24} className="cursor-pointer"
                   onClick={deleteButtonHandler}
                 />

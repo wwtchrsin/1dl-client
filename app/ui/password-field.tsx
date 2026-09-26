@@ -28,7 +28,7 @@ export default function PasswordField ({ name, label }: PasswordFieldProps) {
         />
         <div className="absolute h-full w-12 top-0 right-0 flex items-center justify-center">
           <Image 
-            src={`/icons/${icon}.svg`} alt="Hide" height={24} width={24}
+            src={`/icons/password-${icon}.svg`} alt="Hide" height={24} width={24}
             className="cursor-pointer" onClick={() => setHidden(!hidden)}
           />
         </div>

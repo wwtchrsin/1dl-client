@@ -1,37 +1,31 @@
+import Image from "next/image"
 import { regionBgColors, regionLang } from "../lib/regions"
 import * as I from "@/app/lib/interfaces"
-
-let TxtRes = {
-  EntryNumber: {
-    en: (index: number) => `Entry #${index}`,
-    ru: (index: number) => `Запись №${index}`,
-  },
-  add: {
-    en: "add",
-    ru: "добавить",
-  },
-}
 
 type MessageCellProps = {
   onClick?: () => void,
   index: number,
-  region: I.Region, 
+  region: I.Region,
+  active: boolean,
 }
 
-export default function MessageCell({ region, index, onClick }: MessageCellProps) {
-  let lang = regionLang[region]
+export default function MessageCell({ region, index, onClick, active }: MessageCellProps) {
   let buttonBgColor = onClick ? regionBgColors[region][3] : regionBgColors[region][2]
+  let icon = active ? "cancel" : "add"
   
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       <div className="max-w-80 px-6 flex flex-col gap-2 items-center">
-        <div className="absolute min-w-10 p-2 bottom-4 right-4 rounded-full bg-white/75 text-center">
+        <div className="w-14 h-14 flex justify-center items-center rounded-full bg-white/75 font-bold">
           { (index + 1) }
         </div>
         <button 
-          className={`cursor-pointer py-1 px-2 rounded-md ${buttonBgColor} text-white`}
+          className={`absolute p-2 bottom-4 right-4 cursor-pointer rounded-full ${buttonBgColor} text-white`}
           onClick={onClick}>
-            { TxtRes.add[lang] }
+            <Image
+              src={`/icons/entry-${icon}.svg`} alt={icon}
+              width={24} height={24}
+            />
         </button>
       </div>
     </div>

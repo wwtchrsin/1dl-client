@@ -37,7 +37,7 @@ export default function ColorSelector({ lang, label }: { lang: Lang, label: stri
           </>
         )}
         <Image
-          src={`/icons/${iconType}.svg`} alt={iconType}
+          src={`/icons/color-selector-${iconType}.svg`} alt={iconType}
           width={24} height={24} className="shrink-0 cursor-pointer"
           onClick={() => setExpanded(!expanded)}
         />

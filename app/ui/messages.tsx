@@ -10,7 +10,6 @@ import SendMessageForm from "@/app/ui/send-message-form"
 import Message from "@/app/ui/message"
 import UserMessage from "@/app/ui/user-message"
 import MessageCell from "@/app/ui/message-cell"
-import ActiveMessageCell from "@/app/ui/active-message-cell"
 import type * as I from "@/app/lib/interfaces"
 
 type MessagesProps = {
@@ -33,10 +32,8 @@ export default function Messages({ location, messages }: MessagesProps) {
       return createdMessage ?? msg
     }
   
-  let resetFormIndex = (index: number) => {
-    if ( index === formIndex ) {
-      setFormIndex(-1)
-    }
+  let toggleFormIndex = (index: number) => {
+    setFormIndex(index === formIndex ? -1 : index)
   }
 
   useEffect(() => {
@@ -80,21 +77,15 @@ export default function Messages({ location, messages }: MessagesProps) {
                 <UserMessage
                   lang={lang}
                   message={message}
-                  onAction={() => resetFormIndex(index)}
+                  onAction={() => toggleFormIndex(index)}
                 />
               )}
-              {!message && index === formIndex && (
-                <ActiveMessageCell
-                  region={region}
-                  index={index}
-                  onClick={() =>  resetFormIndex(index)}
-                />
-              )}
-              {!message && index !== formIndex && (
+              {!message && (
                 <MessageCell
                   region={region}
                   index={index}
-                  onClick={localProfile ? () => setFormIndex(index) : undefined}
+                  onClick={() =>  toggleFormIndex(index)}
+                  active={index === formIndex}
                 />
               )}
             </div>
