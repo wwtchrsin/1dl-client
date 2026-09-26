@@ -2,18 +2,14 @@ import { regionBgColors, regionLang } from "../lib/regions"
 import * as I from "@/app/lib/interfaces"
 
 let TxtRes = {
-  Entry: {
-    en: "Entry",
-    ru: "Запись",
+  EntryNumber: {
+    en: (index: number) => `Entry #${index}`,
+    ru: (index: number) => `Запись №${index}`,
   },
   modify: {
     en: "modify",
     ru: "модифицировать",
   },
-  numberSymbol: {
-    en: "#",
-    ru: "№",
-  }
 }
 
 type MessageCellProps = {
@@ -29,7 +25,7 @@ export default function MessageCell({ region, index, onClick }: MessageCellProps
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       <div className="max-w-80 px-6 flex flex-col gap-2 items-center">
-        <div>{ `${TxtRes.Entry[lang]} ${TxtRes.numberSymbol[lang]}${index + 1}` }</div>
+        <div>{ TxtRes.EntryNumber[lang](index + 1) }</div>
         <button 
           className={`cursor-pointer py-1 px-2 rounded-md ${buttonBgColor} text-white`}
           onClick={onClick}>

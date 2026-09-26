@@ -6,7 +6,7 @@ import { regionLang } from "@/app/lib/regions"
 import SignUpForm from "@/app/ui/sign-up-form"
 import SignInForm from "@/app/ui/sign-in-form"
 import Profile from "@/app/ui/profile"
-import NoteSearch from "./note-search"
+import SearchByTag from "./search-by-tag"
 import CookieConsentWidget from "./cookie-consent-widget"
 import type { Region } from "@/app/lib/interfaces"
 
@@ -44,8 +44,7 @@ let TxtRes = {
 export default function RegionEntry({ region }: { region: Region }) {
   let { profile, deviceid } = useSession()
   let userAuthorized = !!profile && profile.region === region
-  let [ activeForm, setActiveForm ] = 
-    useState(userAuthorized ? "notes" : "sign-in")
+  let [ activeForm, setActiveForm ] = useState("")
   let lang = regionLang[region]
 
   let headerItemClasses = (active: boolean) => {
@@ -54,47 +53,54 @@ export default function RegionEntry({ region }: { region: Region }) {
     return classes
   }
 
-  let switchForm = (formTag: string) => {
-    setActiveForm(activeForm !== formTag ? formTag : "")
+  let displayedForm = activeForm
+  if ( userAuthorized ) {
+    if ( displayedForm !== "search-by-tag" && displayedForm !== "profile" ) {
+      displayedForm = "search-by-tag"
+    }
+  } else {
+    if ( displayedForm !== "sign-in" && displayedForm !== "sign-up" ) {
+      displayedForm = "sign-in"
+    }
   }
 
   return (
     <div className="p-6 md:mx-auto md:max-w-lg bg-black/5">
       <div className={`flex flex-row gap-2 items-center`}>
         {deviceid && userAuthorized && (
-          <button className={headerItemClasses(activeForm === "notes")}
-            onClick={() => switchForm("notes" )} key="notes">
+          <button className={headerItemClasses(displayedForm === "search-by-tag")}
+            onClick={() => setActiveForm("search-by-tag")} key="search-by-tag">
             { TxtRes.SearchByTag[lang] }
           </button>
         )}
         {deviceid && userAuthorized && (
-          <button className={headerItemClasses(activeForm === "profile")}
-            onClick={() => switchForm("profile" )} key="profile">
+          <button className={headerItemClasses(displayedForm === "profile")}
+            onClick={() => setActiveForm("profile")} key="profile">
             { TxtRes.Profile[lang] }
           </button>
         )}
         {deviceid && !userAuthorized && (<>
-          <button className={headerItemClasses(activeForm === "sign-in")}
-            onClick={() => switchForm("sign-in" )} key="sign-in">
+          <button className={headerItemClasses(displayedForm === "sign-in")}
+            onClick={() => setActiveForm("sign-in")} key="sign-in">
             { TxtRes.SignIn[lang] }
           </button>
-          <button className={headerItemClasses(activeForm === "sign-up")}
-            onClick={() => switchForm("sign-up")} key="sign-up">
+          <button className={headerItemClasses(displayedForm === "sign-up")}
+            onClick={() => setActiveForm("sign-up")} key="sign-up">
             { TxtRes.CreateAccount[lang] }
           </button>
         </>)}
       </div>
-      {deviceid && !userAuthorized && activeForm === "sign-in" && (
+      {deviceid && displayedForm === "sign-in" && (
         <SignInForm region={region} />
       )}
-      {deviceid && !userAuthorized && activeForm === "sign-up" && (
+      {deviceid && displayedForm === "sign-up" && (
         <SignUpForm region={region} />
       )}
-      {deviceid && userAuthorized && activeForm === "profile" && (
+      {deviceid && displayedForm === "profile" && (
         <Profile profile={profile!} />
       )}
-      {deviceid && userAuthorized && activeForm === "notes" && (
-        <NoteSearch region={region} />
+      {deviceid && displayedForm === "search-by-tag" && (
+        <SearchByTag region={region} />
       )}
       {!deviceid && (
         <CookieConsentWidget region={region} />

@@ -12,7 +12,7 @@ let TxtRes = {
   },
 }
 
-export default function NoteSearch({ region }: { region: Region }) {
+export default function SearchByTag({ region }: { region: Region }) {
   let [ tag, setTag ] = useState("")
 
   let buttonBg = regionBgColors[region][4]
