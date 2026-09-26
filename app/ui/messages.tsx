@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useSession } from "@/app/providers/session"
 import { regionLang, regionBgColors, regionTextColors } from "@/app/lib/regions"
 import { getMessageColor } from "@/app/lib/message-colors"
 import { useWebSocket } from "@/app/providers/websocket"
+import limits from "@/app/lib/server-limits"
 import SendMessageForm from "@/app/ui/send-message-form"
 import Message from "@/app/ui/message"
 import UserMessage from "@/app/ui/user-message"
@@ -37,6 +38,23 @@ export default function Messages({ location, messages }: MessagesProps) {
       setFormIndex(-1)
     }
   }
+
+  useEffect(() => {
+    setFormIndex(formIndex => {
+      if ( formIndex < 0 ) {
+        return formIndex
+      }
+      let nextIndex = formIndex
+      while ( nextIndex <= limits.message.index.max ) {
+        if ( deletedMessages.has(nextIndex) || 
+          !createdMessages.has(nextIndex) && !messages[nextIndex] ) {
+            break
+        }
+        nextIndex++
+      }
+      return nextIndex <= limits.message.index.max ? nextIndex : -1
+    })
+  }, [createdMessages, deletedMessages])
 
   return (
     <>
