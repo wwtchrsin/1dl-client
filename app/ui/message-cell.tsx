@@ -6,9 +6,9 @@ let TxtRes = {
     en: (index: number) => `Entry #${index}`,
     ru: (index: number) => `Запись №${index}`,
   },
-  modify: {
-    en: "modify",
-    ru: "модифицировать",
+  add: {
+    en: "add",
+    ru: "добавить",
   },
 }
 
@@ -29,7 +29,7 @@ export default function MessageCell({ region, index, onClick }: MessageCellProps
         <button 
           className={`cursor-pointer py-1 px-2 rounded-md ${buttonBgColor} text-white`}
           onClick={onClick}>
-            { TxtRes.modify[lang] }
+            { TxtRes.add[lang] }
         </button>
       </div>
     </div>

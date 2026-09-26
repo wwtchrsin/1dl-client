@@ -60,7 +60,9 @@ export default function Messages({ location, messages }: MessagesProps) {
     <>
       <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
         {messages.map((msg, index) => {
-          let bgColor = regionBgColors[region][0]
+          let bgColor = index !== formIndex ?
+            regionBgColors[region][0] :
+            regionBgColors[region][1]
           let textColor = regionTextColors[region][8]
           let message = getCurrentMessage(msg, index)
           if ( message ) {

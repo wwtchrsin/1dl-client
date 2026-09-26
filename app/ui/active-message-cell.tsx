@@ -6,9 +6,9 @@ let TxtRes = {
     en: (index: number) => `Adding Entry #${index}...`,
     ru: (index: number) => `Добавление Записи №${index}....`,
   },
-  close: {
-    en: "close",
-    ru: "закрыть",
+  cancel: {
+    en: "cancel",
+    ru: "отмена",
   },
 }
 
@@ -25,11 +25,10 @@ export default function ActiveMessageCell({ region, index, onClick }: ActiveMess
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       <div className="max-w-80 px-6 flex flex-col gap-2 items-center">
-        <div>{ TxtRes.AddingEntry[lang](index + 1) }</div>
         <button 
           className={`cursor-pointer py-1 px-2 rounded-md ${buttonBgColor} text-white`}
           onClick={onClick}>
-            { TxtRes.close[lang] }
+            { TxtRes.cancel[lang] }
         </button>
       </div>
     </div>
