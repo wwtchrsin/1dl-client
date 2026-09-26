@@ -25,7 +25,9 @@ export default function MessageCell({ region, index, onClick }: MessageCellProps
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       <div className="max-w-80 px-6 flex flex-col gap-2 items-center">
-        <div>{ TxtRes.EntryNumber[lang](index + 1) }</div>
+        <div className="absolute min-w-10 p-2 bottom-4 right-4 rounded-full bg-white/75 text-center">
+          { (index + 1) }
+        </div>
         <button 
           className={`cursor-pointer py-1 px-2 rounded-md ${buttonBgColor} text-white`}
           onClick={onClick}>
