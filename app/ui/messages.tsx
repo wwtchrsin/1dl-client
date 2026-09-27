@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useActionState } from "react"
 import { useSession } from "@/app/providers/session"
+import { sendMessageAction, deleteMessageAction } from "@/app/lib/form-actions"
 import { regionLang, regionBgColors, regionTextColors } from "@/app/lib/regions"
 import { getMessageColor } from "@/app/lib/message-colors"
 import { useWebSocket } from "@/app/providers/websocket"
-import limits from "@/app/lib/server-limits"
 import SendMessageForm from "@/app/ui/send-message-form"
 import Message from "@/app/ui/message"
 import MessageCell from "@/app/ui/message-cell"
 import DeleteMessageDialog from "@/app/ui/delete-message-dialog"
+import ErrorMessage from "@/app/ui/error-message"
 import type * as I from "@/app/lib/interfaces"
 
 type MessagesProps = {
@@ -17,60 +18,83 @@ type MessagesProps = {
   messages: (I.Message | null)[],
 }
 
+type ActiveCell = {
+  type: "empty" | "message",
+  index: number,
+} | undefined
+
 export default function Messages({ location, messages }: MessagesProps) {
+  let [ sendFormState, sendFormAction, isSendFormPending ] = 
+    useActionState(sendMessageAction, {
+      error: undefined,
+      done: false,
+      timestamp: -1,
+    })
+  let [ deleteFormState, deleteFormAction, isDeleteFormPending ] = 
+    useActionState(deleteMessageAction, {
+      error: undefined,
+      done: false,
+      timestamp: -1,
+    })
+
   let { region, tag } = location
   let { profile } = useSession()
   let { createdMessages, deletedMessages } = useWebSocket()
-  let [ formIndex, setFormIndex ] = useState(-1)
+  let [ activeCell, setActiveCell ] = useState<ActiveCell>(undefined)
   
   let isUserActive = profile?.state === "active"
   let isUserLocal = region === profile?.region
   let lang = regionLang[region]
 
-  let getCurrentMessage = (msg: I.Message | null, index: number): 
+  useEffect(() => {
+    if ( sendFormState.done ) {
+      setActiveCell(undefined)
+    }
+  }, [sendFormState])
+
+  useEffect(() => {
+    if ( deleteFormState.done ) {
+      setActiveCell(undefined)
+    }
+  }, [deleteFormState])
+
+  useEffect(() => {
+    if ( activeCell ) {
+      let type = (createdMessages.has(activeCell.index) ||
+        messages[activeCell.index]) && !deletedMessages.has(activeCell.index)
+        ? "message" : "empty"
+      if ( type !== activeCell.type ) {
+        setActiveCell(undefined)
+      }
+    }
+  }, [createdMessages, deletedMessages, messages])
+
+  let getCurrentMessage = (index: number): 
     I.Message | null => {
       if ( deletedMessages.has(index) ) return null
       let createdMessage = createdMessages.get(index)
-      return createdMessage ?? msg
+      return createdMessage ?? messages[index]
     }
   
-  let toggleFormIndex = (index: number) => {
-    setFormIndex(index === formIndex ? -1 : index)
-  }
-
-  let activeCellType = "empty"
-  if ( formIndex >= 0 &&  (messages[formIndex] ||
-    createdMessages.has(formIndex)) &&
-    !deletedMessages.has(formIndex) ) {
-      activeCellType = "message"
+  let toggleActiveCell = (type: "empty" | "message", index: number) => {
+    if ( !isSendFormPending && !isDeleteFormPending ) {
+      if ( index === activeCell?.index ) {
+        setActiveCell(undefined)
+        return
+      }
+      setActiveCell({ type, index })
     }
-
-  useEffect(() => {
-    setFormIndex(formIndex => {
-      if ( formIndex < 0 ) {
-        return formIndex
-      }
-      let nextIndex = formIndex
-      while ( nextIndex <= limits.message.index.max ) {
-        if ( deletedMessages.has(nextIndex) || 
-          !createdMessages.has(nextIndex) && !messages[nextIndex] ) {
-            break
-        }
-        nextIndex++
-      }
-      return nextIndex <= limits.message.index.max ? nextIndex : -1
-    })
-  }, [createdMessages, deletedMessages])
+  }
 
   return (
     <>
       <div className="p-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1 bg-white">
-        {messages.map((msg, index) => {
-          let bgColor = index !== formIndex ?
+        {messages.map((_msg, index) => {
+          let bgColor = index !== activeCell?.index ?
             regionBgColors[region][0] :
             regionBgColors[region][1]
           let textColor = regionTextColors[region][8]
-          let message = getCurrentMessage(msg, index)
+          let message = getCurrentMessage(index)
           if ( message ) {
             bgColor = getMessageColor(message.color)
             textColor = "text-white"
@@ -82,38 +106,58 @@ export default function Messages({ location, messages }: MessagesProps) {
               {message && (
                 <Message
                   message={message}
-                  onClick={() => { toggleFormIndex(index) }}
+                  onClick={() => { toggleActiveCell("message", index) }}
                   enabled={isUserActive && isUserCreator}
-                  active={index === formIndex}
+                  active={index === activeCell?.index}
                 />
               )}
               {!message && (
                 <MessageCell
                   region={region}
                   index={index}
-                  onClick={() => toggleFormIndex(index)}
+                  onClick={() => { toggleActiveCell("empty", index) }}
                   enabled={isUserActive && isUserLocal}
-                  active={index === formIndex}
+                  active={index === activeCell?.index}
                 />
               )}
             </div>
           )
         })}
       </div>
-      {formIndex >= 0 && activeCellType === "empty" && (
-        <SendMessageForm 
-          region={region}
-          tag={tag}
-          index={formIndex}
-          close={() => setFormIndex(-1)}
-        />
+      {activeCell && activeCell.index >= 0 && activeCell.type === "empty" && (
+        <form action="#">
+          <SendMessageForm 
+            region={region}
+            tag={tag}
+            index={activeCell.index}
+            close={() => setActiveCell(undefined)}
+            formAction={sendFormAction}
+            isPending={isSendFormPending}
+            timestamp={sendFormState.timestamp}
+          />
+          <ErrorMessage
+            error={sendFormState.error}
+            timestamp={sendFormState.timestamp}
+            lang={lang}
+          />
+        </form>
       )}
-      {formIndex >= 0 && activeCellType === "message" && (
-        <DeleteMessageDialog
-          lang={lang}
-          message={messages[formIndex]}
-          close={() => setFormIndex(-1)}
-        />
+      {activeCell && activeCell.index >= 0 && activeCell.type === "message" && (
+        <form action="#">
+          <DeleteMessageDialog
+            lang={lang}
+            message={getCurrentMessage(activeCell.index)}
+            close={() => setActiveCell(undefined)}
+            formAction={deleteFormAction}
+            isPending={isDeleteFormPending}
+            timestamp={deleteFormState.timestamp}
+          />
+          <ErrorMessage
+            error={deleteFormState.error}
+            timestamp={deleteFormState.timestamp}
+            lang={lang}
+          />
+        </form>
       )}
     </>
   )

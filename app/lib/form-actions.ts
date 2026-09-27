@@ -271,7 +271,7 @@ export async function deleteMessageAction(prevState: DeleteMessageState,
     let response = await requests.deleteMessage(session.data.sessionid, form.data)
     return {
       error: response.error,
-      done: !!response.error,
+      done: !response.error,
       timestamp: getTimestamp(),
     }
   }
