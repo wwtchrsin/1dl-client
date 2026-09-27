@@ -6,10 +6,12 @@ type MessageCellProps = {
   onClick?: () => void,
   index: number,
   region: I.Region,
+  enabled: boolean,
   active: boolean,
 }
 
-export default function MessageCell({ region, index, onClick, active }: MessageCellProps) {
+export default function MessageCell(props: MessageCellProps) {
+  let { region, index, onClick, enabled, active } = props
   let buttonBgColor = onClick ? regionBgColors[region][3] : regionBgColors[region][2]
   let icon = active ? "cancel" : "add"
   
@@ -19,14 +21,16 @@ export default function MessageCell({ region, index, onClick, active }: MessageC
         <div className="w-14 h-14 flex justify-center items-center rounded-full bg-white/75 font-bold">
           { (index + 1) }
         </div>
-        <button 
-          className={`absolute p-2 bottom-4 right-4 cursor-pointer rounded-full ${buttonBgColor} text-white`}
-          onClick={onClick}>
-            <Image
-              src={`/icons/entry-${icon}.svg`} alt={icon}
-              width={24} height={24}
-            />
-        </button>
+        {enabled && (
+          <button 
+            className={`absolute p-2 bottom-4 right-4 cursor-pointer rounded-full ${buttonBgColor} text-white`}
+            onClick={onClick}>
+              <Image
+                src={`/icons/entry-${icon}.svg`} alt={icon}
+                width={24} height={24}
+              />
+          </button>
+        )}
       </div>
     </div>
   )

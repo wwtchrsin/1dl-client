@@ -52,7 +52,7 @@ export default function SendMessageForm(props: SendMessageProps) {
 
   return (
     <form action="#">
-      <div className={`fixed bottom-0 left-0 w-full ${bgColor}`}>
+      <div className={`fixed z-1 bottom-0 left-0 w-full ${bgColor}`}>
         <div className="mx-auto max-w-150 p-8 text-white">
           <div className="w-full mb-4 flex flex-col gap-2 justify-center">
             <div>
