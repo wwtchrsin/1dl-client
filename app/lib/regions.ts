@@ -55,6 +55,31 @@ export const regionTextColors = {
   ],
 }
 
+export const regionOutlineColors = {
+  "en": [
+    "ring-sky-100",
+    "ring-sky-200",
+    "ring-sky-300",
+    "ring-sky-400",
+    "ring-sky-500",
+    "ring-sky-600",
+    "ring-sky-700",
+    "ring-sky-800",
+    "ring-sky-900",
+  ],
+  "ru": [
+    "ring-blue-100",
+    "ring-blue-200",
+    "ring-blue-300",
+    "ring-blue-400",
+    "ring-blue-500",
+    "ring-blue-600",
+    "ring-blue-700",
+    "ring-blue-800",
+    "ring-blue-900",
+  ],
+}
+
 export const regions: Region[] = ["en", "ru"]
 
 export const langs: Lang[] = ["en", "ru"]

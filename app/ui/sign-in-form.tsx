@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 import { createSessionAction } from "../lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
 import TextField from "@/app/ui/text-field"
@@ -30,6 +30,9 @@ export default function signInForm({ region }: { region: Region }) {
     profile: undefined,
     timestamp: -1,
   })
+  let [ login, setLogin ] = useState("")
+  let [ password, setPassword ] = useState("")
+
   let lang = regionLang[region]
 
   if ( formState.profile ) {
@@ -43,12 +46,16 @@ export default function signInForm({ region }: { region: Region }) {
           <TextField
             name="login" 
             label={TxtRes.Login[lang]}
+            value={login}
+            setValue={setLogin}
           />
         </div>
         <div>
           <PasswordField
             name="password" 
             label={TxtRes.Password[lang]}
+            value={password}
+            setValue={setPassword}
           />
         </div>
         <TurnstileWidget

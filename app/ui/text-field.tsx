@@ -1,14 +1,14 @@
 "use client"
 
-import { useState } from "react"
-
 type TextFieldProps = {
   name: string,
-  label: string
+  label: string,
+  value: string,
+  setValue: (value: string) => unknown,
 }
 
-export default function TextField ({ name, label }: TextFieldProps) {
-  let [ value, setValue ] = useState("")
+export default function TextField (props: TextFieldProps) {
+  let { name, label, value, setValue } = props
 
   return (
     <>

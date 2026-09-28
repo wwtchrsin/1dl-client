@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useState } from "react"
 import { createProfileAction } from "../lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
 import TextField from "@/app/ui/text-field"
@@ -39,6 +39,11 @@ export default function SignUpForm ({ region }: { region: Region }) {
     profile: undefined,
     timestamp: -1,
   })
+  let [ login, setLogin ] = useState("")
+  let [ password, setPassword ] = useState("")
+  let [ password2, setPassword2 ] = useState("")
+  let [ name, setName ] = useState("")
+
   let lang = regionLang[region]
 
   if ( formState.profile ) {
@@ -52,24 +57,32 @@ export default function SignUpForm ({ region }: { region: Region }) {
           <TextField
             name="login"
             label={TxtRes.Login[lang]}
+            value={login}
+            setValue={setLogin}
           />
         </div>
         <div>
           <PasswordField
             name="password"
             label={TxtRes.Password[lang]}
+            value={password}
+            setValue={setPassword}
           />
         </div>
         <div>
           <PasswordField
             name="password2"
             label={TxtRes.ConfirmPassword[lang]}
+            value={password2}
+            setValue={setPassword2}
           />
         </div>
         <div>
           <TextField
             name="name"
             label={TxtRes.Name[lang]}
+            value={name}
+            setValue={setName}
           />
         </div>
         <TurnstileWidget

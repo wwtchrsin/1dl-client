@@ -89,7 +89,6 @@ export default function Messages({ location, messages }: MessagesProps) {
   let toggleActiveCell = (type: "empty" | "message", index: number) => {
     if ( !isSendFormPending && !isDeleteFormPending ) {
       if ( index === activeCell?.index ) {
-        setSendFormFields({ ...sendFormFields, text: "" })
         setActiveCell(undefined)
         return
       }
@@ -99,7 +98,6 @@ export default function Messages({ location, messages }: MessagesProps) {
 
   let deactivateCell = () => {
     setActiveCell(undefined)
-    setSendFormFields({ ...sendFormFields, text: "" })
   }
 
   return (

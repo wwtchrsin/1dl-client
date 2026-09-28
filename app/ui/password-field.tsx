@@ -6,13 +6,15 @@ import Image from "next/image"
 type PasswordFieldProps = {
   name: string,
   label: string,
+  value: string,
+  setValue: (value: string) => unknown,
 }
 
-export default function PasswordField ({ name, label }: PasswordFieldProps) {
-  let [ value, setValue ] = useState("")
+export default function PasswordField (props: PasswordFieldProps) {
+  let { name, label, value, setValue } = props
   let [ hidden, setHidden ] = useState(true)
   let type = hidden ? "password" : "text"
-  let icon = hidden ? "visibility" : "visibility-off" 
+  let icon = hidden ? "visibility-off" : "visibility"
 
   return (
     <>
