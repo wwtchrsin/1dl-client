@@ -42,7 +42,7 @@ export default function DeleteMessageDialog(props: UserMessageProps) {
 
   return (
     <div className={`fixed z-1 w-full bottom-0 left-0 w-full ${bgColor}`}>
-      <div className="mx-auto max-w-150 px-8 py-12 text-white">
+      <div className="mx-auto max-w-lg px-8 py-12 text-white">
         <div className="font-bold">
           { TxtRes.ConfirmDeletion[lang] }
         </div>

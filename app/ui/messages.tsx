@@ -11,7 +11,6 @@ import Message from "@/app/ui/message"
 import MessageCell from "@/app/ui/message-cell"
 import DeleteMessageDialog from "@/app/ui/delete-message-dialog"
 import ErrorMessage from "@/app/ui/error-message"
-import ErrorMessageStateless from "@/app/ui/error-message-stateless"
 import * as I from "@/app/lib/interfaces"
 
 type MessagesProps = {
@@ -38,7 +37,9 @@ export default function Messages({ location, messages }: MessagesProps) {
       timestamp: -1,
     })
 
-  let [ closedErrorTimestamp, setClosedErrorTimestamp ] = useState(-1) 
+  let formState = sendFormState.timestamp > deleteFormState.timestamp ?
+    sendFormState : deleteFormState
+
   let { region, tag } = location
   let { profile, updateColor } = useSession()
   let { createdMessages, deletedMessages } = useWebSocket()
@@ -48,35 +49,17 @@ export default function Messages({ location, messages }: MessagesProps) {
   let isUserLocal = region === profile?.region
   let lang = regionLang[region]
 
-  let errorMessage = sendFormState.error
-  let errorMessageTimestamp = sendFormState.timestamp
-
-  if ( deleteFormState.timestamp > sendFormState.timestamp ) {
-    errorMessage = deleteFormState.error
-    errorMessageTimestamp = deleteFormState.timestamp
-  }
-
-  if ( closedErrorTimestamp >= errorMessageTimestamp ) {
-    errorMessage = undefined
-    errorMessageTimestamp = closedErrorTimestamp
-  }
-
-  function closeErrorMessage() {
-    setClosedErrorTimestamp(errorMessageTimestamp)
-  }
 
   useEffect(() => {
     if ( sendFormState.message ) {
       updateColor(sendFormState.message.color)
       setActiveCell(undefined)
-      setClosedErrorTimestamp(errorMessageTimestamp)
     }
   }, [sendFormState])
 
   useEffect(() => {
     if ( deleteFormState.done ) {
       setActiveCell(undefined)
-      setClosedErrorTimestamp(errorMessageTimestamp)
     }
   }, [deleteFormState])
 
@@ -87,7 +70,6 @@ export default function Messages({ location, messages }: MessagesProps) {
         ? "message" : "empty"
       if ( type !== activeCell.type ) {
         setActiveCell(undefined)
-        setClosedErrorTimestamp(errorMessageTimestamp)
       }
     }
   }, [createdMessages, deletedMessages, messages])
@@ -101,18 +83,12 @@ export default function Messages({ location, messages }: MessagesProps) {
   
   let toggleActiveCell = (type: "empty" | "message", index: number) => {
     if ( !isSendFormPending && !isDeleteFormPending ) {
-      setClosedErrorTimestamp(errorMessageTimestamp)
       if ( index === activeCell?.index ) {
         setActiveCell(undefined)
         return
       }
       setActiveCell({ type, index })
     }
-  }
-
-  let deactivateCell = () => {
-    setActiveCell(undefined)
-    setClosedErrorTimestamp(errorMessageTimestamp)
   }
 
   return (
@@ -160,7 +136,7 @@ export default function Messages({ location, messages }: MessagesProps) {
               region={region}
               tag={tag}
               index={activeCell.index}
-              close={() => deactivateCell()}
+              close={() => setActiveCell(undefined)}
               formAction={sendFormAction}
               isPending={isSendFormPending}
               timestamp={sendFormState.timestamp}
@@ -174,20 +150,18 @@ export default function Messages({ location, messages }: MessagesProps) {
             <DeleteMessageDialog
               lang={lang}
               message={getCurrentMessage(activeCell.index)}
-              close={() => deactivateCell()}
+              close={() => setActiveCell(undefined)}
               formAction={deleteFormAction}
               isPending={isDeleteFormPending}
               timestamp={deleteFormState.timestamp}
             />
         </form>
       )}
-      {errorMessage && (
-        <ErrorMessageStateless
-          lang={lang}
-          error={errorMessage}
-          onClosed={closeErrorMessage}
-        />
-      )}
+      <ErrorMessage
+        lang={lang}
+        error={formState.error}
+        timestamp={formState.timestamp}
+      />
     </>
   )
 }

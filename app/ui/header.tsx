@@ -39,7 +39,7 @@ export default function Header() {
           {urlSegments.map((segment, index) => {
             let url = "/" + urlSegments.slice(0, index + 1).join("/")
             let segmentLabel = segmentLabels[index](segment)
-            let isTagSegment = index === urlSegments.length - 1
+            let isTagSegment = index > 0 && index === urlSegments.length - 1
             let width = !isTagSegment ? "w-10 sm:w-16" : "w-20 sm:w-28"
             if ( !isTagSegment ) {
               return (
