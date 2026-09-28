@@ -20,12 +20,17 @@ type ErrorMessageProps = {
   timestamp: number,
   lang: Lang,
   formAction?: (payload: FormData) => void,
+  onClosed?: (timestamp: number) => unknown, 
 }
 
-export default function ErrorMessage({ error, timestamp, lang, formAction }: ErrorMessageProps) {
+export default function ErrorMessage(props: ErrorMessageProps) {
+  let { error, timestamp, lang, formAction, onClosed } = props
   let [ errorClosed, setErrorClosed ] = useState(-1)
 
-  let closeWindow = async () => setErrorClosed(timestamp)
+  let closeWindow = async () => {
+    setErrorClosed(timestamp)
+    onClosed?.(timestamp)
+  }
 
   if ( !error || errorClosed === timestamp ) {
     return <></>

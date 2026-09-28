@@ -8,8 +8,15 @@ import type { Lang } from "@/app/lib/interfaces"
 
 let colors = Array.from(messageColors.entries())
 
-export default function ColorSelector({ lang, label }: { lang: Lang, label: string }) {
-  let [ color, setColor ] = useState("")
+type ColorSelectorProps = {
+  lang: Lang,
+  label: string,
+  defaultColor: string | null | undefined,
+}
+
+export default function ColorSelector(props: ColorSelectorProps) {
+  let { lang, label, defaultColor } = props
+  let [ color, setColor ] = useState(defaultColor ?? "")
   let [ expanded, setExpanded ] = useState(false)
   let selColorValue = getMessageColor(color)
   let selColorName = messageColorNames.get(color)

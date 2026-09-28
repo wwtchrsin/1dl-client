@@ -24,6 +24,7 @@ export type Profile = {
   region: string,
   login: string,
   name: string,
+  color: string,
   state: string,
   puid: string,
   timestamp: string,

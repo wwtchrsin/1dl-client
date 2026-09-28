@@ -7,7 +7,6 @@ import { getTimestamp } from "@/app/lib/miscs"
 import limits from "@/app/lib/server-limits"
 import type { Region } from "@/app/lib/interfaces"
 
-
 const JwtKey = process.env.JWT_KEY ?? "ha-ha"
 const SessionMaxAge = +(process.env.NEXT_PUBLIC_SESSION_MAX_AGE ?? 2_000_000)
 
@@ -28,7 +27,6 @@ const verifySessionCookie = (token: string): Session | undefined => {
     return undefined
   }
 }
-
 
 
 export const resetSession = async () => {

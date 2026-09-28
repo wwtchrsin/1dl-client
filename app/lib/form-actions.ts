@@ -5,7 +5,7 @@ import * as requests from "@/app/lib/requests"
 import * as cookies from "@/app/lib/cookies"
 import * as processors from "@/app/lib/form-processors"
 import { getTimestamp } from "@/app/lib/miscs"
-import type { Profile } from "@/app/lib/interfaces"
+import type { Profile, UserMessage } from "@/app/lib/interfaces"
 
 type CreateProfileState = {
   error: string | undefined,
@@ -39,7 +39,7 @@ type DeleteProfileState = {
 
 type SendMessageState = {
   error: string | undefined,
-  done: boolean,
+  message: UserMessage | undefined,
   timestamp: number,
 }
 
@@ -221,7 +221,7 @@ export async function sendMessageAction(prevState: SendMessageState,
     if ( !session.data?.sessionid ) {
       return {
         error: "wrongValue.auth.sessionid",
-        done: false,
+        message: undefined,
         timestamp: getTimestamp(),
       }
     }
@@ -230,7 +230,7 @@ export async function sendMessageAction(prevState: SendMessageState,
     if ( !form.data || !token.data || form.error || token.error ) {
       return {
         error: form.error ?? token.error,
-        done: false,
+        message: undefined,
         timestamp: getTimestamp(),
       }
     }
@@ -238,14 +238,14 @@ export async function sendMessageAction(prevState: SendMessageState,
     if ( validation.error ) {
       return {
         error: validation.error,
-        done: false,
+        message: undefined,
         timestamp: getTimestamp(),
       }
     }
     let message = await requests.sendMessage(session.data.sessionid, form.data)
     return {
       error: message.error,
-      done: !!message.data,
+      message: message.data,
       timestamp: message.timestamp,
     }
   }
