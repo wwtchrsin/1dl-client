@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-
 type TextAreaProps = {
   name: string,
   label: string,
@@ -9,10 +7,12 @@ type TextAreaProps = {
     min: number,
     max: number,
   },
+  value: string,
+  setValue: (v: string) => unknown,
 }
 
-export default function TextArea({ name, label, limits }: TextAreaProps) {
-  let [ value, setValue ] = useState("")
+export default function TextArea(props: TextAreaProps) {
+  let { name, label, limits, value, setValue } = props
 
   return (
     <>

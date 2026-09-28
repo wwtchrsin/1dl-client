@@ -27,13 +27,18 @@ let TxtRes = {
 type SendMessageProps = Messageid & {
   close: () => unknown,
   formAction: (formData: FormData) => void,
-  color: string | undefined | null,
+  fields: {
+    text: string,
+    color: string | null | undefined,
+  },
+  setFields: (v: { text: string, color: string | null | undefined }) => unknown,
   isPending: boolean,
   timestamp: number,
 }
 
 export default function SendMessageForm(props: SendMessageProps) {
-  let { region, tag, index, close, formAction, isPending, timestamp, color } = props
+  let { region, tag, index, close, formAction, isPending, 
+    timestamp, fields, setFields } = props
   
   let lang = regionLang[region]
   let buttonBgColor = regionBgColors[region][3]
@@ -51,13 +56,16 @@ export default function SendMessageForm(props: SendMessageProps) {
                 min: limits.message.text.minLen,
                 max: limits.message.text.maxLen,
               }}
+              value={fields.text}
+              setValue={(text) => setFields({ ...fields, text })}
             />
           </div>
           <div>
             <ColorSelector
               lang={lang}
               label={TxtRes.BackgroundColor[lang]}
-              defaultColor={color}
+              color={fields.color}
+              setColor={(color) => setFields({ ...fields, color })}
             />
           </div>
           <div className="mt-2 flex flex-row gap-2">

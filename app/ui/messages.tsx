@@ -44,6 +44,10 @@ export default function Messages({ location, messages }: MessagesProps) {
   let { profile, updateColor } = useSession()
   let { createdMessages, deletedMessages } = useWebSocket()
   let [ activeCell, setActiveCell ] = useState<ActiveCell>(undefined)
+  let [ sendFormFields, setSendFormFields ] = useState({
+    text: "",
+    color: profile?.color,
+  })
   
   let isUserActive = profile?.state === "active"
   let isUserLocal = region === profile?.region
@@ -54,6 +58,7 @@ export default function Messages({ location, messages }: MessagesProps) {
     if ( sendFormState.message ) {
       updateColor(sendFormState.message.color)
       setActiveCell(undefined)
+      setSendFormFields({ ...sendFormFields, text: "" })
     }
   }, [sendFormState])
 
@@ -84,11 +89,17 @@ export default function Messages({ location, messages }: MessagesProps) {
   let toggleActiveCell = (type: "empty" | "message", index: number) => {
     if ( !isSendFormPending && !isDeleteFormPending ) {
       if ( index === activeCell?.index ) {
+        setSendFormFields({ ...sendFormFields, text: "" })
         setActiveCell(undefined)
         return
       }
       setActiveCell({ type, index })
     }
+  }
+
+  let deactivateCell = () => {
+    setActiveCell(undefined)
+    setSendFormFields({ ...sendFormFields, text: "" })
   }
 
   return (
@@ -136,11 +147,12 @@ export default function Messages({ location, messages }: MessagesProps) {
               region={region}
               tag={tag}
               index={activeCell.index}
-              close={() => setActiveCell(undefined)}
+              close={() => deactivateCell()}
               formAction={sendFormAction}
               isPending={isSendFormPending}
               timestamp={sendFormState.timestamp}
-              color={profile?.color}
+              fields={sendFormFields}
+              setFields={setSendFormFields}
             />
           </form>
       )}
@@ -150,7 +162,7 @@ export default function Messages({ location, messages }: MessagesProps) {
             <DeleteMessageDialog
               lang={lang}
               message={getCurrentMessage(activeCell.index)}
-              close={() => setActiveCell(undefined)}
+              close={() => deactivateCell()}
               formAction={deleteFormAction}
               isPending={isDeleteFormPending}
               timestamp={deleteFormState.timestamp}

@@ -11,15 +11,15 @@ let colors = Array.from(messageColors.entries())
 type ColorSelectorProps = {
   lang: Lang,
   label: string,
-  defaultColor: string | null | undefined,
+  color: string | null | undefined,
+  setColor: (v: string | null | undefined) => unknown,
 }
 
 export default function ColorSelector(props: ColorSelectorProps) {
-  let { lang, label, defaultColor } = props
-  let [ color, setColor ] = useState(defaultColor ?? "")
+  let { lang, label, color, setColor } = props
   let [ expanded, setExpanded ] = useState(false)
-  let selColorValue = getMessageColor(color)
-  let selColorName = messageColorNames.get(color)
+  let selColorValue = getMessageColor(color ?? "")
+  let selColorName = messageColorNames.get(color ?? "")
   let iconType = expanded ? "arrow-up" : "arrow-down"
   let headerBorder = expanded ? "rounded-b-md" : "rounded-md"
   
@@ -65,7 +65,7 @@ export default function ColorSelector(props: ColorSelectorProps) {
           })}
         </div>
       )}
-      <input type="hidden" name="color" value={color} />
+      <input type="hidden" name="color" value={color ?? ""} />
     </div>
   )
 }
