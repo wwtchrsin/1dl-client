@@ -139,6 +139,14 @@ export default {
     "en": "Impossible to delete message",
     "ru": "Невозможно удалить сообщение"
   },
+  "databaseError.updateProfileColor": {
+    "en": "Impossible to update profile color",
+    "ru": "Невозможно обновить цвет профиля"
+  },
+  "databaseError.deleteMessagesByTime": {
+    "en": "Impossible to find and delete messages by time",
+    "ru": "Невозможно найти и удалить сообщения по времени"
+  },
   "databaseConflict.messageNotFound": {
     "en": "Message not found",
     "ru": "Сообщение не найдено"
@@ -147,9 +155,9 @@ export default {
     "en": "Message already exists",
     "ru": "Сообщение уже существует"
   },
-  "databaseConflict.loginTaken": {
-    "en": "The login is already taken",
-    "ru": "Логин уже используется"
+  "databaseConflict.userExists": {
+    "en": "User already exists",
+    "ru": "Пользователь уже существует"
   },
   "databaseConflict.sessionNotFound": {
     "en": "Session not found",
