@@ -3,34 +3,12 @@
 import { useActionState, useState } from "react"
 import { createProfileAction } from "../lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
+import { txtRes } from "@/app/lib/text-resources"
 import TextField from "@/app/ui/text-field"
 import PasswordField from "@/app/ui/password-field"
 import ErrorMessage from "@/app/ui/error-message"
 import TurnstileWidget from "@/app/ui/turnstile-widget"
 import type { Region } from "@/app/lib/interfaces"
-
-let TxtRes = {
-  Login: {
-    en: "Login",
-    ru: "Логин",
-  },
-  Password: {
-    en: "Password",
-    ru: "Пароль",
-  },
-  ConfirmPassword: {
-    en: "Confirm Password",
-    ru: "Подтвердите Пароль",
-  },
-  Name: {
-    en: "Name",
-    ru: "Имя",
-  },
-  create: {
-    en: "create",
-    ru: "создать",
-  },
-}
 
 
 export default function SignUpForm ({ region }: { region: Region }) {
@@ -56,7 +34,7 @@ export default function SignUpForm ({ region }: { region: Region }) {
         <div>
           <TextField
             name="login"
-            label={TxtRes.Login[lang]}
+            label={txtRes.Login[lang]}
             value={login}
             setValue={setLogin}
           />
@@ -64,7 +42,7 @@ export default function SignUpForm ({ region }: { region: Region }) {
         <div>
           <PasswordField
             name="password"
-            label={TxtRes.Password[lang]}
+            label={txtRes.Password[lang]}
             value={password}
             setValue={setPassword}
           />
@@ -72,7 +50,7 @@ export default function SignUpForm ({ region }: { region: Region }) {
         <div>
           <PasswordField
             name="password2"
-            label={TxtRes.ConfirmPassword[lang]}
+            label={txtRes.ConfirmPassword[lang]}
             value={password2}
             setValue={setPassword2}
           />
@@ -80,7 +58,7 @@ export default function SignUpForm ({ region }: { region: Region }) {
         <div>
           <TextField
             name="name"
-            label={TxtRes.Name[lang]}
+            label={txtRes.Name[lang]}
             value={name}
             setValue={setName}
           />
@@ -97,7 +75,7 @@ export default function SignUpForm ({ region }: { region: Region }) {
         <div className="mt-2">
           <button formAction={formAction} disabled={isPending}
             className="cursor-pointer py-1 px-2 rounded-md bg-sky-400 text-white">
-              { TxtRes.create[lang] }
+              { txtRes.create[lang] }
           </button>
         </div>
         <ErrorMessage

@@ -3,26 +3,12 @@
 import { useActionState, useState } from "react"
 import { createSessionAction } from "../lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
+import { txtRes } from "@/app/lib/text-resources"
 import TextField from "@/app/ui/text-field"
 import PasswordField from "@/app/ui/password-field"
 import ErrorMessage from "@/app/ui/error-message"
 import TurnstileWidget from "@/app/ui/turnstile-widget"
 import type { Region } from "@/app/lib/interfaces"
-
-let TxtRes = {
-  Login: {
-    en: "Login",
-    ru: "Логин",
-  },
-  Password: {
-    en: "Password",
-    ru: "Пароль",
-  },
-  verify: {
-    en: "verify",
-    ru: "проверить",
-  },
-}
 
 export default function signInForm({ region }: { region: Region }) {
   let [ formState, formAction, isPending ] = useActionState(createSessionAction, {
@@ -45,7 +31,7 @@ export default function signInForm({ region }: { region: Region }) {
         <div>
           <TextField
             name="login" 
-            label={TxtRes.Login[lang]}
+            label={txtRes.Login[lang]}
             value={login}
             setValue={setLogin}
           />
@@ -53,7 +39,7 @@ export default function signInForm({ region }: { region: Region }) {
         <div>
           <PasswordField
             name="password" 
-            label={TxtRes.Password[lang]}
+            label={txtRes.Password[lang]}
             value={password}
             setValue={setPassword}
           />
@@ -70,7 +56,7 @@ export default function signInForm({ region }: { region: Region }) {
         <div className="mt-2">
           <button formAction={formAction} disabled={isPending}
             className="cursor-pointer py-1 px-2 rounded-md bg-sky-400 text-white">
-              { TxtRes.verify[lang] }
+              { txtRes.verify[lang] }
           </button>
         </div>
         <ErrorMessage

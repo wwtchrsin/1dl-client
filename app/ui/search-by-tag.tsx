@@ -3,14 +3,8 @@
 import Link from "next/link"
 import { useState } from "react"
 import { regionBgColors, regionTextColors, regionOutlineColors } from "@/app/lib/regions"
+import { txtRes } from "@/app/lib/text-resources"
 import type { Region } from "@/app/lib/interfaces"
-
-let TxtRes = {
-  find: {
-    en: "find",
-    ru: "найти",
-  },
-}
 
 export default function SearchByTag({ region }: { region: Region }) {
   let [ tag, setTag ] = useState("")
@@ -32,7 +26,7 @@ export default function SearchByTag({ region }: { region: Region }) {
       />
       <Link href={`/${region}/${tag}`} 
         className={`flex flex-row items-center -ml-1 px-4 py-2 rounded-r-md ${buttonBg} text-white`}>
-          <span>{TxtRes.find[region]}</span>
+          <span>{txtRes.find[region]}</span>
       </Link>
     </div>
   )

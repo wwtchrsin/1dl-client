@@ -3,80 +3,18 @@
 import { useState, useActionState } from "react"
 import { deleteProfileAction, logoutAction } from "@/app/lib/form-actions"
 import { regionLang } from "@/app/lib/regions"
+import { txtRes } from "@/app/lib/text-resources"
 import ErrorMessage from "@/app/ui/error-message"
 import TurnstileWidget from "@/app/ui/turnstile-widget"
 import type { Profile, Region, TextResource } from "@/app/lib/interfaces"
 
-let TxtRes = {
-  Login: {
-    en: "Login",
-    ru: "Логин",
-  },
-  Name: {
-    en: "Name",
-    ru: "Имя",
-  },
-  Status: {
-    en: "Status",
-    ru: "Статус",
-  },
-  AccountCreated: {
-    en: "Account created",
-    ru: "Аккаунт создан",
-  },
-  logout: {
-    en: "logout",
-    ru: "выйти",
-  },
-  deleteAccount: {
-    en: "delete account",
-    ru: "удалить аккаунт",
-  },
-  ConfirmDeletion: {
-    en: "Are you sure you want to delete your account " +
-      "and all the data associated with it? " +
-      "This action cannot be undone.",
-    ru: "Вы уверены, что хотите удалить ваш аккаунт " +
-      "вместе со всеми связанными данными? " +
-      "Это действие нельзя будет отменить.",
-  },
-  confirm: {
-    en: "confirm",
-    ru: "подтвердить",
-  },
-  cancel: {
-    en: "cancel",
-    ru: "отменить",
-  },
-
-}
-
 type ProfileStatus = "active" | "inactive" | "suspended" | "unknown"
 
-let statuses: Record<ProfileStatus, TextResource> = {
-  unknown: {
-    en: "unknown",
-    ru: "неизвестный",
-  },
-  active: {
-    en: "active",
-    ru: "активный",
-  },
-  inactive: {
-    en: "inactive",
-    ru: "неактивный",
-  },
-  suspended: {
-    en: "suspended",
-    ru: "приостановлен",
-  },
-}
-
 let getStatusName = (tag: string) => {
-  if ( tag in statuses ) {
-    return statuses[tag as ProfileStatus]
+  if ( tag in txtRes ) {
+    return txtRes[tag as ProfileStatus]
   }
-  return statuses.unknown
+  return txtRes.unknown
 }
 
 export default function Profile({ profile }: { profile: Profile }) {
@@ -116,7 +54,7 @@ export default function Profile({ profile }: { profile: Profile }) {
       <div className="flex flex-col gap-2 py-4">
         <div>
           <div className="text-gray-500">
-            { TxtRes.Login[lang] }
+            { txtRes.Login[lang] }
           </div>
           <div className="text-xl">
             { profile.login }
@@ -124,7 +62,7 @@ export default function Profile({ profile }: { profile: Profile }) {
         </div>
         <div>
           <div className="text-gray-500">
-            { TxtRes.Name[lang] }
+            { txtRes.Name[lang] }
           </div>
           <div className="text-xl">
             { profile.name }
@@ -132,7 +70,7 @@ export default function Profile({ profile }: { profile: Profile }) {
         </div>
         <div>
           <div className="text-gray-500">
-            { TxtRes.Status[lang] }
+            { txtRes.Status[lang] }
           </div>
           <div className="text-xl">
             { getStatusName(profile.state)[lang] }
@@ -140,7 +78,7 @@ export default function Profile({ profile }: { profile: Profile }) {
         </div>
         <div>
           <div className="text-gray-500">
-            { TxtRes.AccountCreated[lang] }
+            { txtRes.AccountCreated[lang] }
           </div>
           <div className="text-xl">
             { timestampToDate(profile.timestamp) }
@@ -151,12 +89,12 @@ export default function Profile({ profile }: { profile: Profile }) {
             <button className="rounded py-1 px-2 bg-red-500 text-white"
               type="submit" formAction={logoutFormAction}
               disabled={isPending}>
-                { TxtRes.logout[lang] }
+                { txtRes.logout[lang] }
             </button>
             <button className="rounded py-1 px-2 bg-red-500 text-white" 
               onClick={() => setDialogVisible(true)}
               disabled={isPending}>
-                { TxtRes.deleteAccount[lang] }
+                { txtRes.deleteAccount[lang] }
             </button>
           </div>
         )}
@@ -173,17 +111,17 @@ export default function Profile({ profile }: { profile: Profile }) {
             />
             <div className="mt-2 flex flex-col gap-2">
               <div className="text-red-500 font-bold">
-                { TxtRes.ConfirmDeletion[lang] }
+                { txtRes.deleteAccountConfirmation[lang] }
               </div>
               <div className="flex flex-row gap-2 mt-2">
                 <button className="rounded py-1 px-2 bg-red-500 text-white"
                   type="submit" formAction={deleteFormAction}
                   disabled={isPending}>
-                    { TxtRes.confirm[lang] }
+                    { txtRes.confirm[lang] }
                 </button>
                 <button className="rounded py-1 px-2 bg-red-500 text-white" 
                   onClick={() => setDialogVisible(false)}>
-                    { TxtRes.cancel[lang] }
+                    { txtRes.cancel[lang] }
                 </button>
               </div>
             </div>

@@ -1,25 +1,7 @@
 import { regionBgColors } from "@/app/lib/regions"
+import { txtRes } from "@/app/lib/text-resources"
 import TurnstileWidget from "@/app/ui/turnstile-widget"
 import type * as I from "@/app/lib/interfaces"
-
-let TxtRes = {
-  delete: {
-    en: "delete",
-    ru: "удалить"
-  },
-  ConfirmDeletion: {
-    en: "Are you sure you want to delete the entry?",
-    ru: "Вы уверены что хотите удалить эту запись?",
-  },
-  confirm: {
-    en: "confirm",
-    ru: "подтвердить",
-  },
-  cancel: {
-    en: "cancel",
-    ru: "отменить",
-  },
-}
 
 type UserMessageProps = {
   lang: I.Lang,
@@ -44,17 +26,17 @@ export default function DeleteMessageDialog(props: UserMessageProps) {
     <div className={`fixed z-1 w-full bottom-0 left-0 w-full ${bgColor}`}>
       <div className="mx-auto max-w-lg px-8 py-12 text-white">
         <div className="font-bold">
-          { TxtRes.ConfirmDeletion[lang] }
+          { txtRes.deleteMessageConfirmation[lang] }
         </div>
         <div className="mt-2 flex flex-row gap-2">
           <button className="cursor-pointer rounded py-1 px-2 bg-gray-600 text-white"
             type="submit" formAction={formAction}
             disabled={isPending}>
-              { TxtRes.confirm[lang] }
+              { txtRes.confirm[lang] }
           </button>
           <button className="cursor-pointer rounded py-1 px-2 bg-gray-600 text-white" 
             onClick={() => close()}>
-              { TxtRes.cancel[lang] }
+              { txtRes.cancel[lang] }
           </button>
         </div>
         <TurnstileWidget

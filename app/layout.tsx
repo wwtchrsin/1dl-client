@@ -5,7 +5,6 @@ import * as cookies from "@/app/lib/cookies"
 import { getProfile } from "@/app/lib/requests"
 import Header from "@/app/ui/header"
 import SessionError from "./ui/session-error"
-import CookieConsentWindow from "@/app/ui/cookie-consent-window"
 import PageRefresher from "@/app/ui/page-refresher"
 import { SessionProvider } from "@/app/providers/session"
 import { WebSocketProvider } from "@/app/providers/websocket"
@@ -61,9 +60,6 @@ export default async function RootLayout({
                 error={error}
                 timestamp={timestamp}
               />
-            )}
-            {!session.data?.deviceid && (
-              <CookieConsentWindow />
             )}
             <PageRefresher />
           </WebSocketProvider>

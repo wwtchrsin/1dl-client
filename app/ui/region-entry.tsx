@@ -3,43 +3,13 @@
 import { useState } from "react"
 import { useSession } from "../providers/session"
 import { regionLang } from "@/app/lib/regions"
+import { txtRes } from "../lib/text-resources"
 import SignUpForm from "@/app/ui/sign-up-form"
 import SignInForm from "@/app/ui/sign-in-form"
 import Profile from "@/app/ui/profile"
-import SearchByTag from "./search-by-tag"
+import SearchByTag from "@/app/ui/search-by-tag"
 import CookieConsentWidget from "./cookie-consent-widget"
 import type { Region } from "@/app/lib/interfaces"
-
-let TxtRes = {
-  Region: {
-    en: "Region",
-    ru: "Регион",
-  },
-  CreateAccount: {
-    en: "Create account",
-    ru: "Регистрация",
-  },
-  SignIn: {
-    en: "Sign in",
-    ru: "Вход",
-  },
-  SearchByTag: {
-    en: "Search by tag",
-    ru: "Поиск по метке",
-  },
-  Profile: {
-    en: "Profile",
-    ru: "Профиль",
-  },
-  Error: {
-    en: "Error",
-    ru: "Ошибка",
-  },
-  OK: {
-    en: "OK",
-    ru: "ОК",
-  },
-}
 
 export default function RegionEntry({ region }: { region: Region }) {
   let { profile, deviceid } = useSession()
@@ -70,23 +40,23 @@ export default function RegionEntry({ region }: { region: Region }) {
         {deviceid && userAuthorized && (
           <button className={headerItemClasses(displayedForm === "search-by-tag")}
             onClick={() => setActiveForm("search-by-tag")} key="search-by-tag">
-            { TxtRes.SearchByTag[lang] }
+            { txtRes.SearchByTag[lang] }
           </button>
         )}
         {deviceid && userAuthorized && (
           <button className={headerItemClasses(displayedForm === "profile")}
             onClick={() => setActiveForm("profile")} key="profile">
-            { TxtRes.Profile[lang] }
+            { txtRes.Profile[lang] }
           </button>
         )}
         {deviceid && !userAuthorized && (<>
           <button className={headerItemClasses(displayedForm === "sign-in")}
             onClick={() => setActiveForm("sign-in")} key="sign-in">
-            { TxtRes.SignIn[lang] }
+            { txtRes.SignIn[lang] }
           </button>
           <button className={headerItemClasses(displayedForm === "sign-up")}
             onClick={() => setActiveForm("sign-up")} key="sign-up">
-            { TxtRes.CreateAccount[lang] }
+            { txtRes.CreateAccount[lang] }
           </button>
         </>)}
       </div>

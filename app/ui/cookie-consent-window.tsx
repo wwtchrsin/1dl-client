@@ -4,6 +4,7 @@ import { useActionState } from "react"
 import { usePathname } from "next/navigation"
 import { initCookiesAction } from "@/app/lib/form-actions"
 import { getUrlSegments } from "@/app/lib/miscs"
+import { regions } from "@/app/lib/regions"
 import CookieConsent from "@/app/ui/cookie-consent"
 import type { Region } from "@/app/lib/interfaces"
 
@@ -15,8 +16,10 @@ export default function CookieConsentWindow() {
   })
   let segments = getUrlSegments(usePathname())
 
-  if ( !segments.length || formState.done ) {
-    return <></>
+  if ( segments.length === 0 || segments.length === 1 && 
+    (regions as string[]).includes(segments[0]) ||
+    formState.done ) {
+      return <></>
   }
 
   return (

@@ -1,28 +1,10 @@
 import { regionLang, regionBgColors } from "@/app/lib/regions"
 import limits from "@/app/lib/server-limits"
+import { txtRes, getTxtRes } from "@/app/lib/text-resources"
 import TextArea from "@/app/ui/text-area"
 import ColorSelector from "@/app/ui/color-selector"
 import TurnstileWidget from "@/app/ui/turnstile-widget"
 import type { Messageid } from "@/app/lib/interfaces"
-
-let TxtRes = {
-  EntryNumber: {
-    en: (index: number) => `Entry #${index}`,
-    ru: (index: number) => `Запись №${index}`,
-  },
-  BackgroundColor: {
-    en: "Background",
-    ru: "Цвет фона",
-  },
-  add: {
-    en: "add",
-    ru: "добавить",
-  },
-  close: {
-    en: "close",
-    ru: "закрыть",
-  },
-}
 
 type SendMessageProps = Messageid & {
   close: () => unknown,
@@ -51,7 +33,7 @@ export default function SendMessageForm(props: SendMessageProps) {
           <div>
             <TextArea 
               name="text"
-              label={ TxtRes.EntryNumber[lang](index + 1) }
+              label={ getTxtRes.EntryNumber(index + 1)[lang] }
               limits={{ 
                 min: limits.message.text.minLen,
                 max: limits.message.text.maxLen,
@@ -63,7 +45,7 @@ export default function SendMessageForm(props: SendMessageProps) {
           <div>
             <ColorSelector
               lang={lang}
-              label={TxtRes.BackgroundColor[lang]}
+              label={txtRes.BackgroundColor[lang]}
               color={fields.color}
               setColor={(color) => setFields({ ...fields, color })}
             />
@@ -71,11 +53,11 @@ export default function SendMessageForm(props: SendMessageProps) {
           <div className="mt-2 flex flex-row gap-2">
             <button formAction={formAction} disabled={isPending}
               className={`cursor-pointer py-1 px-2 rounded-md text-white ${buttonBgColor}`}>
-                { TxtRes.add[lang] }
+                { txtRes.add[lang] }
             </button>
             <button onClick={() => close()} disabled={isPending}
               className={`cursor-pointer py-1 px-2 rounded-md text-white ${buttonBgColor}`}>
-                { TxtRes.close[lang] }
+                { txtRes.close[lang] }
             </button>
           </div>
           <input type="hidden" name="region" value={region} />
