@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 1dl-client 
+Frontend of the 1dl-project application. 1dl-project is an app that lets you save, 
+find and share temporary text entries (such as notes), Each entry has a text tag and 
+each tag has its own dedicated page where all entries with that tag are grouped 
+together. Tags are also used to search for and access entries: any user can view any 
+entry as long as they know its tag. Moreover, any user can save their entries using any tag, including tags already used by other users (however, users cannot delete 
+entries created by others). Both the lifetime of entries and the number of entries 
+sharing the same tag are limited.
 
-## Getting Started
+## Requirements
+* Node.js (version >= 20)
 
-First, run the development server:
+## Installation
+To protect against bots, the application uses Cloudflare Turnstile. 
+Therefore, before running the application, make sure you have a Turnstile 
+site key and secret key. Then in the root directory of the project, 
+create a `.env` file using the `.env.example` file as a base and define 
+the following entries:
+* `NEXT_PUBLIC_TURNSTILE_KEY`: Turnstile site key
+* `TURNSTILE_SECRET_KEY`
+* `JWT_KEY`: used to sign user cookies
+* `SERVICE_ID`: used by the backend to verify requests. It must match the SERVICE_ID
+value stored on the backend server
 
+Then run the following command:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Building
+```bash
+npm run build
+```
+The builder uses "standalone" preset. The build output will be located 
+in the `.next/standalone` directory.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Launching
+Onve you have built the client, you can run the following command:
+```bash
+node ./.next/standalone/server.js
+```
+Alternatively, you can just preview the client:
+```bash
+npm run preview
+```
