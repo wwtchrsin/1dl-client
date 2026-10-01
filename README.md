@@ -19,7 +19,7 @@ the following entries:
 * `NEXT_PUBLIC_TURNSTILE_KEY`: Turnstile site key
 * `TURNSTILE_SECRET_KEY`
 * `JWT_KEY`: used to sign user cookies
-* `SERVICE_ID`: used by the backend to verify requests. It must match the SERVICE_ID
+* `SERVICE_ID`: used by the backend to verify requests. It must match the `SERVICE_ID`
 value stored on the backend server
 
 Then run the following command:
