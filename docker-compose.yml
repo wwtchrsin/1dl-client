@@ -1,0 +1,29 @@
+services:
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_WS_SERVER: ${NEXT_PUBLIC_WS_SERVER}
+        NEXT_PUBLIC_TURNSTILE_KEY: ${NEXT_PUBLIC_TURNSTILE_KEY}
+        NEXT_PUBLIC_SESSION_MAX_AGE: ${NEXT_PUBLIC_SESSION_MAX_AGE}
+        NEXT_PUBLIC_LOGLEVEL: ${NEXT_PUBLIC_LOGLEVEL}
+    command: node ./server.js
+    restart: unless-stopped
+    ports:
+      - "3200:3000"
+    environment:
+      - NEXT_TELEMETRY_DISABLED=1
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - HTTP_SERVER=${HTTP_SERVER_DOCKER}
+      - TURNSTILE_SECRET_KEY=${TURNSTILE_SECRET_KEY}
+      - SERVICE_ID=${SERVICE_ID}
+      - JWT_KEY=${JWT_KEY}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/ || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+  
+  
